@@ -55,8 +55,6 @@ export function BreadcrumbNav() {
     )
   }
 
-  let accumulatedPath = ''
-
   return (
     <Breadcrumb className='hidden md:flex'>
       <BreadcrumbList>
@@ -71,12 +69,12 @@ export function BreadcrumbNav() {
         <BreadcrumbSeparator />
 
         {segments.map((segment, index) => {
-          accumulatedPath += `/${segment}`
+          const currentPath = `/${segments.slice(0, index + 1).join('/')}`
           const isLast = index === segments.length - 1
           const label = ROUTE_LABELS[segment] || decodeURIComponent(segment)
 
           return (
-            <span key={accumulatedPath} className='inline-flex items-center gap-1.5'>
+            <span key={currentPath} className='inline-flex items-center gap-1.5'>
               <BreadcrumbItem>
                 {isLast ? (
                   <BreadcrumbPage className='font-semibold text-foreground capitalize'>
@@ -85,7 +83,7 @@ export function BreadcrumbNav() {
                 ) : (
                   <BreadcrumbLink asChild>
                     <Link
-                      to={accumulatedPath}
+                      to={currentPath as string as never}
                       className='text-muted-foreground hover:text-foreground capitalize'
                     >
                       {label}

@@ -275,7 +275,7 @@ export function DashboardPage() {
               </AlertDescription>
               <div className='pt-2 flex items-center gap-3'>
                 <Button asChild size='sm' variant='destructive' className='h-8 text-xs font-semibold'>
-                  <Link to={'/laporan/rekonsiliasi' as any}>
+                  <Link to={'/laporan/rekonsiliasi' as string as never}>
                     Periksa Laporan Rekonsiliasi
                     <ArrowRight className='size-3.5 ml-1' />
                   </Link>
@@ -302,7 +302,7 @@ export function DashboardPage() {
               </div>
             </div>
             <Button asChild variant='ghost' size='sm' className='text-xs text-emerald-700 dark:text-emerald-300 hover:text-emerald-800'>
-              <Link to={'/laporan/rekonsiliasi' as any}>
+              <Link to={'/laporan/rekonsiliasi' as string as never}>
                 Lihat Rincian <ArrowRight className='size-3 ml-1' />
               </Link>
             </Button>
@@ -500,7 +500,7 @@ export function DashboardPage() {
                 </CardDescription>
               </div>
               <Button asChild variant='ghost' size='sm' className='text-xs h-7 px-2'>
-                <Link to={'/stok/kartu' as any}>Lihat Semua</Link>
+                <Link to={'/stok/kartu' as string as never}>Lihat Semua</Link>
               </Button>
             </CardHeader>
             <CardContent className='flex-1 p-0'>
@@ -573,7 +573,7 @@ export function DashboardPage() {
               <div className='p-3 border-t border-border/50 bg-muted/20 flex items-center justify-between text-xs text-muted-foreground'>
                 <span>Ingin mencatat faktur suplai baru?</span>
                 <Link
-                  to={'/stok/masuk' as any}
+                  to={'/stok/masuk' as string as never}
                   className='font-semibold text-primary hover:underline inline-flex items-center gap-1'
                 >
                   Input Barang Masuk <ArrowRight className='size-3' />
@@ -668,7 +668,7 @@ export function DashboardPage() {
               </Button>
 
               <Button asChild variant='outline' className='w-full justify-start text-xs h-10 border-border/70 hover:bg-primary/5 hover:border-primary/40'>
-                <Link to={'/stok/masuk' as any} className='flex items-center gap-2.5'>
+                <Link to={'/stok/masuk' as string as never} className='flex items-center gap-2.5'>
                   <div className='size-6 rounded bg-blue-500/10 text-blue-600 flex items-center justify-center shrink-0'>
                     <Boxes className='size-3.5' />
                   </div>
@@ -680,7 +680,7 @@ export function DashboardPage() {
               </Button>
 
               <Button asChild variant='outline' className='w-full justify-start text-xs h-10 border-border/70 hover:bg-primary/5 hover:border-primary/40'>
-                <Link to={'/tu/topup' as any} className='flex items-center gap-2.5'>
+                <Link to={'/tu/topup' as string as never} className='flex items-center gap-2.5'>
                   <div className='size-6 rounded bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0'>
                     <Banknote className='size-3.5' />
                   </div>
@@ -692,7 +692,7 @@ export function DashboardPage() {
               </Button>
 
               <Button asChild variant='outline' className='w-full justify-start text-xs h-10 border-border/70 hover:bg-primary/5 hover:border-primary/40'>
-                <Link to={'/laporan/rekonsiliasi' as any} className='flex items-center gap-2.5'>
+                <Link to={'/laporan/rekonsiliasi' as string as never} className='flex items-center gap-2.5'>
                   <div className='size-6 rounded bg-purple-500/10 text-purple-600 flex items-center justify-center shrink-0'>
                     <FileSpreadsheet className='size-3.5' />
                   </div>

@@ -98,13 +98,4 @@ pnpm run lint
 pnpm run build
 ```
 
----
-
-## Pembagian Tugas Tim (16 Fitur)
-
-| Pilar | Penanggung Jawab | Rincian Fitur & Issue |
-|---|---|---|
-| Pilar 1: Fondasi & Layar Kasir POS | @wibisanabama | #1 Core Scaffolding, #2 Auth JWT, #3 Katalog POS & Cart, #4 RFID Hook & Beep, #5 Sesi & Tutup Kasir |
-| Pilar 2: Menu, Stok & HPP | @Derylfabiensyah | #6 Shell Backoffice & Dashboard, #7 Kategori & Menu CRUD, #8 Barang Masuk, #9 Stok Opname, #10 Kartu Stok |
-| Pilar 3: TU, Saldo & Laporan | @Mayoranz | #11 Top-up Tunai Siswa, #12 Manajemen Kartu Tamu, #13 Setoran Kas TU, #14 Refund Siswa Keluar, #15 Pengaturan Kantin, #16 Pusat Laporan Keuangan |
 

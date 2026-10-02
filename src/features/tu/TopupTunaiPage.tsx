@@ -29,22 +29,40 @@ export function TopupTunaiPage() {
   const [slipData, setSlipData] = useState<TopupSlipData | null>(null)
   const [isSlipOpen, setIsSlipOpen] = useState(false)
 
-  // Sync / fetch student data from API
-  const fetchStudents = async () => {
+  useEffect(() => {
+    let isMounted = true
+    const loadStudents = async () => {
+      try {
+        const res = await apiClient
+          .get('/api/v1/tu/topup/siswa')
+          .catch(() => apiClient.get('/api/v1/tu/siswa'))
+        if (isMounted && res.data?.data) {
+          setStudents(res.data.data)
+        }
+      } catch {
+        if (isMounted) {
+          setStudents(MOCK_SISWA)
+        }
+      }
+    }
+    void loadStudents()
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  const handleRefresh = async () => {
     try {
-      const res = await apiClient.get('/api/v1/tu/topup/siswa').catch(() => apiClient.get('/api/v1/tu/siswa'))
+      const res = await apiClient
+        .get('/api/v1/tu/topup/siswa')
+        .catch(() => apiClient.get('/api/v1/tu/siswa'))
       if (res.data?.data) {
         setStudents(res.data.data)
       }
     } catch {
-      // Fallback ke mock lokal jika API tidak merespons
       setStudents(MOCK_SISWA)
     }
   }
-
-  useEffect(() => {
-    fetchStudents()
-  }, [])
 
   // Keep selected student object updated if list changes
   const currentStudent = selectedStudent
@@ -172,7 +190,7 @@ export function TopupTunaiPage() {
             <Button
               variant='outline'
               size='sm'
-              onClick={fetchStudents}
+              onClick={handleRefresh}
               className='self-start sm:self-auto text-xs gap-1.5'
             >
               <RefreshCw className='h-3.5 w-3.5' />

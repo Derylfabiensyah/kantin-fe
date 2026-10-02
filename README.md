@@ -120,3 +120,9 @@ Seluruh konfigurasi lingkungan diatur melalui berkas .env:
 | pnpm preview | Menjalankan preview lokal dari hasil kompilasi produksi di folder dist |
 | pnpm lint | Menjalankan ESLint untuk memeriksa standar kualitas dan aturan kode |
 | pnpm exec tsc -b | Menjalankan pengecekan tipe data TypeScript di seluruh proyek |
+
+---
+
+## Lisensi
+
+Didistribusikan di bawah lisensi MIT sesuai ketentuan template satnaing/shadcn-admin. Informasi lengkap tersedia pada berkas LICENSE.

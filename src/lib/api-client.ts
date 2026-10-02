@@ -28,6 +28,7 @@ if (useMock) {
   // eslint-disable-next-line no-console
   console.info('⚡ [Kantin-FE] Mock API Layer AKTIF (VITE_USE_MOCK=true).')
   setupMockAdapter(apiClient)
+  setupMockAdapter(axios)
 } else {
   // eslint-disable-next-line no-console
   console.info(`🌐 [Kantin-FE] Terhubung ke server backend: ${baseURL}`)

@@ -17,9 +17,11 @@ import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
   user: {
-    name: 'Wibisana Bama',
-    email: 'wibisanabama@gmail.com',
+    name: 'Deryl Fabiensyah',
+    email: 'derylfabiensyah@skoolia.id',
     avatar: '/avatars/shadcn.jpg',
+    role: 'Pengelola Kantin',
+    schoolName: 'SMA Negeri 1 SKOOLIA',
   },
   teams: [
     {
@@ -31,21 +33,25 @@ export const sidebarData: SidebarData = {
   navGroups: [
     {
       title: 'Kasir & Ringkasan',
+      roles: ['admin', 'pengelola', 'kasir', 'tu', 'bendahara'],
       items: [
-        {
-          title: 'Kasir POS (Layar Penuh)',
-          url: '/kasir',
-          icon: ShoppingCart,
-        },
         {
           title: 'Dashboard Ringkasan',
           url: '/',
           icon: LayoutDashboard,
         },
+        {
+          title: 'Kasir POS (Layar Penuh)',
+          url: '/kasir',
+          icon: ShoppingCart,
+          badge: 'POS',
+          roles: ['admin', 'kasir', 'pengelola'],
+        },
       ],
     },
     {
       title: 'Katalog & Inventaris',
+      roles: ['admin', 'pengelola'],
       items: [
         {
           title: 'Katalog Menu',
@@ -62,15 +68,15 @@ export const sidebarData: SidebarData = {
           icon: Boxes,
           items: [
             {
-              title: 'Barang Masuk',
+              title: 'Barang Masuk (Restock)',
               url: '/stok/masuk',
             },
             {
-              title: 'Stok Opname',
+              title: 'Stok Opname & Rusak',
               url: '/stok/opname',
             },
             {
-              title: 'Kartu Stok',
+              title: 'Kartu Stok & Persediaan',
               url: '/stok/kartu',
             },
           ],
@@ -79,6 +85,7 @@ export const sidebarData: SidebarData = {
     },
     {
       title: 'Layanan TU & Kartu',
+      roles: ['admin', 'tu'],
       items: [
         {
           title: 'Top-up Tunai Siswa',
@@ -86,7 +93,7 @@ export const sidebarData: SidebarData = {
           icon: Banknote,
         },
         {
-          title: 'Setoran Kas TU',
+          title: 'Setoran Kas TU Harian',
           url: '/tu/setoran',
           icon: Receipt,
         },
@@ -99,6 +106,7 @@ export const sidebarData: SidebarData = {
     },
     {
       title: 'Saldo & Pengawasan',
+      roles: ['admin', 'bendahara'],
       items: [
         {
           title: 'Refund Saldo Siswa',
@@ -114,17 +122,19 @@ export const sidebarData: SidebarData = {
     },
     {
       title: 'Laporan & Pengaturan',
+      roles: ['admin', 'bendahara', 'pengelola'],
       items: [
         {
-          title: 'Laporan Keuangan',
+          title: 'Pusat Laporan Keuangan',
           icon: FileSpreadsheet,
+          roles: ['admin', 'bendahara', 'pengelola'],
           items: [
             {
               title: 'Rekonsiliasi Harian',
               url: '/laporan/rekonsiliasi',
             },
             {
-              title: 'Penjualan & Laba',
+              title: 'Penjualan & Laba Kotor',
               url: '/laporan/penjualan',
             },
             {
@@ -137,6 +147,7 @@ export const sidebarData: SidebarData = {
           title: 'Pengaturan Kantin',
           url: '/pengaturan',
           icon: Settings,
+          roles: ['admin'],
         },
       ],
     },

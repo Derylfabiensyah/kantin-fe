@@ -32,6 +32,7 @@ import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedTuTopupIndexRouteImport } from './routes/_authenticated/tu/topup/index'
 
 const KasirRouteRoute = KasirRouteRouteImport.update({
   id: '/kasir',
@@ -155,6 +156,12 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedTuTopupIndexRoute =
+  AuthenticatedTuTopupIndexRouteImport.update({
+    id: '/tu/topup/',
+    path: '/tu/topup/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -179,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/backoffice/': typeof AuthenticatedBackofficeIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
+  '/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
 }
 export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordRoute
@@ -201,6 +209,7 @@ export interface FileRoutesByTo {
   '/backoffice': typeof AuthenticatedBackofficeIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/tu/topup': typeof AuthenticatedTuTopupIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -227,6 +236,7 @@ export interface FileRoutesById {
   '/_authenticated/backoffice/': typeof AuthenticatedBackofficeIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -253,6 +263,7 @@ export interface FileRouteTypes {
     | '/backoffice/'
     | '/settings/'
     | '/users/'
+    | '/tu/topup/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/forgot-password'
@@ -275,6 +286,7 @@ export interface FileRouteTypes {
     | '/backoffice'
     | '/settings'
     | '/users'
+    | '/tu/topup'
   id:
     | '__root__'
     | '/_authenticated'
@@ -300,6 +312,7 @@ export interface FileRouteTypes {
     | '/_authenticated/backoffice/'
     | '/_authenticated/settings/'
     | '/_authenticated/users/'
+    | '/_authenticated/tu/topup/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -480,6 +493,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/tu/topup/': {
+      id: '/_authenticated/tu/topup/'
+      path: '/tu/topup'
+      fullPath: '/tu/topup/'
+      preLoaderRoute: typeof AuthenticatedTuTopupIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -512,6 +532,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedBackofficeIndexRoute: typeof AuthenticatedBackofficeIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedTuTopupIndexRoute: typeof AuthenticatedTuTopupIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -520,6 +541,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedBackofficeIndexRoute: AuthenticatedBackofficeIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedTuTopupIndexRoute: AuthenticatedTuTopupIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

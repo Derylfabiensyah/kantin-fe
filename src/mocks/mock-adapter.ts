@@ -316,6 +316,73 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
     }
 
+    // --- 7. TU: Topup Tunai Saldo Siswa ---
+    if (url.includes('/api/v1/tu/topup') && method === 'post') {
+      const siswaId = Number(payload.siswa_id)
+      const nominal = Number(payload.nominal) || 0
+      const namaPenyetor = (payload.nama_penyetor as string) || 'Orang Tua / Wali'
+      const petugasNama = (payload.petugas_nama as string) || 'Wibisana Bama (Petugas TU)'
+
+      if (!siswaId || nominal <= 0) {
+        return { status: 400, data: { message: 'Siswa dan nominal top-up valid wajib diisi' } }
+      }
+
+      const siswa = siswaList.find((s) => s.siswa_id === siswaId)
+      if (!siswa) {
+        return { status: 404, data: { message: 'Siswa tidak ditemukan' } }
+      }
+
+      if (siswa.is_blocked) {
+        return { status: 400, data: { message: 'Top-up ditolak: Kartu siswa sedang diblokir' } }
+      }
+
+      const MAX_SALDO = 500000
+      if (siswa.saldo + nominal > MAX_SALDO) {
+        return {
+          status: 400,
+          data: {
+            message: `Top-up ditolak: Saldo baru (Rp ${(siswa.saldo + nominal).toLocaleString(
+              'id-ID'
+            )}) melebihi batas saldo maksimal sekolah (Rp ${MAX_SALDO.toLocaleString('id-ID')})`,
+          },
+        }
+      }
+
+      const saldoAwal = siswa.saldo
+      siswa.saldo += nominal
+      const saldoBaru = siswa.saldo
+
+      const now = new Date()
+      const dateCode = now.toISOString().slice(0, 10).replace(/-/g, '')
+      const randomSeq = Math.floor(1000 + Math.random() * 9000)
+      const refNo = `TU-TOPUP-${dateCode}-${randomSeq}`
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Top-up tunai berhasil',
+          data: {
+            ref_no: refNo,
+            waktu: now.toISOString(),
+            petugas_nama: petugasNama,
+            nama_penyetor: namaPenyetor,
+            nominal,
+            saldo_awal: saldoAwal,
+            saldo_baru: saldoBaru,
+            siswa: {
+              siswa_id: siswa.siswa_id,
+              nis: siswa.nis,
+              nama: siswa.nama,
+              kelas: siswa.kelas,
+              foto_url: siswa.foto_url,
+            },
+          },
+        },
+      }
+    }
+
     return null
   }
 }

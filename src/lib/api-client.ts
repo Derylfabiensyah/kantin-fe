@@ -11,7 +11,7 @@ import axios, {
 import { toast } from 'sonner'
 import { setupMockAdapter } from '@/mocks/mock-adapter'
 
-const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8082'
 const useMock = import.meta.env.VITE_USE_MOCK === 'true'
 
 export const apiClient: AxiosInstance = axios.create({
@@ -21,6 +21,7 @@ export const apiClient: AxiosInstance = axios.create({
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
+  withCredentials: true,
 })
 
 // Pasang Mock Adapter jika VITE_USE_MOCK=true
@@ -56,6 +57,7 @@ apiClient.interceptors.response.use(
     if (status === 401) {
       // Token expired atau unauthenticated
       localStorage.removeItem('kantin_token')
+      localStorage.removeItem('kantin_user')
       sessionStorage.removeItem('kantin_token')
       // Jika bukan di halaman login, redirect
       if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/sign-in')) {

@@ -37,6 +37,7 @@ interface TransaksiPayload {
 export function setupMockAdapter(axiosInstance: AxiosInstance) {
   // Simulasi state mutable di memori untuk pengujian
   const menuList: MenuItemMock[] = [...MOCK_MENU]
+  const kategoriList = [...MOCK_KATEGORI]
   const siswaList: KartuSiswaMock[] = [...MOCK_SISWA]
   const kartuTamuList: KartuTamuMock[] = [...MOCK_KARTU_TAMU]
 
@@ -104,6 +105,42 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
 
     // --- 1. Auth Login Staf ---
     if (url.includes('/api/v1/auth/login') && method === 'post') {
+      const email = String(payload.email || payload.username || '').toLowerCase()
+      const password = String(payload.password || '')
+
+      if (password === 'salah' || password === 'wrong') {
+        return {
+          status: 401,
+          data: {
+            code: 401,
+            status: 'UNAUTHORIZED',
+            message: 'Email atau kata sandi tidak valid',
+          },
+        }
+      }
+
+      let detectedRole = 'admin'
+      let roleList = ['ROLE_ADMIN', 'ROLE_PENGELOLA_KANTIN', 'ROLE_PETUGAS_KANTIN', 'ROLE_TU_SEKOLAH', 'ROLE_BENDAHARA']
+      let namaStaf = 'Wibisana Bama (Admin)'
+
+      if (email.includes('kasir')) {
+        detectedRole = 'kasir'
+        roleList = ['ROLE_PETUGAS_KANTIN']
+        namaStaf = 'Ahmad Kasir (Petugas POS)'
+      } else if (email.includes('pengelola')) {
+        detectedRole = 'pengelola'
+        roleList = ['ROLE_PENGELOLA_KANTIN']
+        namaStaf = 'Deryl Fabiensyah (Pengelola)'
+      } else if (email.includes('tu')) {
+        detectedRole = 'tu'
+        roleList = ['ROLE_TU_SEKOLAH']
+        namaStaf = 'Andika Pratama (Petugas TU)'
+      } else if (email.includes('bendahara')) {
+        detectedRole = 'bendahara'
+        roleList = ['ROLE_BENDAHARA']
+        namaStaf = 'Siti Rahma (Bendahara)'
+      }
+
       return {
         status: 200,
         data: {
@@ -111,14 +148,15 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
           status: 'SUCCESS',
           message: 'Login berhasil (Mock)',
           data: {
-            token: 'mock-jwt-token-skoolia-kantin-2026',
+            token: `mock-jwt-token-skoolia-${detectedRole}-2026`,
             user: {
               id: 1,
-              nama: 'Wibisana Bama (Petugas)',
-              email: 'wibisanabama@gmail.com',
-              roles: ['ROLE_PETUGAS_KANTIN', 'ROLE_PENGELOLA_KANTIN', 'ROLE_BENDAHARA', 'ROLE_ADMIN'],
+              nama: namaStaf,
+              email: email || 'wibisanabama@gmail.com',
+              currentRole: detectedRole,
+              roles: roleList,
               sekolah: {
-                id: 10,
+                id: Number(payload.sekolah_id) || 10,
                 nama: 'SMA Negeri 1 SKOOLIA',
               },
             },
@@ -127,26 +165,265 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
     }
 
-    // --- 2. Katalog Menu ---
-    if (url.includes('/api/v1/katalog/menu') && method === 'get') {
-      return {
-        status: 200,
-        data: {
-          code: 200,
-          status: 'SUCCESS',
-          data: menuList,
-        },
+    // --- 2. Katalog Menu (CRUD) ---
+    if (url.includes('/katalog/menu')) {
+      const idMatch = url.match(/\/katalog\/menu\/(\d+)/)
+      const targetId = idMatch ? Number(idMatch[1]) : null
+
+      if (method === 'get') {
+        if (targetId) {
+          const item = menuList.find((m) => m.id === targetId)
+          if (!item) return { status: 404, data: { message: 'Menu tidak ditemukan' } }
+          return {
+            status: 200,
+            data: {
+              code: 200,
+              status: 'SUCCESS',
+              data: {
+                id: item.id,
+                kategoriId: item.kategori_id,
+                nama: item.nama,
+                hargaJual: item.harga_jual,
+                satuan: item.satuan ? item.satuan.toUpperCase() : 'PCS',
+                fotoUrl: item.foto_url || null,
+                stokMinimum: item.stok_minimum,
+                stokBerjalan: item.stok,
+                aktif: item.is_active,
+              },
+            },
+          }
+        }
+
+        // List menu
+        const mappedList = menuList.map((m) => ({
+          id: m.id,
+          kategoriId: m.kategori_id,
+          nama: m.nama,
+          hargaJual: m.harga_jual,
+          satuan: m.satuan ? m.satuan.toUpperCase() : 'PCS',
+          fotoUrl: m.foto_url || null,
+          stokMinimum: m.stok_minimum,
+          stokBerjalan: m.stok,
+          aktif: m.is_active,
+        }))
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            data: mappedList,
+          },
+        }
+      }
+
+      if (method === 'post') {
+        const nextId = menuList.length > 0 ? Math.max(...menuList.map((m) => m.id)) + 1 : 1
+        const kat = kategoriList.find((k) => k.id === Number(payload.kategoriId))
+        const newItem: MenuItemMock = {
+          id: nextId,
+          nama: String(payload.nama || ''),
+          kategori_id: Number(payload.kategoriId) || 1,
+          kategori_nama: kat ? kat.nama : 'Umum',
+          harga_jual: Number(payload.hargaJual) || 0,
+          satuan: String(payload.satuan || 'PCS'),
+          stok: 0,
+          stok_minimum: Number(payload.stokMinimum) || 0,
+          foto_url: payload.fotoUrl ? String(payload.fotoUrl) : undefined,
+          is_active: payload.aktif !== false,
+          hpp: Math.round((Number(payload.hargaJual) || 0) * 0.7),
+        }
+        menuList.unshift(newItem)
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            message: 'Menu berhasil dibuat',
+            data: {
+              id: newItem.id,
+              kategoriId: newItem.kategori_id,
+              nama: newItem.nama,
+              hargaJual: newItem.harga_jual,
+              satuan: newItem.satuan,
+              fotoUrl: newItem.foto_url || null,
+              stokMinimum: newItem.stok_minimum,
+              stokBerjalan: newItem.stok,
+              aktif: newItem.is_active,
+            },
+          },
+        }
+      }
+
+      if (method === 'put' && targetId) {
+        const idx = menuList.findIndex((m) => m.id === targetId)
+        if (idx === -1) return { status: 404, data: { message: 'Menu tidak ditemukan' } }
+        const kat = kategoriList.find((k) => k.id === Number(payload.kategoriId))
+        menuList[idx] = {
+          ...menuList[idx],
+          nama: String(payload.nama || menuList[idx].nama),
+          kategori_id: Number(payload.kategoriId) || menuList[idx].kategori_id,
+          kategori_nama: kat ? kat.nama : menuList[idx].kategori_nama,
+          harga_jual: payload.hargaJual !== undefined ? Number(payload.hargaJual) : menuList[idx].harga_jual,
+          satuan: String(payload.satuan || menuList[idx].satuan),
+          stok_minimum: payload.stokMinimum !== undefined ? Number(payload.stokMinimum) : menuList[idx].stok_minimum,
+          foto_url: payload.fotoUrl !== undefined ? String(payload.fotoUrl || '') : menuList[idx].foto_url,
+          is_active: payload.aktif !== undefined ? Boolean(payload.aktif) : menuList[idx].is_active,
+        }
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            message: 'Menu berhasil diperbarui',
+            data: {
+              id: menuList[idx].id,
+              kategoriId: menuList[idx].kategori_id,
+              nama: menuList[idx].nama,
+              hargaJual: menuList[idx].harga_jual,
+              satuan: menuList[idx].satuan,
+              fotoUrl: menuList[idx].foto_url || null,
+              stokMinimum: menuList[idx].stok_minimum,
+              stokBerjalan: menuList[idx].stok,
+              aktif: menuList[idx].is_active,
+            },
+          },
+        }
+      }
+
+      if (method === 'delete' && targetId) {
+        const idx = menuList.findIndex((m) => m.id === targetId)
+        if (idx === -1) return { status: 404, data: { message: 'Menu tidak ditemukan' } }
+        // Soft delete
+        menuList[idx].is_active = false
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            message: 'Menu berhasil dinonaktifkan',
+          },
+        }
       }
     }
 
-    // --- 3. Kategori Menu ---
-    if (url.includes('/api/v1/katalog/kategori') && method === 'get') {
+    // --- 3. Kategori Menu (CRUD) ---
+    if (url.includes('/katalog/kategori')) {
+      const idMatch = url.match(/\/katalog\/kategori\/(\d+)/)
+      const targetId = idMatch ? Number(idMatch[1]) : null
+
+      if (method === 'get') {
+        const mappedKategori = kategoriList.map((k) => ({
+          id: k.id,
+          nama: k.nama,
+          urutan: k.id,
+          isActive: k.is_active,
+          aktif: k.is_active,
+          jumlahItem: menuList.filter((m) => m.kategori_id === k.id && m.is_active).length,
+        }))
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            data: mappedKategori,
+          },
+        }
+      }
+
+      if (method === 'post') {
+        const nextId = kategoriList.length > 0 ? Math.max(...kategoriList.map((k) => k.id)) + 1 : 1
+        const newKat = {
+          id: nextId,
+          nama: String(payload.nama || ''),
+          is_active: true,
+          jumlah_item: 0,
+        }
+        kategoriList.push(newKat)
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            message: 'Kategori berhasil dibuat',
+            data: {
+              id: newKat.id,
+              nama: newKat.nama,
+              urutan: Number(payload.urutan) || newKat.id,
+              isActive: true,
+              aktif: true,
+              jumlahItem: 0,
+            },
+          },
+        }
+      }
+
+      if (method === 'put' && targetId) {
+        const idx = kategoriList.findIndex((k) => k.id === targetId)
+        if (idx === -1) return { status: 404, data: { message: 'Kategori tidak ditemukan' } }
+        kategoriList[idx] = {
+          ...kategoriList[idx],
+          nama: String(payload.nama || kategoriList[idx].nama),
+        }
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            message: 'Kategori berhasil diperbarui',
+            data: {
+              id: kategoriList[idx].id,
+              nama: kategoriList[idx].nama,
+              urutan: Number(payload.urutan) || kategoriList[idx].id,
+              isActive: kategoriList[idx].is_active,
+              aktif: kategoriList[idx].is_active,
+              jumlahItem: menuList.filter((m) => m.kategori_id === targetId && m.is_active).length,
+            },
+          },
+        }
+      }
+
+      if (method === 'delete' && targetId) {
+        // Pengecekan aturan bisnis: jika kategori masih digunakan menu aktif, tidak bisa dihapus
+        const activeUsage = menuList.some((m) => m.kategori_id === targetId && m.is_active)
+        if (activeUsage) {
+          return {
+            status: 400,
+            data: {
+              code: 400,
+              status: 'BAD_REQUEST',
+              message: 'Kategori ini masih digunakan oleh menu aktif. Nonaktifkan atau pindahkan menu terlebih dahulu sebelum menghapus kategori.',
+            },
+          }
+        }
+        const idx = kategoriList.findIndex((k) => k.id === targetId)
+        if (idx !== -1) {
+          kategoriList[idx].is_active = false
+        }
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            message: 'Kategori berhasil dinonaktifkan',
+          },
+        }
+      }
+    }
+
+    // --- Storage Upload File ---
+    if (url.includes('/api/storage/upload') && method === 'post') {
       return {
         status: 200,
         data: {
           code: 200,
           status: 'SUCCESS',
-          data: MOCK_KATEGORI,
+          message: 'Berkas berhasil diunggah',
+          data: {
+            path: 'sekolah-10/menu/upload-preview.jpg',
+            url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400',
+            namaAsli: 'foto-produk.jpg',
+            ukuran: 154200,
+          },
         },
       }
     }

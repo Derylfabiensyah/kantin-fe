@@ -1,53 +1,117 @@
 import { create } from 'zustand'
 import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
+import { useRoleStore, type UserRole } from '@/stores/useRoleStore'
 
-const ACCESS_TOKEN = 'thisisjustarandomstring'
+export const ACCESS_TOKEN_COOKIE = 'kantin_access_token'
+export const ACCESS_TOKEN_STORAGE = 'kantin_token'
+export const AUTH_USER_STORAGE = 'kantin_user'
 
-interface AuthUser {
-  accountNo: string
+export interface AuthUser {
+  userId: string | number
+  nama: string
   email: string
-  role: string[]
-  exp: number
+  sekolahId: number
+  sekolahNama: string
+  roles: string[]
+  currentRole: UserRole
+  exp?: number
 }
 
 interface AuthState {
   auth: {
     user: AuthUser | null
-    setUser: (user: AuthUser | null) => void
     accessToken: string
+    setUser: (user: AuthUser | null) => void
     setAccessToken: (accessToken: string) => void
     resetAccessToken: () => void
     reset: () => void
+    isAuthenticated: () => boolean
+    hasRole: (allowedRoles: UserRole[]) => boolean
   }
 }
 
-export const useAuthStore = create<AuthState>()((set) => {
-  const cookieState = getCookie(ACCESS_TOKEN)
-  const initToken = cookieState ? JSON.parse(cookieState) : ''
+function parseStoredUser(): AuthUser | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = localStorage.getItem(AUTH_USER_STORAGE)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
+
+function parseStoredToken(): string {
+  if (typeof window === 'undefined') return ''
+  const cookieVal = getCookie(ACCESS_TOKEN_COOKIE)
+  if (cookieVal) {
+    try {
+      return JSON.parse(cookieVal)
+    } catch {
+      return cookieVal
+    }
+  }
+  return localStorage.getItem(ACCESS_TOKEN_STORAGE) || ''
+}
+
+export const useAuthStore = create<AuthState>()((set, get) => {
+  const initialToken = parseStoredToken()
+  const initialUser = parseStoredUser()
+
   return {
     auth: {
-      user: null,
-      setUser: (user) =>
-        set((state) => ({ ...state, auth: { ...state.auth, user } })),
-      accessToken: initToken,
-      setAccessToken: (accessToken) =>
-        set((state) => {
-          setCookie(ACCESS_TOKEN, JSON.stringify(accessToken))
-          return { ...state, auth: { ...state.auth, accessToken } }
-        }),
-      resetAccessToken: () =>
-        set((state) => {
-          removeCookie(ACCESS_TOKEN)
-          return { ...state, auth: { ...state.auth, accessToken: '' } }
-        }),
-      reset: () =>
-        set((state) => {
-          removeCookie(ACCESS_TOKEN)
-          return {
-            ...state,
-            auth: { ...state.auth, user: null, accessToken: '' },
-          }
-        }),
+      user: initialUser,
+      accessToken: initialToken,
+
+      setUser: (user) => {
+        if (user) {
+          localStorage.setItem(AUTH_USER_STORAGE, JSON.stringify(user))
+          // Sinkronisasi ke useRoleStore untuk header dan sidebar
+          useRoleStore.getState().setRole(user.currentRole)
+          useRoleStore.getState().setSchoolName(user.sekolahNama)
+        } else {
+          localStorage.removeItem(AUTH_USER_STORAGE)
+        }
+        set((state) => ({ ...state, auth: { ...state.auth, user } }))
+      },
+
+      setAccessToken: (accessToken) => {
+        if (accessToken) {
+          setCookie(ACCESS_TOKEN_COOKIE, JSON.stringify(accessToken))
+          localStorage.setItem(ACCESS_TOKEN_STORAGE, accessToken)
+        } else {
+          removeCookie(ACCESS_TOKEN_COOKIE)
+          localStorage.removeItem(ACCESS_TOKEN_STORAGE)
+        }
+        set((state) => ({ ...state, auth: { ...state.auth, accessToken } }))
+      },
+
+      resetAccessToken: () => {
+        removeCookie(ACCESS_TOKEN_COOKIE)
+        localStorage.removeItem(ACCESS_TOKEN_STORAGE)
+        set((state) => ({ ...state, auth: { ...state.auth, accessToken: '' } }))
+      },
+
+      reset: () => {
+        removeCookie(ACCESS_TOKEN_COOKIE)
+        localStorage.removeItem(ACCESS_TOKEN_STORAGE)
+        localStorage.removeItem(AUTH_USER_STORAGE)
+        set((state) => ({
+          ...state,
+          auth: { ...state.auth, user: null, accessToken: '' },
+        }))
+      },
+
+      isAuthenticated: () => {
+        const token = get().auth.accessToken || parseStoredToken()
+        return Boolean(token && token.trim().length > 0)
+      },
+
+      hasRole: (allowedRoles: UserRole[]) => {
+        const user = get().auth.user || parseStoredUser()
+        if (!user) return false
+        if (user.currentRole === 'admin') return true
+        return allowedRoles.includes(user.currentRole)
+      },
     },
   }
 })

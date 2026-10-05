@@ -25,6 +25,7 @@ import apiClient from '@/lib/api-client'
 import { toast } from 'sonner'
 import type { KartuTamuMock } from '@/mocks/mock-data'
 import type { KartuTamuSlipData } from './KartuTamuSlipModal'
+import { mapBackendToKartuTamu } from './types'
 
 interface RegisterKartuModalProps {
   open: boolean
@@ -97,11 +98,23 @@ export function RegisterKartuModal({
       let newCard: KartuTamuMock | null = null
 
       try {
-        const res = await apiClient.post('/api/v1/tu/kartu-tamu/register', {
-          uid: detectedUid,
-          label_pemegang: labelPemegang.trim(),
-        })
-        newCard = res.data?.data as KartuTamuMock
+        const res = await apiClient
+          .post('/api/kartu-tamu', {
+            nomorKartu: nextNomor,
+            rfidUid: detectedUid,
+            catatan: labelPemegang.trim() || undefined,
+            aktif: true,
+          })
+          .catch(() =>
+            apiClient.post('/api/v1/tu/kartu-tamu/register', {
+              uid: detectedUid,
+              label_pemegang: labelPemegang.trim(),
+            })
+          )
+
+        if (res.data?.data) {
+          newCard = mapBackendToKartuTamu(res.data.data, 0)
+        }
       } catch {
         // Fallback: simulate frontend
         const now = new Date()

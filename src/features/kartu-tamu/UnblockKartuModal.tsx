@@ -50,9 +50,16 @@ export function UnblockKartuModal({
     setIsSubmitting(true)
     try {
       try {
-        await apiClient.post(`/api/v1/tu/kartu-tamu/${kartu.id}/unblock`, {
-          alasan: alasan.trim(),
-        })
+        await apiClient
+          .put(`/api/kartu-tamu/${kartu.id}`, {
+            aktif: true,
+            catatan: alasan.trim(),
+          })
+          .catch(() =>
+            apiClient.post(`/api/v1/tu/kartu-tamu/${kartu.id}/unblock`, {
+              alasan: alasan.trim(),
+            })
+          )
       } catch {
         // Fallback simulasi frontend
       }

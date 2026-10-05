@@ -56,6 +56,7 @@ apiClient.interceptors.response.use(
     if (status === 401) {
       // Token expired atau unauthenticated
       localStorage.removeItem('kantin_token')
+      localStorage.removeItem('kantin_user')
       sessionStorage.removeItem('kantin_token')
       // Jika bukan di halaman login, redirect
       if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/sign-in')) {

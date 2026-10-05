@@ -1,15 +1,20 @@
 import { clearCookies } from '@/test-utils/cookies'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { AuthUser } from './auth-store'
 
 async function importAuthStore() {
   const { useAuthStore } = await import('./auth-store')
   return useAuthStore
 }
 
-const sampleUser = {
-  accountNo: 'ACC-1',
+const sampleUser: AuthUser = {
+  userId: '1',
+  nama: 'Wibisana Bama',
   email: 'user@example.com',
-  role: ['user'],
+  sekolahId: 10,
+  sekolahNama: 'SMA Negeri 1 SKOOLIA',
+  roles: ['ROLE_ADMIN'],
+  currentRole: 'admin',
   exp: 1_700_000_000,
 }
 
@@ -17,6 +22,7 @@ describe('useAuthStore', () => {
   beforeEach(() => {
     clearCookies()
     vi.resetModules()
+    localStorage.clear()
   })
 
   it('starts with an empty access token when nothing is persisted', async () => {

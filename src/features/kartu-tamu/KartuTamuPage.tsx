@@ -40,9 +40,10 @@ import { RegisterKartuModal } from './RegisterKartuModal'
 import { TopupKartuTamuModal } from './TopupKartuTamuModal'
 import { RefundKartuModal } from './RefundKartuModal'
 import { BlokirKartuModal } from './BlokirKartuModal'
+import { UnblockKartuModal } from './UnblockKartuModal'
 import { KartuTamuSlipModal, type KartuTamuSlipData } from './KartuTamuSlipModal'
 
-type ModalType = 'register' | 'topup' | 'refund' | 'blokir' | null
+type ModalType = 'register' | 'topup' | 'refund' | 'blokir' | 'unblock' | null
 
 const STATUS_CONFIG = {
   ACTIVE: {
@@ -152,6 +153,16 @@ export function KartuTamuPage() {
         return c
       })
     })
+  }
+
+  const handleUnblockSuccess = (kartuId: number) => {
+    setCards((prev) =>
+      prev.map((c) =>
+        c.id === kartuId
+          ? { ...c, status: 'AVAILABLE', is_active: false }
+          : c
+      )
+    )
   }
 
   // --- Stats ---
@@ -427,21 +438,36 @@ export function KartuTamuPage() {
                                 <TooltipContent>Kembalikan Kartu & Refund</TooltipContent>
                               </Tooltip>
 
-                              {/* Blokir */}
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    size='icon'
-                                    variant='ghost'
-                                    disabled={isBlocked}
-                                    onClick={() => openModal('blokir', card)}
-                                    className='h-8 w-8 rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950/40 disabled:opacity-30'
-                                  >
-                                    <ShieldAlert className='h-4 w-4' />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>Blokir Kartu</TooltipContent>
-                              </Tooltip>
+                              {/* Blokir / Buka Blokir */}
+                              {isBlocked ? (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      size='icon'
+                                      variant='ghost'
+                                      onClick={() => openModal('unblock', card)}
+                                      className='h-8 w-8 rounded-lg text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/40'
+                                    >
+                                      <ShieldCheck className='h-4 w-4' />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Buka Blokir Kartu (Aktifkan Kembali)</TooltipContent>
+                                </Tooltip>
+                              ) : (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      size='icon'
+                                      variant='ghost'
+                                      onClick={() => openModal('blokir', card)}
+                                      className='h-8 w-8 rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950/40'
+                                    >
+                                      <ShieldAlert className='h-4 w-4' />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Blokir Kartu</TooltipContent>
+                                </Tooltip>
+                              )}
 
                               {/* Riwayat (placeholder) */}
                               <Tooltip>
@@ -525,6 +551,12 @@ export function KartuTamuPage() {
         kartu={selectedCard}
         allCards={cards}
         onBlokirSuccess={handleBlokirSuccess}
+      />
+      <UnblockKartuModal
+        open={activeModal === 'unblock'}
+        onOpenChange={(o) => !o && closeModal()}
+        kartu={selectedCard}
+        onUnblockSuccess={handleUnblockSuccess}
       />
       <KartuTamuSlipModal
         open={isSlipOpen}

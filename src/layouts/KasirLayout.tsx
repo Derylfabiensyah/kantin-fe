@@ -8,15 +8,21 @@ import {
   ArrowLeft,
   Clock,
   User,
+  LogOut,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { useAuthStore } from '@/stores/auth-store'
+import { SignOutDialog } from '@/components/sign-out-dialog'
+import useDialogState from '@/hooks/use-dialog-state'
 
 export function KasirLayout() {
   const [isOnline, setIsOnline] = useState(navigator.onLine)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [time, setTime] = useState(new Date())
+  const [signOutOpen, setSignOutOpen] = useDialogState()
+  const { user } = useAuthStore().auth
 
   // Deteksi status koneksi internet
   useEffect(() => {
@@ -57,7 +63,7 @@ export function KasirLayout() {
       {!isOnline && (
         <div className='flex items-center justify-center gap-2 bg-destructive py-2 text-sm font-semibold text-destructive-foreground animate-pulse'>
           <WifiOff className='h-4 w-4' />
-          <span>Offline — Transaksi kasir tidak tersedia sampai koneksi pulih</span>
+          <span>Offline - Transaksi kasir tidak tersedia sampai koneksi pulih</span>
         </div>
       )}
 
@@ -76,7 +82,7 @@ export function KasirLayout() {
               </Badge>
             </div>
             <p className='text-xs text-muted-foreground flex items-center gap-1'>
-              <User className='h-3 w-3' /> Petugas: Bama (Aktif)
+              <User className='h-3 w-3' /> Petugas: {user?.nama || 'Ahmad Kasir'} (Aktif)
             </p>
           </div>
         </div>
@@ -129,6 +135,18 @@ export function KasirLayout() {
               <span className='hidden sm:inline'>Back Office</span>
             </Link>
           </Button>
+
+          {/* Logout Staf */}
+          <Button
+            variant='ghost'
+            size='sm'
+            className='h-8 gap-1 text-xs text-destructive hover:text-destructive hover:bg-destructive/10'
+            onClick={() => setSignOutOpen(true)}
+            title='Keluar Akun'
+          >
+            <LogOut className='size-3.5' />
+            <span className='hidden sm:inline'>Keluar</span>
+          </Button>
         </div>
       </header>
 
@@ -136,6 +154,9 @@ export function KasirLayout() {
       <main className='flex-1 overflow-hidden relative'>
         <Outlet />
       </main>
+
+      {/* Dialog Konfirmasi Keluar */}
+      <SignOutDialog open={!!signOutOpen} onOpenChange={setSignOutOpen} />
     </div>
   )
 }

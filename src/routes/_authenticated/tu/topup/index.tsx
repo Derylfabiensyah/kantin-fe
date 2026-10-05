@@ -1,6 +1,15 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { TopupTunaiPage } from '@/features/tu'
+import { useAuthStore } from '@/stores/auth-store'
 
 export const Route = createFileRoute('/_authenticated/tu/topup/')({
+  beforeLoad: () => {
+    const { hasRole } = useAuthStore.getState().auth
+    if (!hasRole(['tu', 'admin'])) {
+      throw redirect({
+        to: '/403',
+      })
+    }
+  },
   component: TopupTunaiPage,
 })

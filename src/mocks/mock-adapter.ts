@@ -103,6 +103,42 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
 
     // --- 1. Auth Login Staf ---
     if (url.includes('/api/v1/auth/login') && method === 'post') {
+      const email = String(payload.email || payload.username || '').toLowerCase()
+      const password = String(payload.password || '')
+
+      if (password === 'salah' || password === 'wrong') {
+        return {
+          status: 401,
+          data: {
+            code: 401,
+            status: 'UNAUTHORIZED',
+            message: 'Email atau kata sandi tidak valid',
+          },
+        }
+      }
+
+      let detectedRole = 'admin'
+      let roleList = ['ROLE_ADMIN', 'ROLE_PENGELOLA_KANTIN', 'ROLE_PETUGAS_KANTIN', 'ROLE_TU_SEKOLAH', 'ROLE_BENDAHARA']
+      let namaStaf = 'Wibisana Bama (Admin)'
+
+      if (email.includes('kasir')) {
+        detectedRole = 'kasir'
+        roleList = ['ROLE_PETUGAS_KANTIN']
+        namaStaf = 'Ahmad Kasir (Petugas POS)'
+      } else if (email.includes('pengelola')) {
+        detectedRole = 'pengelola'
+        roleList = ['ROLE_PENGELOLA_KANTIN']
+        namaStaf = 'Deryl Fabiensyah (Pengelola)'
+      } else if (email.includes('tu')) {
+        detectedRole = 'tu'
+        roleList = ['ROLE_TU_SEKOLAH']
+        namaStaf = 'Andika Pratama (Petugas TU)'
+      } else if (email.includes('bendahara')) {
+        detectedRole = 'bendahara'
+        roleList = ['ROLE_BENDAHARA']
+        namaStaf = 'Siti Rahma (Bendahara)'
+      }
+
       return {
         status: 200,
         data: {
@@ -110,14 +146,15 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
           status: 'SUCCESS',
           message: 'Login berhasil (Mock)',
           data: {
-            token: 'mock-jwt-token-skoolia-kantin-2026',
+            token: `mock-jwt-token-skoolia-${detectedRole}-2026`,
             user: {
               id: 1,
-              nama: 'Wibisana Bama (Petugas)',
-              email: 'wibisanabama@gmail.com',
-              roles: ['ROLE_PETUGAS_KANTIN', 'ROLE_PENGELOLA_KANTIN', 'ROLE_BENDAHARA', 'ROLE_ADMIN'],
+              nama: namaStaf,
+              email: email || 'wibisanabama@gmail.com',
+              currentRole: detectedRole,
+              roles: roleList,
               sekolah: {
-                id: 10,
+                id: Number(payload.sekolah_id) || 10,
                 nama: 'SMA Negeri 1 SKOOLIA',
               },
             },

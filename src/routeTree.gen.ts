@@ -26,6 +26,8 @@ import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-p
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedMenuIndexRouteImport } from './routes/_authenticated/menu/index'
+import { Route as AuthenticatedKategoriIndexRouteImport } from './routes/_authenticated/kategori/index'
 import { Route as AuthenticatedKartuTamuIndexRouteImport } from './routes/_authenticated/kartu-tamu/index'
 import { Route as AuthenticatedBackofficeIndexRouteImport } from './routes/_authenticated/backoffice/index'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
@@ -121,6 +123,17 @@ const AuthenticatedSettingsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedMenuIndexRoute = AuthenticatedMenuIndexRouteImport.update({
+  id: '/menu/',
+  path: '/menu/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedKategoriIndexRoute =
+  AuthenticatedKategoriIndexRouteImport.update({
+    id: '/kategori/',
+    path: '/kategori/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedKartuTamuIndexRoute =
   AuthenticatedKartuTamuIndexRouteImport.update({
     id: '/kartu-tamu/',
@@ -192,6 +205,8 @@ export interface FileRoutesByFullPath {
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/backoffice/': typeof AuthenticatedBackofficeIndexRoute
   '/kartu-tamu/': typeof AuthenticatedKartuTamuIndexRoute
+  '/kategori/': typeof AuthenticatedKategoriIndexRoute
+  '/menu/': typeof AuthenticatedMenuIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
   '/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
@@ -216,6 +231,8 @@ export interface FileRoutesByTo {
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/backoffice': typeof AuthenticatedBackofficeIndexRoute
   '/kartu-tamu': typeof AuthenticatedKartuTamuIndexRoute
+  '/kategori': typeof AuthenticatedKategoriIndexRoute
+  '/menu': typeof AuthenticatedMenuIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/tu/topup': typeof AuthenticatedTuTopupIndexRoute
@@ -244,6 +261,8 @@ export interface FileRoutesById {
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/_authenticated/backoffice/': typeof AuthenticatedBackofficeIndexRoute
   '/_authenticated/kartu-tamu/': typeof AuthenticatedKartuTamuIndexRoute
+  '/_authenticated/kategori/': typeof AuthenticatedKategoriIndexRoute
+  '/_authenticated/menu/': typeof AuthenticatedMenuIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
@@ -272,6 +291,8 @@ export interface FileRouteTypes {
     | '/settings/notifications'
     | '/backoffice/'
     | '/kartu-tamu/'
+    | '/kategori/'
+    | '/menu/'
     | '/settings/'
     | '/users/'
     | '/tu/topup/'
@@ -296,6 +317,8 @@ export interface FileRouteTypes {
     | '/settings/notifications'
     | '/backoffice'
     | '/kartu-tamu'
+    | '/kategori'
+    | '/menu'
     | '/settings'
     | '/users'
     | '/tu/topup'
@@ -323,6 +346,8 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/notifications'
     | '/_authenticated/backoffice/'
     | '/_authenticated/kartu-tamu/'
+    | '/_authenticated/kategori/'
+    | '/_authenticated/menu/'
     | '/_authenticated/settings/'
     | '/_authenticated/users/'
     | '/_authenticated/tu/topup/'
@@ -464,6 +489,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/menu/': {
+      id: '/_authenticated/menu/'
+      path: '/menu'
+      fullPath: '/menu/'
+      preLoaderRoute: typeof AuthenticatedMenuIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/kategori/': {
+      id: '/_authenticated/kategori/'
+      path: '/kategori'
+      fullPath: '/kategori/'
+      preLoaderRoute: typeof AuthenticatedKategoriIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/kartu-tamu/': {
       id: '/_authenticated/kartu-tamu/'
       path: '/kartu-tamu'
@@ -552,6 +591,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedBackofficeIndexRoute: typeof AuthenticatedBackofficeIndexRoute
   AuthenticatedKartuTamuIndexRoute: typeof AuthenticatedKartuTamuIndexRoute
+  AuthenticatedKategoriIndexRoute: typeof AuthenticatedKategoriIndexRoute
+  AuthenticatedMenuIndexRoute: typeof AuthenticatedMenuIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedTuTopupIndexRoute: typeof AuthenticatedTuTopupIndexRoute
 }
@@ -562,6 +603,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedBackofficeIndexRoute: AuthenticatedBackofficeIndexRoute,
   AuthenticatedKartuTamuIndexRoute: AuthenticatedKartuTamuIndexRoute,
+  AuthenticatedKategoriIndexRoute: AuthenticatedKategoriIndexRoute,
+  AuthenticatedMenuIndexRoute: AuthenticatedMenuIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedTuTopupIndexRoute: AuthenticatedTuTopupIndexRoute,
 }

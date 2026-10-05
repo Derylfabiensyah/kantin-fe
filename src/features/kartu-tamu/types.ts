@@ -32,7 +32,7 @@ export function mapBackendToKartuTamu(
   const isActive = raw.aktif ?? raw.is_active ?? true
   const catatan = (raw.catatan ?? raw.label_pemegang ?? '').trim()
 
-  let status: 'ACTIVE' | 'BLOCKED' | 'AVAILABLE' = 'AVAILABLE'
+  let status: 'ACTIVE' | 'BLOCKED' | 'AVAILABLE'
   if (!isActive) {
     status = 'BLOCKED'
   } else if (catatan.length > 0) {

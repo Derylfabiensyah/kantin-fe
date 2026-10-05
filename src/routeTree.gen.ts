@@ -26,6 +26,7 @@ import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-p
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedKartuTamuIndexRouteImport } from './routes/_authenticated/kartu-tamu/index'
 import { Route as AuthenticatedBackofficeIndexRouteImport } from './routes/_authenticated/backoffice/index'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
@@ -120,6 +121,12 @@ const AuthenticatedSettingsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedKartuTamuIndexRoute =
+  AuthenticatedKartuTamuIndexRouteImport.update({
+    id: '/kartu-tamu/',
+    path: '/kartu-tamu/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedBackofficeIndexRoute =
   AuthenticatedBackofficeIndexRouteImport.update({
     id: '/backoffice/',
@@ -184,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/backoffice/': typeof AuthenticatedBackofficeIndexRoute
+  '/kartu-tamu/': typeof AuthenticatedKartuTamuIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
   '/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
@@ -207,6 +215,7 @@ export interface FileRoutesByTo {
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/backoffice': typeof AuthenticatedBackofficeIndexRoute
+  '/kartu-tamu': typeof AuthenticatedKartuTamuIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/tu/topup': typeof AuthenticatedTuTopupIndexRoute
@@ -234,6 +243,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/_authenticated/backoffice/': typeof AuthenticatedBackofficeIndexRoute
+  '/_authenticated/kartu-tamu/': typeof AuthenticatedKartuTamuIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
@@ -261,6 +271,7 @@ export interface FileRouteTypes {
     | '/settings/display'
     | '/settings/notifications'
     | '/backoffice/'
+    | '/kartu-tamu/'
     | '/settings/'
     | '/users/'
     | '/tu/topup/'
@@ -284,6 +295,7 @@ export interface FileRouteTypes {
     | '/settings/display'
     | '/settings/notifications'
     | '/backoffice'
+    | '/kartu-tamu'
     | '/settings'
     | '/users'
     | '/tu/topup'
@@ -310,6 +322,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
     | '/_authenticated/backoffice/'
+    | '/_authenticated/kartu-tamu/'
     | '/_authenticated/settings/'
     | '/_authenticated/users/'
     | '/_authenticated/tu/topup/'
@@ -451,6 +464,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/kartu-tamu/': {
+      id: '/_authenticated/kartu-tamu/'
+      path: '/kartu-tamu'
+      fullPath: '/kartu-tamu/'
+      preLoaderRoute: typeof AuthenticatedKartuTamuIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/backoffice/': {
       id: '/_authenticated/backoffice/'
       path: '/backoffice'
@@ -531,6 +551,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedBackofficeIndexRoute: typeof AuthenticatedBackofficeIndexRoute
+  AuthenticatedKartuTamuIndexRoute: typeof AuthenticatedKartuTamuIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedTuTopupIndexRoute: typeof AuthenticatedTuTopupIndexRoute
 }
@@ -540,6 +561,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedBackofficeIndexRoute: AuthenticatedBackofficeIndexRoute,
+  AuthenticatedKartuTamuIndexRoute: AuthenticatedKartuTamuIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedTuTopupIndexRoute: AuthenticatedTuTopupIndexRoute,
 }

@@ -13,27 +13,38 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { SignOutDialog } from '@/components/sign-out-dialog'
+import { useRoleStore, ROLE_CONFIGS } from '@/stores/useRoleStore'
+import { Badge } from '@/components/ui/badge'
 
 export function ProfileDropdown() {
   const [open, setOpen] = useDialogState()
+  const { userName, userEmail, currentRole } = useRoleStore()
+  const roleConfig = ROLE_CONFIGS[currentRole]
 
   return (
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
+          <Button variant='ghost' className='relative h-8 w-8 rounded-full ring-2 ring-primary/20 hover:ring-primary/40'>
             <Avatar className='h-8 w-8'>
-              <AvatarImage src='/avatars/01.png' alt='@shadcn' />
-              <AvatarFallback>SN</AvatarFallback>
+              <AvatarImage src='/avatars/shadcn.jpg' alt={userName} />
+              <AvatarFallback className='bg-primary/10 text-primary font-semibold text-xs'>
+                {userName.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+              </AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className='w-56' align='end' forceMount>
+        <DropdownMenuContent className='w-64' align='end' forceMount>
           <DropdownMenuLabel className='font-normal'>
             <div className='flex flex-col gap-1.5'>
-              <p className='text-sm leading-none font-medium'>satnaing</p>
+              <div className='flex items-center justify-between'>
+                <p className='text-sm leading-none font-semibold text-foreground'>{userName}</p>
+                <Badge variant='outline' className={`text-[10px] px-1 py-0 h-4 ${roleConfig?.badgeColor}`}>
+                  {roleConfig?.label.split(' ')[0]}
+                </Badge>
+              </div>
               <p className='text-xs leading-none text-muted-foreground'>
-                satnaingdev@gmail.com
+                {userEmail}
               </p>
             </div>
           </DropdownMenuLabel>

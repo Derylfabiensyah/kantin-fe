@@ -27,6 +27,7 @@ import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authen
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedKartuTamuIndexRouteImport } from './routes/_authenticated/kartu-tamu/index'
+import { Route as AuthenticatedBackofficeIndexRouteImport } from './routes/_authenticated/backoffice/index'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
@@ -126,6 +127,12 @@ const AuthenticatedKartuTamuIndexRoute =
     path: '/kartu-tamu/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedBackofficeIndexRoute =
+  AuthenticatedBackofficeIndexRouteImport.update({
+    id: '/backoffice/',
+    path: '/backoffice/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsNotificationsRoute =
   AuthenticatedSettingsNotificationsRouteImport.update({
     id: '/notifications',
@@ -183,6 +190,7 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/backoffice/': typeof AuthenticatedBackofficeIndexRoute
   '/kartu-tamu/': typeof AuthenticatedKartuTamuIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
@@ -206,6 +214,7 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/backoffice': typeof AuthenticatedBackofficeIndexRoute
   '/kartu-tamu': typeof AuthenticatedKartuTamuIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
@@ -233,6 +242,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/_authenticated/backoffice/': typeof AuthenticatedBackofficeIndexRoute
   '/_authenticated/kartu-tamu/': typeof AuthenticatedKartuTamuIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
@@ -260,6 +270,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/backoffice/'
     | '/kartu-tamu/'
     | '/settings/'
     | '/users/'
@@ -283,6 +294,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/backoffice'
     | '/kartu-tamu'
     | '/settings'
     | '/users'
@@ -309,6 +321,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
+    | '/_authenticated/backoffice/'
     | '/_authenticated/kartu-tamu/'
     | '/_authenticated/settings/'
     | '/_authenticated/users/'
@@ -458,6 +471,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKartuTamuIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/backoffice/': {
+      id: '/_authenticated/backoffice/'
+      path: '/backoffice'
+      fullPath: '/backoffice/'
+      preLoaderRoute: typeof AuthenticatedBackofficeIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/notifications': {
       id: '/_authenticated/settings/notifications'
       path: '/notifications'
@@ -530,6 +550,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedBackofficeIndexRoute: typeof AuthenticatedBackofficeIndexRoute
   AuthenticatedKartuTamuIndexRoute: typeof AuthenticatedKartuTamuIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedTuTopupIndexRoute: typeof AuthenticatedTuTopupIndexRoute
@@ -539,6 +560,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedBackofficeIndexRoute: AuthenticatedBackofficeIndexRoute,
   AuthenticatedKartuTamuIndexRoute: AuthenticatedKartuTamuIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedTuTopupIndexRoute: AuthenticatedTuTopupIndexRoute,

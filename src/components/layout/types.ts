@@ -16,6 +16,7 @@ type BaseNavItem = {
   title: string
   badge?: string
   icon?: React.ElementType
+  roles?: string[]
 }
 
 type NavLink = BaseNavItem & {
@@ -33,10 +34,11 @@ type NavItem = NavCollapsible | NavLink
 type NavGroup = {
   title: string
   items: NavItem[]
+  roles?: string[]
 }
 
 type SidebarData = {
-  user: User
+  user: User & { role?: string; schoolName?: string }
   teams: Team[]
   navGroups: NavGroup[]
 }

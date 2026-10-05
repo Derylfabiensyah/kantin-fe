@@ -44,7 +44,9 @@ export interface KartuTamuMock {
   label_pemegang: string
   saldo: number
   is_active: boolean
+  status: 'ACTIVE' | 'BLOCKED' | 'AVAILABLE'
   created_at: string
+  last_used_at?: string
 }
 
 export const MOCK_KATEGORI: KategoriMock[] = [
@@ -260,7 +262,9 @@ export const MOCK_KARTU_TAMU: KartuTamuMock[] = [
     label_pemegang: 'Pak Hartono (Guru Fisika)',
     saldo: 75000,
     is_active: true,
+    status: 'ACTIVE',
     created_at: '2026-10-01T08:00:00Z',
+    last_used_at: '2026-10-04T12:30:00Z',
   },
   {
     id: 2,
@@ -269,7 +273,9 @@ export const MOCK_KARTU_TAMU: KartuTamuMock[] = [
     label_pemegang: 'Ibu Ratna (Staf TU)',
     saldo: 50000,
     is_active: true,
+    status: 'ACTIVE',
     created_at: '2026-10-01T08:30:00Z',
+    last_used_at: '2026-10-05T08:10:00Z',
   },
   {
     id: 3,
@@ -278,6 +284,40 @@ export const MOCK_KARTU_TAMU: KartuTamuMock[] = [
     label_pemegang: 'Tamu Seminar Pengawas',
     saldo: 20000,
     is_active: true,
+    status: 'ACTIVE',
     created_at: '2026-10-02T09:00:00Z',
+    last_used_at: '2026-10-02T13:45:00Z',
+  },
+  {
+    id: 4,
+    nomor_kartu: 'KT-004',
+    uid: '04KT04D4',
+    label_pemegang: 'Pak Bambang (Satpam)',
+    saldo: 0,
+    is_active: false,
+    status: 'BLOCKED',
+    created_at: '2026-10-01T09:00:00Z',
+    last_used_at: '2026-10-03T11:00:00Z',
+  },
+  {
+    id: 5,
+    nomor_kartu: 'KT-005',
+    uid: '04KT05E5',
+    label_pemegang: '',
+    saldo: 0,
+    is_active: false,
+    status: 'AVAILABLE',
+    created_at: '2026-10-01T10:00:00Z',
+  },
+  {
+    id: 6,
+    nomor_kartu: 'KT-006',
+    uid: '04KT06F6',
+    label_pemegang: 'Ibu Sari (Kepala TU)',
+    saldo: 100000,
+    is_active: true,
+    status: 'ACTIVE',
+    created_at: '2026-10-03T07:30:00Z',
+    last_used_at: '2026-10-05T07:55:00Z',
   },
 ]

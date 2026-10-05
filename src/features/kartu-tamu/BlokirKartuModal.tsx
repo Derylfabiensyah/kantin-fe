@@ -71,9 +71,27 @@ export function BlokirKartuModal({
     setIsSubmitting(true)
     try {
       try {
-        await apiClient.post(`/api/v1/tu/kartu-tamu/${kartu.id}/blokir`, {
-          transfer_saldo_ke: transferSaldo ? Number(targetKartuId) : undefined,
-        })
+        await apiClient
+          .delete(`/api/kartu-tamu/${kartu.id}`)
+          .catch(() =>
+            apiClient.post(`/api/v1/tu/kartu-tamu/${kartu.id}/blokir`, {
+              transfer_saldo_ke: transferSaldo ? Number(targetKartuId) : undefined,
+            })
+          )
+
+        if (transferSaldo && targetKartuId && kartu.saldo > 0) {
+          const dateCode = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+          const seq = Math.floor(1000 + Math.random() * 9000)
+          await apiClient
+            .post('/api/saldo/topup', {
+              subjekTipe: 'KARTU_TAMU',
+              subjekId: Number(targetKartuId),
+              nominal: kartu.saldo,
+              penyetor: `Transfer Sisa Saldo (${kartu.nomor_kartu})`,
+              referensiId: `KT-TRF-${dateCode}-${seq}`,
+            })
+            .catch(() => {})
+        }
       } catch {
         // Fallback simulasi
       }

@@ -56,17 +56,37 @@ export function RefundKartuModal({
     if (!isValidSubmit) return
 
     setIsSubmitting(true)
+    const dateCode = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+    const seq = Math.floor(1000 + Math.random() * 9000)
+    const refNo = `KT-REFUND-${dateCode}-${seq}`
+
     try {
       try {
-        await apiClient.post(`/api/v1/tu/kartu-tamu/${kartu.id}/refund`, {
-          nama_penerima: namaPenerima.trim(),
-        })
+        await apiClient
+          .put(`/api/kartu-tamu/${kartu.id}`, {
+            catatan: '',
+          })
+          .catch(() =>
+            apiClient.post(`/api/v1/tu/kartu-tamu/${kartu.id}/refund`, {
+              nama_penerima: namaPenerima.trim(),
+            })
+          )
+
+        if (kartu.saldo > 0) {
+          await apiClient
+            .post('/api/saldo/koreksi', {
+              subjekTipe: 'KARTU_TAMU',
+              subjekId: kartu.id,
+              arah: 'DEBIT',
+              nominal: kartu.saldo,
+              alasan: `Refund tunai pengembalian kartu tamu oleh ${namaPenerima.trim()}`,
+              referensiId: refNo,
+            })
+            .catch(() => {})
+        }
       } catch {
         // Fallback simulasi
       }
-
-      const dateCode = new Date().toISOString().slice(0, 10).replace(/-/g, '')
-      const seq = Math.floor(1000 + Math.random() * 9000)
 
       onRefundSuccess(kartu.id)
       toast.success(`Kartu ${kartu.nomor_kartu} berhasil dikembalikan!`, {
@@ -75,7 +95,7 @@ export function RefundKartuModal({
 
       onShowSlip({
         type: 'REFUND',
-        ref_no: `KT-REFUND-${dateCode}-${seq}`,
+        ref_no: refNo,
         waktu: new Date().toISOString(),
         petugas_nama: 'Wibisana Bama (Petugas TU)',
         nomor_kartu: kartu.nomor_kartu,

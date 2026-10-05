@@ -42,6 +42,7 @@ import { RefundKartuModal } from './RefundKartuModal'
 import { BlokirKartuModal } from './BlokirKartuModal'
 import { UnblockKartuModal } from './UnblockKartuModal'
 import { KartuTamuSlipModal, type KartuTamuSlipData } from './KartuTamuSlipModal'
+import { mapBackendToKartuTamu, type KartuTamuBackendDto } from './types'
 
 type ModalType = 'register' | 'topup' | 'refund' | 'blokir' | 'unblock' | null
 
@@ -66,6 +67,38 @@ const STATUS_CONFIG = {
   },
 }
 
+async function fetchCardsWithBalances(): Promise<KartuTamuMock[]> {
+  const res = await apiClient
+    .get('/api/kartu-tamu')
+    .catch(() => apiClient.get('/api/v1/tu/kartu-tamu'))
+
+  const rawList = (res.data?.data || []) as KartuTamuBackendDto[]
+  if (!Array.isArray(rawList) || rawList.length === 0) {
+    return MOCK_KARTU_TAMU
+  }
+
+  const mappedList = await Promise.all(
+    rawList.map(async (raw) => {
+      let saldo = raw.saldo ?? 0
+      if (raw.saldo === undefined && raw.id) {
+        try {
+          const saldoRes = await apiClient.get('/api/saldo', {
+            params: { subjekTipe: 'KARTU_TAMU', subjekId: raw.id },
+          })
+          if (saldoRes.data?.data?.saldo !== undefined) {
+            saldo = Number(saldoRes.data.data.saldo)
+          }
+        } catch {
+          // saldo tetap 0
+        }
+      }
+      return mapBackendToKartuTamu(raw, saldo)
+    })
+  )
+
+  return mappedList
+}
+
 export function KartuTamuPage() {
   const [cards, setCards] = useState<KartuTamuMock[]>(MOCK_KARTU_TAMU)
   const [searchQuery, setSearchQuery] = useState('')
@@ -80,8 +113,8 @@ export function KartuTamuPage() {
     const load = async () => {
       setIsLoading(true)
       try {
-        const res = await apiClient.get('/api/v1/tu/kartu-tamu')
-        if (isMounted && res.data?.data) setCards(res.data.data as KartuTamuMock[])
+        const loadedCards = await fetchCardsWithBalances()
+        if (isMounted) setCards(loadedCards)
       } catch {
         if (isMounted) setCards(MOCK_KARTU_TAMU)
       } finally {
@@ -95,8 +128,8 @@ export function KartuTamuPage() {
   const handleRefresh = async () => {
     setIsLoading(true)
     try {
-      const res = await apiClient.get('/api/v1/tu/kartu-tamu')
-      if (res.data?.data) setCards(res.data.data as KartuTamuMock[])
+      const loadedCards = await fetchCardsWithBalances()
+      setCards(loadedCards)
     } catch {
       setCards(MOCK_KARTU_TAMU)
     } finally {

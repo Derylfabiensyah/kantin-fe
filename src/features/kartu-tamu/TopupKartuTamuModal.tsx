@@ -68,21 +68,33 @@ export function TopupKartuTamuModal({
     if (!isValidSubmit) return
 
     setIsSubmitting(true)
+    const dateCode = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+    const seq = Math.floor(1000 + Math.random() * 9000)
+    const refNo = `KT-TOPUP-${dateCode}-${seq}`
+
     try {
       let saldoFinal = saldoBaru
 
       try {
-        const res = await apiClient.post(`/api/v1/tu/kartu-tamu/${kartu.id}/topup`, {
-          nominal: nominalNum,
-          nama_penyetor: namaPenyetor.trim(),
-        })
-        saldoFinal = res.data?.data?.saldo_baru ?? saldoBaru
+        const res = await apiClient
+          .post('/api/saldo/topup', {
+            subjekTipe: 'KARTU_TAMU',
+            subjekId: kartu.id,
+            nominal: nominalNum,
+            penyetor: namaPenyetor.trim(),
+            referensiId: refNo,
+          })
+          .catch(() =>
+            apiClient.post(`/api/v1/tu/kartu-tamu/${kartu.id}/topup`, {
+              nominal: nominalNum,
+              nama_penyetor: namaPenyetor.trim(),
+            })
+          )
+        const resData = res.data?.data
+        saldoFinal = resData?.saldoSetelah ?? resData?.saldo_baru ?? saldoBaru
       } catch {
         // Fallback simulasi
       }
-
-      const dateCode = new Date().toISOString().slice(0, 10).replace(/-/g, '')
-      const seq = Math.floor(1000 + Math.random() * 9000)
 
       onTopupSuccess(kartu.id, saldoFinal)
       toast.success(`Top-up Rp ${nominalNum.toLocaleString('id-ID')} berhasil!`, {
@@ -91,7 +103,7 @@ export function TopupKartuTamuModal({
 
       onShowSlip({
         type: 'TOPUP',
-        ref_no: `KT-TOPUP-${dateCode}-${seq}`,
+        ref_no: refNo,
         waktu: new Date().toISOString(),
         petugas_nama: 'Wibisana Bama (Petugas TU)',
         nomor_kartu: kartu.nomor_kartu,

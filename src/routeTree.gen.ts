@@ -36,6 +36,7 @@ import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_a
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedTuTopupIndexRouteImport } from './routes/_authenticated/tu/topup/index'
+import { Route as AuthenticatedStokMasukIndexRouteImport } from './routes/_authenticated/stok/masuk/index'
 
 const KasirRouteRoute = KasirRouteRouteImport.update({
   id: '/kasir',
@@ -182,6 +183,12 @@ const AuthenticatedTuTopupIndexRoute =
     path: '/tu/topup/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedStokMasukIndexRoute =
+  AuthenticatedStokMasukIndexRouteImport.update({
+    id: '/stok/masuk/',
+    path: '/stok/masuk/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -209,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/menu/': typeof AuthenticatedMenuIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
+  '/stok/masuk/': typeof AuthenticatedStokMasukIndexRoute
   '/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
 }
 export interface FileRoutesByTo {
@@ -235,6 +243,7 @@ export interface FileRoutesByTo {
   '/menu': typeof AuthenticatedMenuIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/stok/masuk': typeof AuthenticatedStokMasukIndexRoute
   '/tu/topup': typeof AuthenticatedTuTopupIndexRoute
 }
 export interface FileRoutesById {
@@ -265,6 +274,7 @@ export interface FileRoutesById {
   '/_authenticated/menu/': typeof AuthenticatedMenuIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/stok/masuk/': typeof AuthenticatedStokMasukIndexRoute
   '/_authenticated/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
 }
 export interface FileRouteTypes {
@@ -295,6 +305,7 @@ export interface FileRouteTypes {
     | '/menu/'
     | '/settings/'
     | '/users/'
+    | '/stok/masuk/'
     | '/tu/topup/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -321,6 +332,7 @@ export interface FileRouteTypes {
     | '/menu'
     | '/settings'
     | '/users'
+    | '/stok/masuk'
     | '/tu/topup'
   id:
     | '__root__'
@@ -350,6 +362,7 @@ export interface FileRouteTypes {
     | '/_authenticated/menu/'
     | '/_authenticated/settings/'
     | '/_authenticated/users/'
+    | '/_authenticated/stok/masuk/'
     | '/_authenticated/tu/topup/'
   fileRoutesById: FileRoutesById
 }
@@ -559,6 +572,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTuTopupIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/stok/masuk/': {
+      id: '/_authenticated/stok/masuk/'
+      path: '/stok/masuk'
+      fullPath: '/stok/masuk/'
+      preLoaderRoute: typeof AuthenticatedStokMasukIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -594,6 +614,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedKategoriIndexRoute: typeof AuthenticatedKategoriIndexRoute
   AuthenticatedMenuIndexRoute: typeof AuthenticatedMenuIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedStokMasukIndexRoute: typeof AuthenticatedStokMasukIndexRoute
   AuthenticatedTuTopupIndexRoute: typeof AuthenticatedTuTopupIndexRoute
 }
 
@@ -606,6 +627,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedKategoriIndexRoute: AuthenticatedKategoriIndexRoute,
   AuthenticatedMenuIndexRoute: AuthenticatedMenuIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedStokMasukIndexRoute: AuthenticatedStokMasukIndexRoute,
   AuthenticatedTuTopupIndexRoute: AuthenticatedTuTopupIndexRoute,
 }
 

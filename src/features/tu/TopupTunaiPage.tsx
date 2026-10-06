@@ -1,27 +1,43 @@
 import { useState, useEffect } from 'react'
-import { Banknote, Wallet, AlertCircle, ArrowRight, RefreshCw, CheckCircle2, ShieldAlert } from 'lucide-react'
-import apiClient from '@/lib/api-client'
+import { MOCK_SISWA, type KartuSiswaMock } from '@/mocks/mock-data'
+import {
+  Banknote,
+  Wallet,
+  AlertCircle,
+  ArrowRight,
+  RefreshCw,
+  CheckCircle2,
+  ShieldAlert,
+} from 'lucide-react'
 import { toast } from 'sonner'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import apiClient from '@/lib/api-client'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { StudentSearchCard } from './StudentSearchCard'
 import { PrintSlipModal, type TopupSlipData } from './PrintSlipModal'
-import { MOCK_SISWA, type KartuSiswaMock } from '@/mocks/mock-data'
+import { StudentSearchCard } from './StudentSearchCard'
 
 const PRESET_NOMINALS = [20000, 50000, 100000, 200000]
 const MAX_SALDO_SEKOLAH = 500000
 
 export function TopupTunaiPage() {
   const [students, setStudents] = useState<KartuSiswaMock[]>(MOCK_SISWA)
-  const [selectedStudent, setSelectedStudent] = useState<KartuSiswaMock | null>(null)
+  const [selectedStudent, setSelectedStudent] = useState<KartuSiswaMock | null>(
+    null
+  )
   const [nominal, setNominal] = useState<string>('')
   const [namaPenyetor, setNamaPenyetor] = useState<string>('Orang Tua / Wali')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -66,7 +82,8 @@ export function TopupTunaiPage() {
 
   // Keep selected student object updated if list changes
   const currentStudent = selectedStudent
-    ? students.find((s) => s.siswa_id === selectedStudent.siswa_id) || selectedStudent
+    ? students.find((s) => s.siswa_id === selectedStudent.siswa_id) ||
+      selectedStudent
     : null
 
   const nominalNum = Number(nominal) || 0
@@ -129,17 +146,24 @@ export function TopupTunaiPage() {
       }
 
       if (result) {
-        toast.success(`Top-up Rp ${nominalNum.toLocaleString('id-ID')} berhasil!`, {
-          description: `Saldo baru ${currentStudent.nama}: Rp ${result.saldo_baru.toLocaleString('id-ID')}`,
-        })
+        toast.success(
+          `Top-up Rp ${nominalNum.toLocaleString('id-ID')} berhasil!`,
+          {
+            description: `Saldo baru ${currentStudent.nama}: Rp ${result.saldo_baru.toLocaleString('id-ID')}`,
+          }
+        )
 
         // Update saldo lokal di UI
         setStudents((prev) =>
           prev.map((s) =>
-            s.siswa_id === currentStudent!.siswa_id ? { ...s, saldo: result!.saldo_baru } : s
+            s.siswa_id === currentStudent!.siswa_id
+              ? { ...s, saldo: result!.saldo_baru }
+              : s
           )
         )
-        setSelectedStudent((prev) => (prev ? { ...prev, saldo: result!.saldo_baru } : null))
+        setSelectedStudent((prev) =>
+          prev ? { ...prev, saldo: result!.saldo_baru } : null
+        )
 
         // Set slip & buka modal
         setSlipData(result)
@@ -149,8 +173,12 @@ export function TopupTunaiPage() {
         setNominal('')
       }
     } catch (err: unknown) {
-      const errorResponse = err as { response?: { data?: { message?: string } } }
-      const message = errorResponse?.response?.data?.message || 'Gagal melakukan top-up tunai.'
+      const errorResponse = err as {
+        response?: { data?: { message?: string } }
+      }
+      const message =
+        errorResponse?.response?.data?.message ||
+        'Gagal melakukan top-up tunai.'
       toast.error('Top-up Gagal', { description: message })
     } finally {
       setIsSubmitting(false)
@@ -170,10 +198,10 @@ export function TopupTunaiPage() {
       <Main>
         <div className='space-y-6 pb-10'>
           {/* Header Title Section */}
-          <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4'>
+          <div className='flex flex-col gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800'>
             <div>
               <div className='flex items-center gap-2'>
-                <div className='p-2 bg-primary/10 text-primary rounded-lg'>
+                <div className='rounded-lg bg-primary/10 p-2 text-primary'>
                   <Banknote className='h-6 w-6' />
                 </div>
                 <div>
@@ -181,7 +209,8 @@ export function TopupTunaiPage() {
                     Pengisian Saldo Tunai Siswa
                   </h1>
                   <p className='text-sm text-muted-foreground'>
-                    Modul layanan Kasir TU — Satu-satunya titik penerimaan uang tunai kantin SKOOLIA
+                    Modul layanan Kasir TU — Satu-satunya titik penerimaan uang
+                    tunai kantin SKOOLIA
                   </p>
                 </div>
               </div>
@@ -191,7 +220,7 @@ export function TopupTunaiPage() {
               variant='outline'
               size='sm'
               onClick={handleRefresh}
-              className='self-start sm:self-auto text-xs gap-1.5'
+              className='gap-1.5 self-start text-xs sm:self-auto'
             >
               <RefreshCw className='h-3.5 w-3.5' />
               Refresh Data
@@ -199,9 +228,9 @@ export function TopupTunaiPage() {
           </div>
 
           {/* Main Content Grid */}
-          <div className='grid grid-cols-1 lg:grid-cols-12 gap-6 items-start'>
+          <div className='grid grid-cols-1 items-start gap-6 lg:grid-cols-12'>
             {/* Left Column: Student Search Card (5 Cols) */}
-            <div className='lg:col-span-5 space-y-6'>
+            <div className='space-y-6 lg:col-span-5'>
               <StudentSearchCard
                 students={students}
                 selectedStudent={currentStudent}
@@ -210,33 +239,36 @@ export function TopupTunaiPage() {
             </div>
 
             {/* Right Column: Topup Form (7 Cols) */}
-            <div className='lg:col-span-7 space-y-6'>
-              <Card className='shadow-sm border-slate-200 dark:border-slate-800'>
+            <div className='space-y-6 lg:col-span-7'>
+              <Card className='border-slate-200 shadow-sm dark:border-slate-800'>
                 <CardHeader>
-                  <CardTitle className='text-lg font-semibold flex items-center gap-2'>
+                  <CardTitle className='flex items-center gap-2 text-lg font-semibold'>
                     <Wallet className='h-5 w-5 text-emerald-600' />
                     Form Pengisian Saldo Tunai
                   </CardTitle>
                   <CardDescription>
-                    Pilih nominal preset atau masukkan jumlah tunai yang disetorkan
+                    Pilih nominal preset atau masukkan jumlah tunai yang
+                    disetorkan
                   </CardDescription>
                 </CardHeader>
                 <CardContent className='space-y-6'>
                   <form onSubmit={handleSubmit} className='space-y-6'>
                     {/* Preset Nominal Buttons */}
                     <div className='space-y-2'>
-                      <Label className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
+                      <Label className='text-xs font-semibold tracking-wider text-muted-foreground uppercase'>
                         Pilihan Nominal Preset
                       </Label>
-                      <div className='grid grid-cols-2 sm:grid-cols-4 gap-2.5'>
+                      <div className='grid grid-cols-2 gap-2.5 sm:grid-cols-4'>
                         {PRESET_NOMINALS.map((preset) => (
                           <Button
                             key={preset}
                             type='button'
-                            variant={nominalNum === preset ? 'default' : 'outline'}
+                            variant={
+                              nominalNum === preset ? 'default' : 'outline'
+                            }
                             className={`h-12 text-sm font-semibold transition-all ${
                               nominalNum === preset
-                                ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow'
+                                ? 'bg-emerald-600 text-white shadow hover:bg-emerald-700'
                                 : 'hover:border-emerald-500 hover:text-emerald-600'
                             }`}
                             onClick={() => handleSelectPreset(preset)}
@@ -249,11 +281,14 @@ export function TopupTunaiPage() {
 
                     {/* Input Nominal Bebas */}
                     <div className='space-y-2'>
-                      <Label htmlFor='nominal-input' className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
+                      <Label
+                        htmlFor='nominal-input'
+                        className='text-xs font-semibold tracking-wider text-muted-foreground uppercase'
+                      >
                         Input Nominal Bebas (Rp)
                       </Label>
                       <div className='relative'>
-                        <span className='absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-slate-500 text-sm'>
+                        <span className='absolute top-1/2 left-3.5 -translate-y-1/2 text-sm font-bold text-slate-500'>
                           Rp
                         </span>
                         <Input
@@ -263,14 +298,17 @@ export function TopupTunaiPage() {
                           placeholder='Masukkan nominal, contoh: 75000'
                           value={nominal}
                           onChange={(e) => setNominal(e.target.value)}
-                          className='pl-11 h-12 text-lg font-mono font-bold tracking-wide'
+                          className='h-12 pl-11 font-mono text-lg font-bold tracking-wide'
                         />
                       </div>
                     </div>
 
                     {/* Input Nama Penyetor */}
                     <div className='space-y-2'>
-                      <Label htmlFor='penyetor-input' className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
+                      <Label
+                        htmlFor='penyetor-input'
+                        className='text-xs font-semibold tracking-wider text-muted-foreground uppercase'
+                      >
                         Nama Penyetor (Orang Tua / Wali / Siswa)
                       </Label>
                       <Input
@@ -287,8 +325,8 @@ export function TopupTunaiPage() {
                     {/* Balance Preview & Validation Warnings */}
                     {currentStudent && (
                       <div className='space-y-3 pt-2'>
-                        <div className='p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3'>
-                          <h4 className='text-xs font-bold text-slate-500 uppercase tracking-wider'>
+                        <div className='space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900'>
+                          <h4 className='text-xs font-bold tracking-wider text-slate-500 uppercase'>
                             Kalkulasi Transaksi
                           </h4>
                           <div className='space-y-2 text-sm'>
@@ -298,17 +336,19 @@ export function TopupTunaiPage() {
                                 Rp {saldoSaatIni.toLocaleString('id-ID')}
                               </span>
                             </div>
-                            <div className='flex justify-between text-emerald-600 dark:text-emerald-400 font-medium'>
+                            <div className='flex justify-between font-medium text-emerald-600 dark:text-emerald-400'>
                               <span>Nominal Top-up (+):</span>
                               <span className='font-mono font-bold'>
                                 Rp {nominalNum.toLocaleString('id-ID')}
                               </span>
                             </div>
-                            <div className='border-t border-slate-200 dark:border-slate-800 pt-2 flex justify-between font-bold text-base text-slate-900 dark:text-slate-100'>
+                            <div className='flex justify-between border-t border-slate-200 pt-2 text-base font-bold text-slate-900 dark:border-slate-800 dark:text-slate-100'>
                               <span>Estimasi Saldo Baru:</span>
                               <span
                                 className={`font-mono ${
-                                  isExceedingLimit ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'
+                                  isExceedingLimit
+                                    ? 'text-red-600 dark:text-red-400'
+                                    : 'text-emerald-600 dark:text-emerald-400'
                                 }`}
                               >
                                 Rp {saldoBaru.toLocaleString('id-ID')}
@@ -319,27 +359,42 @@ export function TopupTunaiPage() {
 
                         {/* Warning: Exceeding Max Balance */}
                         {isExceedingLimit && (
-                          <Alert variant='destructive' className='border-red-300 bg-red-50 dark:bg-red-950/40 text-red-900 dark:text-red-200'>
+                          <Alert
+                            variant='destructive'
+                            className='border-red-300 bg-red-50 text-red-900 dark:bg-red-950/40 dark:text-red-200'
+                          >
                             <AlertCircle className='h-4 w-4 text-red-600 dark:text-red-400' />
-                            <AlertTitle className='font-bold text-xs uppercase tracking-wide'>
+                            <AlertTitle className='text-xs font-bold tracking-wide uppercase'>
                               Melebihi Batas Saldo Maksimal Sekolah!
                             </AlertTitle>
-                            <AlertDescription className='text-xs mt-1 leading-relaxed'>
-                              Saldo baru (<strong>Rp {saldoBaru.toLocaleString('id-ID')}</strong>) melampaui batas maksimum yang diizinkan sekolah sebesar{' '}
-                              <strong>Rp {MAX_SALDO_SEKOLAH.toLocaleString('id-ID')}</strong>. Kurangi nominal top-up.
+                            <AlertDescription className='mt-1 text-xs leading-relaxed'>
+                              Saldo baru (
+                              <strong>
+                                Rp {saldoBaru.toLocaleString('id-ID')}
+                              </strong>
+                              ) melampaui batas maksimum yang diizinkan sekolah
+                              sebesar{' '}
+                              <strong>
+                                Rp {MAX_SALDO_SEKOLAH.toLocaleString('id-ID')}
+                              </strong>
+                              . Kurangi nominal top-up.
                             </AlertDescription>
                           </Alert>
                         )}
 
                         {/* Warning: Card Blocked */}
                         {isStudentBlocked && (
-                          <Alert variant='destructive' className='border-red-300 bg-red-50 dark:bg-red-950/40 text-red-900 dark:text-red-200'>
+                          <Alert
+                            variant='destructive'
+                            className='border-red-300 bg-red-50 text-red-900 dark:bg-red-950/40 dark:text-red-200'
+                          >
                             <ShieldAlert className='h-4 w-4 text-red-600 dark:text-red-400' />
-                            <AlertTitle className='font-bold text-xs uppercase tracking-wide'>
+                            <AlertTitle className='text-xs font-bold tracking-wide uppercase'>
                               Kartu Siswa Diblokir!
                             </AlertTitle>
-                            <AlertDescription className='text-xs mt-1'>
-                              Kartu siswa ini dalam status diblokir. Buka blokir terlebih dahulu sebelum mengisi saldo.
+                            <AlertDescription className='mt-1 text-xs'>
+                              Kartu siswa ini dalam status diblokir. Buka blokir
+                              terlebih dahulu sebelum mengisi saldo.
                             </AlertDescription>
                           </Alert>
                         )}
@@ -350,7 +405,7 @@ export function TopupTunaiPage() {
                     <Button
                       type='submit'
                       disabled={!isValidSubmit || isSubmitting}
-                      className='w-full h-12 text-base font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md transition-all gap-2'
+                      className='h-12 w-full gap-2 bg-emerald-600 text-base font-bold text-white shadow-md transition-all hover:bg-emerald-700'
                     >
                       {isSubmitting ? (
                         <>
@@ -361,7 +416,7 @@ export function TopupTunaiPage() {
                         <>
                           <CheckCircle2 className='h-5 w-5' />
                           Proses Top-up Tunai & Terbitkan Slip
-                          <ArrowRight className='h-4 w-4 ml-auto' />
+                          <ArrowRight className='ml-auto h-4 w-4' />
                         </>
                       )}
                     </Button>

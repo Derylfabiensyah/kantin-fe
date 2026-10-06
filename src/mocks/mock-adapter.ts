@@ -13,9 +13,15 @@ import {
   MOCK_KATEGORI,
   MOCK_SISWA,
   MOCK_KARTU_TAMU,
+  MOCK_SETORAN_KAS,
+  MOCK_KOREKSI_BENDAHARA,
+  MOCK_TRANSAKSI_SESI_TUTUP,
   type MenuItemMock,
   type KartuSiswaMock,
   type KartuTamuMock,
+  type SetoranKasTUMock,
+  type MutasiKoreksiMock,
+  type TransaksiSesiTutupMock,
 } from './mock-data'
 
 export interface MockResponseData {
@@ -43,6 +49,15 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
   const kategoriList = [...MOCK_KATEGORI]
   const siswaList: KartuSiswaMock[] = [...MOCK_SISWA]
   const kartuTamuList: KartuTamuMock[] = [...MOCK_KARTU_TAMU]
+  const setoranKasList: SetoranKasTUMock[] = JSON.parse(
+    JSON.stringify(MOCK_SETORAN_KAS)
+  )
+  const koreksiList: MutasiKoreksiMock[] = JSON.parse(
+    JSON.stringify(MOCK_KOREKSI_BENDAHARA)
+  )
+  const transaksiSesiTutupList: TransaksiSesiTutupMock[] = JSON.parse(
+    JSON.stringify(MOCK_TRANSAKSI_SESI_TUTUP)
+  )
 
   interface MockRiwayatItem {
     id: number
@@ -123,7 +138,6 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
         config.adapter = async () => {
           // Simulasi latensi jaringan natural (100ms - 250ms)
           await new Promise((r) => setTimeout(r, 150))
-
           if (mockResponse.status >= 200 && mockResponse.status < 300) {
             return {
               data: mockResponse.data,
@@ -704,7 +718,10 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
     }
 
     // --- 6. TU: Pencarian Siswa & Kartu Tamu (Backend-aligned /api/kartu-tamu) ---
-    if (url.includes('/api/v1/tu/siswa') && method === 'get') {
+    if (
+      (url.includes('/api/v1/tu/siswa') || url.includes('/api/tu/siswa')) &&
+      method === 'get'
+    ) {
       return {
         status: 200,
         data: {
@@ -715,7 +732,112 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
     }
 
-    // Saldo Query: GET /api/saldo?subjekTipe=KARTU_TAMU&subjekId=...
+    // --- 7. TU: Setoran Kas TU Harian ---
+    // GET /api/v1/tu/setoran or /api/tu/setoran
+    if (
+      (url.includes('/api/v1/tu/setoran') || url.includes('/api/tu/setoran')) &&
+      !url.includes('/konfirmasi') &&
+      method === 'get'
+    ) {
+      const urlObj = new URL(url, 'http://localhost')
+      const tanggalParam = urlObj.searchParams.get('tanggal')
+      const petugasIdParam = urlObj.searchParams.get('petugasId')
+      const statusParam = urlObj.searchParams.get('status')
+
+      let filtered = [...setoranKasList]
+      if (tanggalParam) {
+        filtered = filtered.filter((s) => s.tanggal === tanggalParam)
+      }
+      if (petugasIdParam) {
+        filtered = filtered.filter(
+          (s) => s.petugas_id === Number(petugasIdParam)
+        )
+      }
+      if (statusParam && statusParam !== 'ALL') {
+        filtered = filtered.filter((s) => s.status === statusParam)
+      }
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Daftar setoran kas TU berhasil diambil',
+          data: filtered,
+        },
+      }
+    }
+
+    // POST /api/v1/tu/setoran/konfirmasi or /api/tu/setoran/konfirmasi or /api/v1/tu/setoran/:id/konfirmasi
+    if (
+      (url.includes('/api/v1/tu/setoran') || url.includes('/api/tu/setoran')) &&
+      (url.includes('/konfirmasi') || method === 'post')
+    ) {
+      const idMatch = url.match(/\/setoran\/([^/]+)\/konfirmasi/)
+      const targetId =
+        (idMatch ? idMatch[1] : (payload.id as string)) ||
+        (payload.setoran_id as string)
+      const uangFisik = Number(payload.uang_fisik ?? payload.uangFisik) || 0
+      const catatan = String(payload.catatan ?? payload.keterangan ?? '').trim()
+      const bendaharaNama = String(
+        payload.bendahara_nama ?? 'Siti Rahma (Bendahara)'
+      )
+
+      const setoranIdx = setoranKasList.findIndex((s) => s.id === targetId)
+      if (setoranIdx === -1) {
+        return {
+          status: 404,
+          data: {
+            code: 404,
+            status: 'NOT_FOUND',
+            message: `Setoran kas dengan ID ${targetId} tidak ditemukan`,
+          },
+        }
+      }
+
+      const item = setoranKasList[setoranIdx]
+      const selisih = uangFisik - item.total_sistem
+
+      if (selisih !== 0 && !catatan) {
+        return {
+          status: 400,
+          data: {
+            code: 400,
+            status: 'BAD_REQUEST',
+            message:
+              'Terdapat selisih kas fisik! Alasan / Berita acara selisih wajib diisi.',
+          },
+        }
+      }
+
+      setoranKasList[setoranIdx] = {
+        ...item,
+        uang_fisik: uangFisik,
+        selisih,
+        status: 'TERKONFIRMASI',
+        catatan:
+          catatan ||
+          (selisih === 0
+            ? 'Uang fisik pas sesuai total sistem'
+            : `Selisih kas ${selisih < 0 ? 'kurang' : 'lebih'} Rp ${Math.abs(selisih).toLocaleString('id-ID')}`),
+        bendahara_id: 10,
+        bendahara_nama: bendaharaNama,
+        konfirmasi_pada: new Date().toISOString(),
+      }
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Setoran kas TU berhasil dikonfirmasi bendahara',
+          data: setoranKasList[setoranIdx],
+        },
+      }
+    }
+
+    // --- 8. Saldo Query (Siswa & Kartu Tamu) ---
+    // GET /api/saldo?subjekTipe=...&subjekId=...
     if (
       url.includes('/api/saldo') &&
       !url.includes('/api/saldo/topup') &&
@@ -723,8 +845,9 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       method === 'get'
     ) {
       const urlObj = new URL(url, 'http://localhost')
-      const subjekTipe = urlObj.searchParams.get('subjekTipe')
+      const subjekTipe = urlObj.searchParams.get('subjekTipe') || 'SISWA'
       const subjekId = Number(urlObj.searchParams.get('subjekId'))
+
       if (subjekTipe === 'KARTU_TAMU') {
         const kt = kartuTamuList.find((k) => k.id === subjekId)
         return {
@@ -733,41 +856,249 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
             code: 200,
             status: 'SUCCESS',
             data: {
+              subjekTipe: 'KARTU_TAMU',
+              subjekId,
               saldo: kt ? kt.saldo : 0,
               belanjaHariIni: 0,
               limitHarian: null,
+              mutasiTerbaru: [],
+            },
+          },
+        }
+      } else {
+        const siswa = siswaList.find((s) => s.siswa_id === subjekId)
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            data: {
+              subjekTipe: 'SISWA',
+              subjekId,
+              saldo: siswa ? siswa.saldo : 0,
+              belanjaHariIni: siswa ? siswa.belanja_hari_ini : 0,
+              limitHarian: siswa ? siswa.limit_harian : null,
+              mutasiTerbaru: [],
             },
           },
         }
       }
     }
 
-    // Koreksi Saldo: POST /api/saldo/koreksi
-    if (url.includes('/api/saldo/koreksi') && method === 'post') {
-      const subjekTipe = (payload.subjekTipe as string) || 'KARTU_TAMU'
-      const subjekId = Number(payload.subjekId)
-      const arah = (payload.arah as string) || 'DEBIT'
-      const nominal = Number(payload.nominal) || 0
-      if (subjekTipe === 'KARTU_TAMU') {
-        const kt = kartuTamuList.find((k) => k.id === subjekId)
-        if (kt) {
-          if (arah === 'DEBIT') {
-            kt.saldo = Math.max(0, kt.saldo - nominal)
-          } else {
-            kt.saldo += nominal
-          }
-        }
-      }
+    // --- 9. Mutasi Koreksi Bendahara ---
+    // GET /api/saldo/koreksi (Riwayat Mutasi Koreksi)
+    if (
+      (url.includes('/api/saldo/koreksi') ||
+        url.includes('/api/v1/bendahara/koreksi')) &&
+      method === 'get'
+    ) {
       return {
         status: 200,
         data: {
           code: 200,
           status: 'SUCCESS',
-          message: 'Koreksi saldo berhasil',
+          message: 'Daftar riwayat mutasi koreksi bendahara berhasil dimuat',
+          data: koreksiList,
+        },
+      }
+    }
+
+    // GET /api/transaksi/sesi-tutup or /api/v1/kasir/transaksi-lampau
+    if (
+      (url.includes('/api/transaksi/sesi-tutup') ||
+        url.includes('/api/v1/kasir/transaksi-lampau')) &&
+      method === 'get'
+    ) {
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          data: transaksiSesiTutupList,
+        },
+      }
+    }
+
+    // POST /api/saldo/koreksi (Eksekusi Koreksi Saldo / Pembalik Transaksi)
+    if (url.includes('/api/saldo/koreksi') && method === 'post') {
+      const subjekTipe =
+        ((payload.subjekTipe || payload.subjek_tipe) as string) || 'SISWA'
+      const subjekId = Number(payload.subjekId ?? payload.subjek_id)
+      const arah = String(payload.arah || 'DEBIT').toUpperCase() as
+        | 'DEBIT'
+        | 'KREDIT'
+      const nominal = Number(payload.nominal) || 0
+      const alasan = String(payload.alasan || '').trim()
+      const referensiId = String(
+        payload.referensiId ||
+          payload.referensi_id ||
+          `BA-KOR-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${Math.floor(1000 + Math.random() * 9000)}`
+      ).trim()
+      const jenisKoreksi = String(
+        payload.jenisKoreksi || payload.jenis_koreksi || 'PENYESUAIAN_AUDIT'
+      ) as
+        | 'SALAH_INPUT_TOPUP'
+        | 'PEMBALIK_TRANSAKSI_KASIR'
+        | 'PENYESUAIAN_AUDIT'
+      const transaksiTerkaitId =
+        payload.transaksiTerkaitId || payload.transaksi_terkait_id
+
+      if (!subjekId || nominal <= 0) {
+        return {
+          status: 400,
           data: {
+            code: 400,
+            status: 'BAD_REQUEST',
+            message: 'Subjek ID dan nominal koreksi valid (> 0) wajib diisi',
+          },
+        }
+      }
+
+      if (!alasan) {
+        return {
+          status: 400,
+          data: {
+            code: 400,
+            status: 'BAD_REQUEST',
+            message: 'Alasan koreksi audit wajib diisi (PRD §9.2 & §11.7)',
+          },
+        }
+      }
+
+      if (!referensiId) {
+        return {
+          status: 400,
+          data: {
+            code: 400,
+            status: 'BAD_REQUEST',
+            message:
+              'Nomor Berita Acara / Referensi koreksi wajib diisi untuk integritas audit & idempotency',
+          },
+        }
+      }
+
+      let subjekNama: string
+      let subjekInfo: string
+      let saldoSebelum: number
+      let saldoSetelah: number
+
+      if (subjekTipe === 'SISWA') {
+        const siswa = siswaList.find((s) => s.siswa_id === subjekId)
+        if (!siswa) {
+          return {
+            status: 404,
+            data: {
+              code: 404,
+              status: 'NOT_FOUND',
+              message: 'Siswa tidak ditemukan',
+            },
+          }
+        }
+        subjekNama = siswa.nama
+        subjekInfo = `${siswa.kelas} (NIS: ${siswa.nis})`
+        saldoSebelum = siswa.saldo
+
+        if (arah === 'DEBIT') {
+          if (siswa.saldo < nominal) {
+            return {
+              status: 400,
+              data: {
+                code: 400,
+                status: 'BAD_REQUEST',
+                message: `Koreksi DEBIT ditolak: Saldo siswa saat ini (Rp ${siswa.saldo.toLocaleString('id-ID')}) tidak mencukupi untuk dikurangi Rp ${nominal.toLocaleString('id-ID')} (saldo tidak boleh minus)`,
+              },
+            }
+          }
+          siswa.saldo -= nominal
+        } else {
+          siswa.saldo += nominal
+        }
+        saldoSetelah = siswa.saldo
+      } else {
+        // KARTU_TAMU
+        const kt = kartuTamuList.find((k) => k.id === subjekId)
+        if (!kt) {
+          return {
+            status: 404,
+            data: {
+              code: 404,
+              status: 'NOT_FOUND',
+              message: 'Kartu tamu tidak ditemukan',
+            },
+          }
+        }
+        subjekNama = kt.label_pemegang || `Kartu ${kt.nomor_kartu}`
+        subjekInfo = `Kartu: ${kt.nomor_kartu}`
+        saldoSebelum = kt.saldo
+
+        if (arah === 'DEBIT') {
+          if (kt.saldo < nominal) {
+            return {
+              status: 400,
+              data: {
+                code: 400,
+                status: 'BAD_REQUEST',
+                message: `Koreksi DEBIT ditolak: Saldo kartu tamu saat ini (Rp ${kt.saldo.toLocaleString('id-ID')}) tidak mencukupi untuk dikurangi Rp ${nominal.toLocaleString('id-ID')}`,
+              },
+            }
+          }
+          kt.saldo -= nominal
+        } else {
+          kt.saldo += nominal
+        }
+        saldoSetelah = kt.saldo
+      }
+
+      // Tandai transaksi sesi tutup terkait jika ada
+      if (transaksiTerkaitId) {
+        const trIdx = transaksiSesiTutupList.findIndex(
+          (t) => t.id === String(transaksiTerkaitId)
+        )
+        if (trIdx !== -1) {
+          transaksiSesiTutupList[trIdx].status = 'DIKOREKSI'
+          transaksiSesiTutupList[trIdx].koreksi_referensi_id = referensiId
+        }
+      }
+
+      const newKoreksi: MutasiKoreksiMock = {
+        id: `KOR-${Date.now()}`,
+        referensi_id: referensiId,
+        waktu: new Date().toISOString(),
+        subjek_tipe: subjekTipe as 'SISWA' | 'KARTU_TAMU',
+        subjek_id: subjekId,
+        subjek_nama: subjekNama,
+        subjek_info: subjekInfo,
+        jenis_koreksi: jenisKoreksi,
+        arah,
+        nominal,
+        saldo_sebelum: saldoSebelum,
+        saldo_setelah: saldoSetelah,
+        alasan,
+        bendahara_id: 10,
+        bendahara_nama: 'Siti Rahma (Bendahara)',
+        transaksi_terkait_id: transaksiTerkaitId
+          ? String(transaksiTerkaitId)
+          : undefined,
+      }
+
+      koreksiList.unshift(newKoreksi)
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Mutasi koreksi bendahara berhasil dicatat di ledger saldo',
+          data: {
+            subjekTipe,
             subjekId,
             nominal,
             arah,
+            saldoSebelum,
+            saldoSetelah,
+            referensiId,
+            alasan,
+            mutasi: newKoreksi,
           },
         },
       }

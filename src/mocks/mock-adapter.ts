@@ -10,9 +10,11 @@ import {
   MOCK_KATEGORI,
   MOCK_SISWA,
   MOCK_KARTU_TAMU,
+  MOCK_SISWA_NONAKTIF,
   type MenuItemMock,
   type KartuSiswaMock,
   type KartuTamuMock,
+  type SiswaNonaktifMock,
 } from './mock-data'
 
 export interface MockResponseData {
@@ -40,6 +42,7 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
   const kategoriList = [...MOCK_KATEGORI]
   const siswaList: KartuSiswaMock[] = [...MOCK_SISWA]
   const kartuTamuList: KartuTamuMock[] = [...MOCK_KARTU_TAMU]
+  const siswaNonaktifList: SiswaNonaktifMock[] = [...MOCK_SISWA_NONAKTIF]
 
   axiosInstance.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
     const url = config.url || ''
@@ -470,19 +473,22 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
           }
         }
 
-        // Validasi 3: Item diblokir ortu?
-        if (siswa?.blocked_items?.includes(menuItem.id)) {
+        // Validasi 3: Item atau Kategori diblokir ortu?
+        const isItemBlocked = siswa?.blocked_items?.includes(menuItem.id)
+        const isCategoryBlocked = siswa?.blocked_categories?.includes(menuItem.kategori_id)
+        if (isItemBlocked || isCategoryBlocked) {
+          const detail = isCategoryBlocked ? ` (Kategori ${menuItem.kategori_nama})` : ''
           return {
             status: 400,
-            data: { message: `Item ${menuItem.nama} diblokir oleh orang tua` },
+            data: { message: `Item ${menuItem.nama}${detail} diblokir oleh orang tua` },
           }
         }
 
         totalBelanja += menuItem.harga_jual * cartItem.qty
       }
 
-      // Validasi 5: Limit harian (hanya untuk siswa)
-      if (siswa && siswa.limit_harian > 0) {
+      // Validasi 5: Limit harian (hanya untuk siswa dengan limit aktif)
+      if (siswa && siswa.limit_harian_enabled !== false && siswa.limit_harian > 0) {
         if (siswa.belanja_hari_ini + totalBelanja > siswa.limit_harian) {
           const sisaLimit = Math.max(0, siswa.limit_harian - siswa.belanja_hari_ini)
           return {
@@ -874,6 +880,245 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
               saldoSetelah: kartuTamu.saldo,
               idempotentReplay: false,
             },
+          },
+        }
+      }
+    }
+
+    // --- 8. Refund Saldo Siswa Keluar / Lulus (PRD §9.3) ---
+    if ((url.includes('/api/v1/tu/siswa/nonaktif') || url.includes('/api/saldo/refund/siswa-nonaktif')) && method === 'get') {
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Berhasil mengambil daftar siswa nonaktif',
+          data: siswaNonaktifList,
+        },
+      }
+    }
+
+    // POST: Refund ke Orang Tua (Tunai / Transfer Bank)
+    if (url.includes('/api/saldo/refund') && !url.includes('/api/saldo/refund/siswa-nonaktif') && method === 'post') {
+      const siswaId = Number(payload.siswaId ?? payload.siswa_id)
+      const metode = (payload.metode as string) || 'TUNAI'
+      const namaPenerima = String(payload.namaPenerima || payload.nama_penerima || 'Orang Tua / Wali')
+      const kontakPenerima = String(payload.kontakPenerima || payload.kontak_penerima || '')
+      const bank = payload.bank ? String(payload.bank) : undefined
+      const noRekening = payload.noRekening ? String(payload.noRekening) : undefined
+      const namaRekening = payload.namaRekening ? String(payload.namaRekening) : undefined
+      const buktiUrl = payload.buktiUrl ? String(payload.buktiUrl) : undefined
+      const catatan = String(payload.catatan || 'Refund sisa saldo siswa keluar/lulus')
+
+      const target = siswaNonaktifList.find((s) => s.siswa_id === siswaId)
+      if (!target) {
+        return { status: 404, data: { message: 'Data siswa nonaktif tidak ditemukan' } }
+      }
+
+      if (target.saldo <= 0) {
+        return { status: 400, data: { message: 'Siswa tidak memiliki sisa saldo (saldo Rp 0)' } }
+      }
+
+      const refNo = String(payload.referensiId || `REFUND-${Date.now().toString().slice(-6)}`)
+      const now = new Date().toISOString()
+      const nominalRefund = target.saldo
+
+      // Mengosongkan saldo dan memblokir kartu fisik otomatis permanen
+      target.saldo = 0
+      target.is_card_blocked = true
+      target.is_refunded = true
+      target.refund_info = {
+        tipe: 'REFUND_ORTU',
+        metode: metode as 'TUNAI' | 'TRANSFER_BANK',
+        nominal: nominalRefund,
+        tanggal: now,
+        referensi_id: refNo,
+        keterangan: catatan,
+        bank,
+        nomor_rekening: noRekening,
+        nama_rekening: namaRekening,
+        bukti_url: buktiUrl,
+      }
+
+      // Sinkronkan ke daftar siswa aktif jika ada
+      const activeMatch = siswaList.find((s) => s.siswa_id === siswaId || s.uid === target.rfid_uid)
+      if (activeMatch) {
+        activeMatch.saldo = 0
+        activeMatch.is_blocked = true
+      }
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Refund sisa saldo berhasil diproses',
+          data: {
+            ref_no: refNo,
+            siswa_id: target.siswa_id,
+            nis: target.nis,
+            nama: target.nama,
+            kelas_terakhir: target.kelas_terakhir,
+            nominal: nominalRefund,
+            metode,
+            nama_penerima: namaPenerima,
+            kontak_penerima: kontakPenerima,
+            bank,
+            nomor_rekening: noRekening,
+            nama_rekening: namaRekening,
+            bukti_url: buktiUrl,
+            status_kartu_lama: 'DIBLOKIR_PERMANEN',
+            saldo_akhir: 0,
+            waktu: now,
+            petugas_nama: 'Wibisana Bama (Petugas TU/Bendahara)',
+          },
+        },
+      }
+    }
+
+    // POST: Pindah Saldo ke Saudara Kandung (Atomik)
+    if (url.includes('/api/saldo/transfer-saudara') && method === 'post') {
+      const siswaAsalId = Number(payload.siswaAsalId ?? payload.siswa_asal_id)
+      const siswaTujuanId = Number(payload.siswaTujuanId ?? payload.siswa_tujuan_id)
+      const beritaAcara = String(payload.beritaAcara || payload.berita_acara || 'Pindah saldo ke saudara kandung')
+
+      const asal = siswaNonaktifList.find((s) => s.siswa_id === siswaAsalId)
+      const tujuan = siswaList.find((s) => s.siswa_id === siswaTujuanId)
+
+      if (!asal || !tujuan) {
+        return { status: 404, data: { message: 'Data siswa asal atau siswa penerima tidak ditemukan' } }
+      }
+
+      if (asal.saldo <= 0) {
+        return { status: 400, data: { message: 'Siswa asal tidak memiliki sisa saldo untuk dipindahkan' } }
+      }
+
+      if (tujuan.is_blocked) {
+        return { status: 400, data: { message: 'Kartu siswa tujuan sedang diblokir, tidak dapat menerima transfer' } }
+      }
+
+      const refNo = String(payload.referensiId || `TRF-SDR-${Date.now().toString().slice(-6)}`)
+      const now = new Date().toISOString()
+      const nominalTransfer = asal.saldo
+      const saldoAwalTujuan = tujuan.saldo
+
+      // Transaksi Atomik:
+      // 1. Kosongkan saldo asal & blokir kartu lama permanen
+      asal.saldo = 0
+      asal.is_card_blocked = true
+      asal.is_refunded = true
+      asal.refund_info = {
+        tipe: 'TRANSFER_SAUDARA',
+        nominal: nominalTransfer,
+        tanggal: now,
+        referensi_id: refNo,
+        keterangan: beritaAcara,
+        saudara_tujuan_id: tujuan.siswa_id,
+        saudara_tujuan_nama: tujuan.nama,
+      }
+
+      const asalInActiveList = siswaList.find((s) => s.siswa_id === siswaAsalId)
+      if (asalInActiveList) {
+        asalInActiveList.saldo = 0
+        asalInActiveList.is_blocked = true
+      }
+
+      // 2. Tambahkan saldo ke saudara tujuan secara atomik
+      tujuan.saldo += nominalTransfer
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Pemindahan saldo ke saudara kandung berhasil secara atomik',
+          data: {
+            ref_no: refNo,
+            siswa_asal: {
+              siswa_id: asal.siswa_id,
+              nis: asal.nis,
+              nama: asal.nama,
+              kelas_terakhir: asal.kelas_terakhir,
+              status_kartu: 'DIBLOKIR_PERMANEN',
+              saldo_akhir: 0,
+            },
+            siswa_tujuan: {
+              siswa_id: tujuan.siswa_id,
+              nis: tujuan.nis,
+              nama: tujuan.nama,
+              kelas: tujuan.kelas,
+              saldo_awal: saldoAwalTujuan,
+              saldo_akhir: tujuan.saldo,
+              nominal_diterima: nominalTransfer,
+            },
+            nominal: nominalTransfer,
+            berita_acara: beritaAcara,
+            waktu: now,
+            petugas_nama: 'Wibisana Bama (Petugas TU/Bendahara)',
+          },
+        },
+      }
+    }
+
+    // --- 9. Kontrol Siswa atas Nama Orang Tua (PRD §9.6 Admin) ---
+    if (url.includes('/api/v1/kontrol-siswa')) {
+      const match = url.match(/\/kontrol-siswa\/(\d+)/)
+      const targetId = match ? Number(match[1]) : null
+
+      if (method === 'get') {
+        if (targetId) {
+          const s = siswaList.find((item) => item.siswa_id === targetId)
+          if (!s) return { status: 404, data: { message: 'Siswa tidak ditemukan' } }
+          return {
+            status: 200,
+            data: {
+              code: 200,
+              status: 'SUCCESS',
+              data: s,
+            },
+          }
+        }
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            data: siswaList,
+          },
+        }
+      }
+
+      if (method === 'put' && targetId) {
+        const s = siswaList.find((item) => item.siswa_id === targetId)
+        if (!s) return { status: 404, data: { message: 'Siswa tidak ditemukan' } }
+
+        if (payload.limit_harian !== undefined) {
+          s.limit_harian = Number(payload.limit_harian) || 0
+        }
+        if (payload.limit_harian_enabled !== undefined) {
+          s.limit_harian_enabled = Boolean(payload.limit_harian_enabled)
+          if (!s.limit_harian_enabled) {
+            s.limit_harian = 0
+          }
+        }
+        if (payload.blocked_items !== undefined && Array.isArray(payload.blocked_items)) {
+          s.blocked_items = payload.blocked_items.map((id) => Number(id))
+        }
+        if (payload.blocked_categories !== undefined && Array.isArray(payload.blocked_categories)) {
+          s.blocked_categories = payload.blocked_categories.map((id) => Number(id))
+        }
+        if (payload.catatan_kontrol !== undefined) {
+          s.catatan_kontrol = String(payload.catatan_kontrol)
+        }
+        s.updated_at = new Date().toISOString()
+
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            message: 'Pengaturan kontrol siswa berhasil diperbarui',
+            data: s,
           },
         }
       }

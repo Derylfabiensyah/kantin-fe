@@ -27,6 +27,7 @@ import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authen
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedMenuIndexRouteImport } from './routes/_authenticated/menu/index'
+import { Route as AuthenticatedKontrolSiswaIndexRouteImport } from './routes/_authenticated/kontrol-siswa/index'
 import { Route as AuthenticatedKategoriIndexRouteImport } from './routes/_authenticated/kategori/index'
 import { Route as AuthenticatedKartuTamuIndexRouteImport } from './routes/_authenticated/kartu-tamu/index'
 import { Route as AuthenticatedBackofficeIndexRouteImport } from './routes/_authenticated/backoffice/index'
@@ -36,6 +37,7 @@ import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_a
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedTuTopupIndexRouteImport } from './routes/_authenticated/tu/topup/index'
+import { Route as AuthenticatedSaldoRefundIndexRouteImport } from './routes/_authenticated/saldo/refund/index'
 
 const KasirRouteRoute = KasirRouteRouteImport.update({
   id: '/kasir',
@@ -128,6 +130,12 @@ const AuthenticatedMenuIndexRoute = AuthenticatedMenuIndexRouteImport.update({
   path: '/menu/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedKontrolSiswaIndexRoute =
+  AuthenticatedKontrolSiswaIndexRouteImport.update({
+    id: '/kontrol-siswa/',
+    path: '/kontrol-siswa/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedKategoriIndexRoute =
   AuthenticatedKategoriIndexRouteImport.update({
     id: '/kategori/',
@@ -182,6 +190,12 @@ const AuthenticatedTuTopupIndexRoute =
     path: '/tu/topup/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSaldoRefundIndexRoute =
+  AuthenticatedSaldoRefundIndexRouteImport.update({
+    id: '/saldo/refund/',
+    path: '/saldo/refund/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -206,9 +220,11 @@ export interface FileRoutesByFullPath {
   '/backoffice/': typeof AuthenticatedBackofficeIndexRoute
   '/kartu-tamu/': typeof AuthenticatedKartuTamuIndexRoute
   '/kategori/': typeof AuthenticatedKategoriIndexRoute
+  '/kontrol-siswa/': typeof AuthenticatedKontrolSiswaIndexRoute
   '/menu/': typeof AuthenticatedMenuIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
+  '/saldo/refund/': typeof AuthenticatedSaldoRefundIndexRoute
   '/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
 }
 export interface FileRoutesByTo {
@@ -232,9 +248,11 @@ export interface FileRoutesByTo {
   '/backoffice': typeof AuthenticatedBackofficeIndexRoute
   '/kartu-tamu': typeof AuthenticatedKartuTamuIndexRoute
   '/kategori': typeof AuthenticatedKategoriIndexRoute
+  '/kontrol-siswa': typeof AuthenticatedKontrolSiswaIndexRoute
   '/menu': typeof AuthenticatedMenuIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/saldo/refund': typeof AuthenticatedSaldoRefundIndexRoute
   '/tu/topup': typeof AuthenticatedTuTopupIndexRoute
 }
 export interface FileRoutesById {
@@ -262,9 +280,11 @@ export interface FileRoutesById {
   '/_authenticated/backoffice/': typeof AuthenticatedBackofficeIndexRoute
   '/_authenticated/kartu-tamu/': typeof AuthenticatedKartuTamuIndexRoute
   '/_authenticated/kategori/': typeof AuthenticatedKategoriIndexRoute
+  '/_authenticated/kontrol-siswa/': typeof AuthenticatedKontrolSiswaIndexRoute
   '/_authenticated/menu/': typeof AuthenticatedMenuIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/saldo/refund/': typeof AuthenticatedSaldoRefundIndexRoute
   '/_authenticated/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
 }
 export interface FileRouteTypes {
@@ -292,9 +312,11 @@ export interface FileRouteTypes {
     | '/backoffice/'
     | '/kartu-tamu/'
     | '/kategori/'
+    | '/kontrol-siswa/'
     | '/menu/'
     | '/settings/'
     | '/users/'
+    | '/saldo/refund/'
     | '/tu/topup/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -318,9 +340,11 @@ export interface FileRouteTypes {
     | '/backoffice'
     | '/kartu-tamu'
     | '/kategori'
+    | '/kontrol-siswa'
     | '/menu'
     | '/settings'
     | '/users'
+    | '/saldo/refund'
     | '/tu/topup'
   id:
     | '__root__'
@@ -347,9 +371,11 @@ export interface FileRouteTypes {
     | '/_authenticated/backoffice/'
     | '/_authenticated/kartu-tamu/'
     | '/_authenticated/kategori/'
+    | '/_authenticated/kontrol-siswa/'
     | '/_authenticated/menu/'
     | '/_authenticated/settings/'
     | '/_authenticated/users/'
+    | '/_authenticated/saldo/refund/'
     | '/_authenticated/tu/topup/'
   fileRoutesById: FileRoutesById
 }
@@ -496,6 +522,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMenuIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/kontrol-siswa/': {
+      id: '/_authenticated/kontrol-siswa/'
+      path: '/kontrol-siswa'
+      fullPath: '/kontrol-siswa/'
+      preLoaderRoute: typeof AuthenticatedKontrolSiswaIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/kategori/': {
       id: '/_authenticated/kategori/'
       path: '/kategori'
@@ -559,6 +592,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTuTopupIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/saldo/refund/': {
+      id: '/_authenticated/saldo/refund/'
+      path: '/saldo/refund'
+      fullPath: '/saldo/refund/'
+      preLoaderRoute: typeof AuthenticatedSaldoRefundIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -592,8 +632,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedBackofficeIndexRoute: typeof AuthenticatedBackofficeIndexRoute
   AuthenticatedKartuTamuIndexRoute: typeof AuthenticatedKartuTamuIndexRoute
   AuthenticatedKategoriIndexRoute: typeof AuthenticatedKategoriIndexRoute
+  AuthenticatedKontrolSiswaIndexRoute: typeof AuthenticatedKontrolSiswaIndexRoute
   AuthenticatedMenuIndexRoute: typeof AuthenticatedMenuIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedSaldoRefundIndexRoute: typeof AuthenticatedSaldoRefundIndexRoute
   AuthenticatedTuTopupIndexRoute: typeof AuthenticatedTuTopupIndexRoute
 }
 
@@ -604,8 +646,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedBackofficeIndexRoute: AuthenticatedBackofficeIndexRoute,
   AuthenticatedKartuTamuIndexRoute: AuthenticatedKartuTamuIndexRoute,
   AuthenticatedKategoriIndexRoute: AuthenticatedKategoriIndexRoute,
+  AuthenticatedKontrolSiswaIndexRoute: AuthenticatedKontrolSiswaIndexRoute,
   AuthenticatedMenuIndexRoute: AuthenticatedMenuIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedSaldoRefundIndexRoute: AuthenticatedSaldoRefundIndexRoute,
   AuthenticatedTuTopupIndexRoute: AuthenticatedTuTopupIndexRoute,
 }
 

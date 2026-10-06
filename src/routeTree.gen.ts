@@ -37,6 +37,7 @@ import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_auth
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedTuTopupIndexRouteImport } from './routes/_authenticated/tu/topup/index'
 import { Route as AuthenticatedTuSetoranIndexRouteImport } from './routes/_authenticated/tu/setoran/index'
+import { Route as AuthenticatedStokMasukIndexRouteImport } from './routes/_authenticated/stok/masuk/index'
 import { Route as AuthenticatedSaldoKoreksiIndexRouteImport } from './routes/_authenticated/saldo/koreksi/index'
 
 const KasirRouteRoute = KasirRouteRouteImport.update({
@@ -190,6 +191,12 @@ const AuthenticatedTuSetoranIndexRoute =
     path: '/tu/setoran/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedStokMasukIndexRoute =
+  AuthenticatedStokMasukIndexRouteImport.update({
+    id: '/stok/masuk/',
+    path: '/stok/masuk/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSaldoKoreksiIndexRoute =
   AuthenticatedSaldoKoreksiIndexRouteImport.update({
     id: '/saldo/koreksi/',
@@ -224,6 +231,7 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
   '/saldo/koreksi/': typeof AuthenticatedSaldoKoreksiIndexRoute
+  '/stok/masuk/': typeof AuthenticatedStokMasukIndexRoute
   '/tu/setoran/': typeof AuthenticatedTuSetoranIndexRoute
   '/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
 }
@@ -252,6 +260,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/saldo/koreksi': typeof AuthenticatedSaldoKoreksiIndexRoute
+  '/stok/masuk': typeof AuthenticatedStokMasukIndexRoute
   '/tu/setoran': typeof AuthenticatedTuSetoranIndexRoute
   '/tu/topup': typeof AuthenticatedTuTopupIndexRoute
 }
@@ -284,6 +293,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/saldo/koreksi/': typeof AuthenticatedSaldoKoreksiIndexRoute
+  '/_authenticated/stok/masuk/': typeof AuthenticatedStokMasukIndexRoute
   '/_authenticated/tu/setoran/': typeof AuthenticatedTuSetoranIndexRoute
   '/_authenticated/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
 }
@@ -316,6 +326,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/users/'
     | '/saldo/koreksi/'
+    | '/stok/masuk/'
     | '/tu/setoran/'
     | '/tu/topup/'
   fileRoutesByTo: FileRoutesByTo
@@ -344,6 +355,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/users'
     | '/saldo/koreksi'
+    | '/stok/masuk'
     | '/tu/setoran'
     | '/tu/topup'
   id:
@@ -375,6 +387,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/'
     | '/_authenticated/users/'
     | '/_authenticated/saldo/koreksi/'
+    | '/_authenticated/stok/masuk/'
     | '/_authenticated/tu/setoran/'
     | '/_authenticated/tu/topup/'
   fileRoutesById: FileRoutesById
@@ -592,6 +605,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTuSetoranIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/stok/masuk/': {
+      id: '/_authenticated/stok/masuk/'
+      path: '/stok/masuk'
+      fullPath: '/stok/masuk/'
+      preLoaderRoute: typeof AuthenticatedStokMasukIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/saldo/koreksi/': {
       id: '/_authenticated/saldo/koreksi/'
       path: '/saldo/koreksi'
@@ -635,6 +655,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMenuIndexRoute: typeof AuthenticatedMenuIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedSaldoKoreksiIndexRoute: typeof AuthenticatedSaldoKoreksiIndexRoute
+  AuthenticatedStokMasukIndexRoute: typeof AuthenticatedStokMasukIndexRoute
   AuthenticatedTuSetoranIndexRoute: typeof AuthenticatedTuSetoranIndexRoute
   AuthenticatedTuTopupIndexRoute: typeof AuthenticatedTuTopupIndexRoute
 }
@@ -649,6 +670,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMenuIndexRoute: AuthenticatedMenuIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedSaldoKoreksiIndexRoute: AuthenticatedSaldoKoreksiIndexRoute,
+  AuthenticatedStokMasukIndexRoute: AuthenticatedStokMasukIndexRoute,
   AuthenticatedTuSetoranIndexRoute: AuthenticatedTuSetoranIndexRoute,
   AuthenticatedTuTopupIndexRoute: AuthenticatedTuTopupIndexRoute,
 }

@@ -1,0 +1,393 @@
+import { useState, useMemo } from 'react'
+import {
+  Search,
+  RefreshCw,
+  RotateCcw,
+  ArrowDownLeft,
+  ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
+  Layers,
+} from 'lucide-react'
+import { formatRupiah, formatNumber, formatDateTime } from '@/lib/formatters'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import type { RiwayatStokItem, JenisMutasiStok } from '../types'
+import { BarangMasukPembalikModal } from './BarangMasukPembalikModal'
+
+interface RiwayatStokTableProps {
+  items: RiwayatStokItem[]
+  loading: boolean
+  onRefresh: () => void
+  totalCount: number
+  currentPage: number
+  pageSize: number
+  onPageChange: (page: number) => void
+  selectedJenis: string
+  onJenisChange: (jenis: string) => void
+}
+
+export function RiwayatStokTable({
+  items,
+  loading,
+  onRefresh,
+  totalCount,
+  currentPage,
+  pageSize,
+  onPageChange,
+  selectedJenis,
+  onJenisChange,
+}: RiwayatStokTableProps) {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedMutasiForPembalik, setSelectedMutasiForPembalik] =
+    useState<RiwayatStokItem | null>(null)
+  const [isPembalikModalOpen, setIsPembalikModalOpen] = useState(false)
+
+  // Filter client-side untuk pencarian cepat
+  const filteredItems = useMemo(() => {
+    if (!searchQuery.trim()) return items
+    const q = searchQuery.toLowerCase()
+    return items.filter(
+      (item) =>
+        (item.menuNama && item.menuNama.toLowerCase().includes(q)) ||
+        (item.referensiId && item.referensiId.toLowerCase().includes(q)) ||
+        (item.alasan && item.alasan.toLowerCase().includes(q))
+    )
+  }, [items, searchQuery])
+
+  const totalPages = Math.ceil(totalCount / pageSize) || 1
+
+  const handleOpenPembalik = (item: RiwayatStokItem) => {
+    setSelectedMutasiForPembalik(item)
+    setIsPembalikModalOpen(true)
+  }
+
+  const renderJenisBadge = (jenis: JenisMutasiStok) => {
+    switch (jenis) {
+      case 'BARANG_MASUK':
+        return (
+          <Badge className='gap-1 border-emerald-500/30 bg-emerald-500/15 text-[11px] font-medium text-emerald-700 dark:text-emerald-400'>
+            <ArrowDownLeft className='h-3 w-3 text-emerald-500' />
+            Barang Masuk
+          </Badge>
+        )
+      case 'BARANG_MASUK_PEMBALIK':
+        return (
+          <Badge className='gap-1 border-destructive/30 bg-destructive/15 text-[11px] font-medium text-destructive'>
+            <RotateCcw className='h-3 w-3 text-destructive' />
+            Pembalik Masuk
+          </Badge>
+        )
+      case 'PENJUALAN':
+        return (
+          <Badge
+            variant='outline'
+            className='gap-1 text-[11px] font-medium text-muted-foreground'
+          >
+            <ArrowUpRight className='h-3 w-3 text-blue-500' />
+            Penjualan
+          </Badge>
+        )
+      case 'PENJUALAN_VOID':
+        return (
+          <Badge variant='secondary' className='gap-1 text-[11px] font-medium'>
+            <RotateCcw className='h-3 w-3 text-amber-500' />
+            Penjualan Void
+          </Badge>
+        )
+      default:
+        return (
+          <Badge variant='outline' className='text-[11px] font-medium'>
+            {jenis.replace(/_/g, ' ')}
+          </Badge>
+        )
+    }
+  }
+
+  return (
+    <div className='space-y-4'>
+      {/* Filter & Toolbar */}
+      <div className='flex flex-col items-center justify-between gap-3 sm:flex-row'>
+        <div className='flex w-full flex-1 items-center gap-2'>
+          <div className='relative max-w-sm flex-1'>
+            <Search className='absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground' />
+            <Input
+              placeholder='Cari nama menu atau no. bukti...'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className='h-9 pl-8 text-xs'
+            />
+          </div>
+
+          <Select value={selectedJenis} onValueChange={onJenisChange}>
+            <SelectTrigger className='h-9 w-[180px] text-xs'>
+              <SelectValue placeholder='Semua Mutasi' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='all' className='text-xs'>
+                Semua Mutasi
+              </SelectItem>
+              <SelectItem value='BARANG_MASUK' className='text-xs'>
+                Hanya Barang Masuk
+              </SelectItem>
+              <SelectItem value='BARANG_MASUK_PEMBALIK' className='text-xs'>
+                Hanya Pembalik Masuk
+              </SelectItem>
+              <SelectItem value='PENJUALAN' className='text-xs'>
+                Penjualan Kasir
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Button
+          variant='outline'
+          size='sm'
+          onClick={onRefresh}
+          disabled={loading}
+          className='h-9 gap-1.5 text-xs'
+        >
+          <RefreshCw
+            className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`}
+          />
+          Muat Ulang
+        </Button>
+      </div>
+
+      {/* Tabel Mutasi */}
+      <div className='overflow-hidden rounded-md border bg-card'>
+        <div className='overflow-x-auto'>
+          <Table>
+            <TableHeader>
+              <TableRow className='bg-muted/40'>
+                <TableHead className='w-36 text-xs'>Waktu & Tanggal</TableHead>
+                <TableHead className='w-36 text-xs'>
+                  No. Bukti / Faktur
+                </TableHead>
+                <TableHead className='min-w-[180px] text-xs'>Menu</TableHead>
+                <TableHead className='w-36 text-xs'>Jenis Mutasi</TableHead>
+                <TableHead className='w-24 text-right text-xs'>Qty</TableHead>
+                <TableHead className='w-32 text-right text-xs'>
+                  Harga Satuan
+                </TableHead>
+                <TableHead className='w-32 text-right text-xs'>
+                  Total Nilai
+                </TableHead>
+                <TableHead className='w-28 text-right text-xs'>
+                  Stok Sisa
+                </TableHead>
+                <TableHead className='w-36 text-center text-xs'>
+                  Aksi / Status
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={9}
+                    className='h-32 text-center text-xs text-muted-foreground'
+                  >
+                    <RefreshCw className='mx-auto mb-2 h-5 w-5 animate-spin text-primary' />
+                    Memuat data riwayat mutasi...
+                  </TableCell>
+                </TableRow>
+              ) : filteredItems.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={9}
+                    className='h-32 text-center text-xs text-muted-foreground'
+                  >
+                    <Layers className='mx-auto mb-2 h-6 w-6 opacity-40' />
+                    Belum ada riwayat mutasi stok yang tercatat
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredItems.map((item) => {
+                  const isMasuk = item.arah === 'MASUK'
+                  return (
+                    <TableRow
+                      key={item.id}
+                      className='text-xs hover:bg-muted/20'
+                    >
+                      {/* Waktu */}
+                      <TableCell className='font-mono whitespace-nowrap text-muted-foreground'>
+                        {formatDateTime(item.waktu)}
+                      </TableCell>
+
+                      {/* No Bukti */}
+                      <TableCell>
+                        <span className='font-mono font-medium text-foreground'>
+                          {item.referensiId}
+                        </span>
+                        {item.alasan && (
+                          <p className='max-w-[140px] truncate text-[10px] text-muted-foreground italic'>
+                            "{item.alasan}"
+                          </p>
+                        )}
+                      </TableCell>
+
+                      {/* Nama Menu */}
+                      <TableCell>
+                        <span className='font-semibold text-foreground'>
+                          {item.menuNama || `Menu #${item.menuId}`}
+                        </span>
+                      </TableCell>
+
+                      {/* Jenis Mutasi Badge */}
+                      <TableCell>{renderJenisBadge(item.jenis)}</TableCell>
+
+                      {/* Qty */}
+                      <TableCell className='text-right font-semibold'>
+                        <span
+                          className={
+                            isMasuk
+                              ? 'text-emerald-600 dark:text-emerald-400'
+                              : 'text-foreground'
+                          }
+                        >
+                          {isMasuk
+                            ? `+${formatNumber(item.qty)}`
+                            : `-${formatNumber(item.qty)}`}
+                        </span>
+                      </TableCell>
+
+                      {/* Harga Satuan */}
+                      <TableCell className='text-right text-muted-foreground'>
+                        {item.hargaBeliSatuan != null
+                          ? formatRupiah(item.hargaBeliSatuan)
+                          : '-'}
+                      </TableCell>
+
+                      {/* Total Nilai */}
+                      <TableCell className='text-right font-medium'>
+                        {item.totalNilai != null
+                          ? formatRupiah(item.totalNilai)
+                          : '-'}
+                      </TableCell>
+
+                      {/* Stok Sesudah */}
+                      <TableCell className='text-right text-muted-foreground'>
+                        {formatNumber(item.stokSetelah)} unit
+                      </TableCell>
+
+                      {/* Aksi Koreksi / Batalkan */}
+                      <TableCell className='text-center'>
+                        {item.jenis === 'BARANG_MASUK' ? (
+                          item.dapatDibalik ? (
+                            <Button
+                              variant='outline'
+                              size='sm'
+                              onClick={() => handleOpenPembalik(item)}
+                              className='h-7 gap-1 border-destructive/30 px-2.5 text-[11px] text-destructive hover:bg-destructive/10 hover:text-destructive'
+                            >
+                              <RotateCcw className='h-3 w-3' />
+                              Koreksi / Balik
+                            </Button>
+                          ) : (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Badge
+                                    variant='secondary'
+                                    className='cursor-help text-[10px] font-normal'
+                                  >
+                                    Sudah Dibalik
+                                  </Badge>
+                                </TooltipTrigger>
+                                <TooltipContent className='text-xs'>
+                                  Barang masuk ini sudah sepenuhnya dibatalkan
+                                  lewat mutasi pembalik.
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )
+                        ) : item.jenis === 'BARANG_MASUK_PEMBALIK' ? (
+                          <Badge
+                            variant='outline'
+                            className='text-[10px] font-normal text-muted-foreground'
+                          >
+                            Entri Pembalik
+                          </Badge>
+                        ) : (
+                          <span className='text-[11px] text-muted-foreground'>
+                            -
+                          </span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Pagination Footer */}
+        {totalCount > 0 && (
+          <div className='flex items-center justify-between border-t bg-muted/20 p-3 text-xs'>
+            <span className='text-muted-foreground'>
+              Menampilkan {filteredItems.length} dari {totalCount} riwayat
+            </span>
+
+            <div className='flex items-center gap-2'>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={() => onPageChange(currentPage - 1)}
+                disabled={currentPage <= 0 || loading}
+                className='h-8 px-2 text-xs'
+              >
+                <ChevronLeft className='mr-1 h-3.5 w-3.5' />
+                Sebelumnya
+              </Button>
+              <span className='text-xs font-medium'>
+                Halaman {currentPage + 1} dari {totalPages}
+              </span>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={() => onPageChange(currentPage + 1)}
+                disabled={currentPage + 1 >= totalPages || loading}
+                className='h-8 px-2 text-xs'
+              >
+                Selanjutnya
+                <ChevronRight className='ml-1 h-3.5 w-3.5' />
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Modal Koreksi Pembalik */}
+      <BarangMasukPembalikModal
+        open={isPembalikModalOpen}
+        onOpenChange={setIsPembalikModalOpen}
+        mutasi={selectedMutasiForPembalik}
+        onSuccess={onRefresh}
+      />
+    </div>
+  )
+}

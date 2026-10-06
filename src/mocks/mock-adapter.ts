@@ -59,6 +59,73 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
     JSON.stringify(MOCK_TRANSAKSI_SESI_TUTUP)
   )
 
+  interface MockRiwayatItem {
+    id: number
+    menuId: number
+    menuNama: string
+    arah: 'MASUK' | 'KELUAR'
+    jenis: string
+    qty: number
+    hargaBeliSatuan: number | null
+    totalNilai: number | null
+    hppSnapshot: number
+    stokSetelah: number
+    referensiTipe: string
+    referensiId: string
+    alasan: string | null
+    mutasiAsalId: number | null
+    sudahDibalik: number | null
+    sisaDapatDibalik: number | null
+    dapatDibalik: boolean
+    aktorId: number
+    waktu: string
+  }
+
+  const riwayatStokList: MockRiwayatItem[] = [
+    {
+      id: 1,
+      menuId: 1,
+      menuNama: 'Nasi Kuning Komplit',
+      arah: 'MASUK',
+      jenis: 'BARANG_MASUK',
+      qty: 25,
+      hargaBeliSatuan: 10000,
+      totalNilai: 250000,
+      hppSnapshot: 10000,
+      stokSetelah: 25,
+      referensiTipe: 'BARANG_MASUK',
+      referensiId: 'BM-20261005-001',
+      alasan: null,
+      mutasiAsalId: null,
+      sudahDibalik: 0,
+      sisaDapatDibalik: 25,
+      dapatDibalik: true,
+      aktorId: 1,
+      waktu: new Date(Date.now() - 86400000).toISOString(),
+    },
+    {
+      id: 2,
+      menuId: 2,
+      menuNama: 'Es Teh Manis',
+      arah: 'MASUK',
+      jenis: 'BARANG_MASUK',
+      qty: 50,
+      hargaBeliSatuan: 2000,
+      totalNilai: 100000,
+      hppSnapshot: 2000,
+      stokSetelah: 50,
+      referensiTipe: 'BARANG_MASUK',
+      referensiId: 'BM-20261005-002',
+      alasan: null,
+      mutasiAsalId: null,
+      sudahDibalik: 0,
+      sisaDapatDibalik: 50,
+      dapatDibalik: true,
+      aktorId: 1,
+      waktu: new Date(Date.now() - 43200000).toISOString(),
+    },
+  ]
+
   axiosInstance.interceptors.request.use(
     async (config: InternalAxiosRequestConfig) => {
       const url = config.url || ''
@@ -71,7 +138,6 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
         config.adapter = async () => {
           // Simulasi latensi jaringan natural (100ms - 250ms)
           await new Promise((r) => setTimeout(r, 150))
-
           if (mockResponse.status >= 200 && mockResponse.status < 300) {
             return {
               data: mockResponse.data,
@@ -1309,6 +1375,235 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
               },
               saldoSetelah: kartuTamu.saldo,
               idempotentReplay: false,
+            },
+          },
+        }
+      }
+    }
+
+    // --- 8. Stok: Barang Masuk, Pembalik, dan Riwayat ---
+    if (url.includes('/api/stok/barang-masuk-pembalik') && method === 'post') {
+      const mutasiId = Number(payload.mutasiId)
+      const targetMutasi = riwayatStokList.find((r) => r.id === mutasiId)
+      if (!targetMutasi) {
+        return {
+          status: 404,
+          data: { message: 'Data barang masuk tidak ditemukan' },
+        }
+      }
+
+      const sisa = targetMutasi.sisaDapatDibalik ?? targetMutasi.qty
+      const qtyBalik = payload.qty ? Math.min(sisa, Number(payload.qty)) : sisa
+      if (qtyBalik <= 0 || qtyBalik > sisa) {
+        return {
+          status: 400,
+          data: { message: 'Qty pembalik tidak valid atau melebihi sisa' },
+        }
+      }
+
+      const alasan = String(payload.alasan || '').trim()
+      if (!alasan) {
+        return { status: 400, data: { message: 'Alasan pembalik wajib diisi' } }
+      }
+
+      const referensiId = String(
+        payload.referensiId || `BMP-${Date.now()}`
+      ).trim()
+
+      const targetMenu = menuList.find((m) => m.id === targetMutasi.menuId)
+      const stokSebelum = targetMenu ? targetMenu.stok : 0
+      const stokSesudah = Math.max(0, stokSebelum - qtyBalik)
+      if (targetMenu) {
+        targetMenu.stok = stokSesudah
+      }
+
+      targetMutasi.sudahDibalik = (targetMutasi.sudahDibalik || 0) + qtyBalik
+      targetMutasi.sisaDapatDibalik = sisa - qtyBalik
+      targetMutasi.dapatDibalik = (targetMutasi.sisaDapatDibalik || 0) > 0
+
+      const now = new Date()
+      const newId =
+        riwayatStokList.length > 0
+          ? Math.max(...riwayatStokList.map((r) => r.id)) + 1
+          : 1
+      const mutasiPembalik: MockRiwayatItem = {
+        id: newId,
+        menuId: targetMutasi.menuId,
+        menuNama: targetMutasi.menuNama,
+        arah: 'KELUAR',
+        jenis: 'BARANG_MASUK_PEMBALIK',
+        qty: qtyBalik,
+        hargaBeliSatuan: targetMutasi.hargaBeliSatuan,
+        totalNilai: (targetMutasi.hargaBeliSatuan || 0) * qtyBalik,
+        hppSnapshot: targetMutasi.hppSnapshot,
+        stokSetelah: stokSesudah,
+        referensiTipe: 'BARANG_MASUK_PEMBALIK',
+        referensiId,
+        alasan,
+        mutasiAsalId: targetMutasi.id,
+        sudahDibalik: null,
+        sisaDapatDibalik: null,
+        dapatDibalik: false,
+        aktorId: 1,
+        waktu: now.toISOString(),
+      }
+      riwayatStokList.unshift(mutasiPembalik)
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Barang masuk pembalik tercatat',
+          data: {
+            mutasiId: newId,
+            menuId: targetMutasi.menuId,
+            stokSebelum,
+            stokSesudah,
+            hppSebelum: targetMutasi.hppSnapshot,
+            hppSesudah: targetMutasi.hppSnapshot,
+            jenis: 'BARANG_MASUK_PEMBALIK',
+            waktu: now.toISOString(),
+          },
+        },
+      }
+    }
+
+    if (url.includes('/api/stok/barang-masuk') && method === 'post') {
+      const menuId = Number(payload.menuId)
+      const qty = Number(payload.qty) || 0
+      const hargaBeli = Number(payload.hargaBeliPerUnit) || 0
+      const referensiId = String(
+        payload.referensiId || `BM-${Date.now()}`
+      ).trim()
+
+      if (!menuId || qty <= 0) {
+        return { status: 400, data: { message: 'Menu ID dan Qty harus valid' } }
+      }
+
+      const targetMenu = menuList.find((m) => m.id === menuId)
+      if (!targetMenu) {
+        return { status: 404, data: { message: 'Menu tidak ditemukan' } }
+      }
+
+      const stokSebelum = targetMenu.stok
+      const stokSesudah = stokSebelum + qty
+      targetMenu.stok = stokSesudah
+
+      const now = new Date()
+      const newId =
+        riwayatStokList.length > 0
+          ? Math.max(...riwayatStokList.map((r) => r.id)) + 1
+          : 1
+      const itemMasuk: MockRiwayatItem = {
+        id: newId,
+        menuId,
+        menuNama: targetMenu.nama,
+        arah: 'MASUK',
+        jenis: 'BARANG_MASUK',
+        qty,
+        hargaBeliSatuan: hargaBeli,
+        totalNilai: qty * hargaBeli,
+        hppSnapshot: hargaBeli,
+        stokSetelah: stokSesudah,
+        referensiTipe: 'BARANG_MASUK',
+        referensiId,
+        alasan: null,
+        mutasiAsalId: null,
+        sudahDibalik: 0,
+        sisaDapatDibalik: qty,
+        dapatDibalik: true,
+        aktorId: 1,
+        waktu: now.toISOString(),
+      }
+      riwayatStokList.unshift(itemMasuk)
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Barang masuk tercatat',
+          data: {
+            mutasiId: newId,
+            menuId,
+            stokSebelum,
+            stokSesudah,
+            hppSebelum: Math.round(targetMenu.harga_jual * 0.7),
+            hppSesudah: hargaBeli,
+            jenis: 'BARANG_MASUK',
+            waktu: now.toISOString(),
+          },
+        },
+      }
+    }
+
+    if (url.includes('/api/stok/riwayat') && method === 'get') {
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Riwayat mutasi stok berhasil dimuat',
+          data: {
+            items: riwayatStokList,
+            total: riwayatStokList.length,
+            halaman: 0,
+            ukuran: 50,
+            totalHalaman: 1,
+          },
+        },
+      }
+    }
+
+    if (url.includes('/api/stok/menipis') && method === 'get') {
+      const menipisList = menuList
+        .filter((m) => m.stok <= m.stok_minimum)
+        .map((m) => ({
+          menuId: m.id,
+          stok: m.stok,
+          stokMinimum: m.stok_minimum,
+          hpp: m.hpp || Math.round(m.harga_jual * 0.7),
+          nilaiPersediaan: m.stok * (m.hpp || Math.round(m.harga_jual * 0.7)),
+          menipis: true,
+        }))
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Daftar stok menipis',
+          data: menipisList,
+        },
+      }
+    }
+
+    const stokMenuMatch = url.match(/\/api\/stok\/(\d+)$/)
+    if (stokMenuMatch && method === 'get') {
+      const menuId = Number(stokMenuMatch[1])
+      const targetMenu = menuList.find((m) => m.id === menuId)
+      if (targetMenu) {
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            responseCode: 200,
+            status: 'SUCCESS',
+            message: 'Data stok menu',
+            data: {
+              menuId: targetMenu.id,
+              stok: targetMenu.stok,
+              stokMinimum: targetMenu.stok_minimum,
+              hpp: targetMenu.hpp || Math.round(targetMenu.harga_jual * 0.7),
+              nilaiPersediaan:
+                targetMenu.stok *
+                (targetMenu.hpp || Math.round(targetMenu.harga_jual * 0.7)),
+              menipis: targetMenu.stok <= targetMenu.stok_minimum,
             },
           },
         }

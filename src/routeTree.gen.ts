@@ -37,6 +37,8 @@ import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_auth
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedTuTopupIndexRouteImport } from './routes/_authenticated/tu/topup/index'
 import { Route as AuthenticatedTuSetoranIndexRouteImport } from './routes/_authenticated/tu/setoran/index'
+import { Route as AuthenticatedStokRusakIndexRouteImport } from './routes/_authenticated/stok/rusak/index'
+import { Route as AuthenticatedStokOpnameIndexRouteImport } from './routes/_authenticated/stok/opname/index'
 import { Route as AuthenticatedStokMasukIndexRouteImport } from './routes/_authenticated/stok/masuk/index'
 import { Route as AuthenticatedSaldoKoreksiIndexRouteImport } from './routes/_authenticated/saldo/koreksi/index'
 
@@ -191,6 +193,18 @@ const AuthenticatedTuSetoranIndexRoute =
     path: '/tu/setoran/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedStokRusakIndexRoute =
+  AuthenticatedStokRusakIndexRouteImport.update({
+    id: '/stok/rusak/',
+    path: '/stok/rusak/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedStokOpnameIndexRoute =
+  AuthenticatedStokOpnameIndexRouteImport.update({
+    id: '/stok/opname/',
+    path: '/stok/opname/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedStokMasukIndexRoute =
   AuthenticatedStokMasukIndexRouteImport.update({
     id: '/stok/masuk/',
@@ -232,6 +246,8 @@ export interface FileRoutesByFullPath {
   '/users/': typeof AuthenticatedUsersIndexRoute
   '/saldo/koreksi/': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/stok/masuk/': typeof AuthenticatedStokMasukIndexRoute
+  '/stok/opname/': typeof AuthenticatedStokOpnameIndexRoute
+  '/stok/rusak/': typeof AuthenticatedStokRusakIndexRoute
   '/tu/setoran/': typeof AuthenticatedTuSetoranIndexRoute
   '/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
 }
@@ -261,6 +277,8 @@ export interface FileRoutesByTo {
   '/users': typeof AuthenticatedUsersIndexRoute
   '/saldo/koreksi': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/stok/masuk': typeof AuthenticatedStokMasukIndexRoute
+  '/stok/opname': typeof AuthenticatedStokOpnameIndexRoute
+  '/stok/rusak': typeof AuthenticatedStokRusakIndexRoute
   '/tu/setoran': typeof AuthenticatedTuSetoranIndexRoute
   '/tu/topup': typeof AuthenticatedTuTopupIndexRoute
 }
@@ -294,6 +312,8 @@ export interface FileRoutesById {
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/saldo/koreksi/': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/_authenticated/stok/masuk/': typeof AuthenticatedStokMasukIndexRoute
+  '/_authenticated/stok/opname/': typeof AuthenticatedStokOpnameIndexRoute
+  '/_authenticated/stok/rusak/': typeof AuthenticatedStokRusakIndexRoute
   '/_authenticated/tu/setoran/': typeof AuthenticatedTuSetoranIndexRoute
   '/_authenticated/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
 }
@@ -327,6 +347,8 @@ export interface FileRouteTypes {
     | '/users/'
     | '/saldo/koreksi/'
     | '/stok/masuk/'
+    | '/stok/opname/'
+    | '/stok/rusak/'
     | '/tu/setoran/'
     | '/tu/topup/'
   fileRoutesByTo: FileRoutesByTo
@@ -356,6 +378,8 @@ export interface FileRouteTypes {
     | '/users'
     | '/saldo/koreksi'
     | '/stok/masuk'
+    | '/stok/opname'
+    | '/stok/rusak'
     | '/tu/setoran'
     | '/tu/topup'
   id:
@@ -388,6 +412,8 @@ export interface FileRouteTypes {
     | '/_authenticated/users/'
     | '/_authenticated/saldo/koreksi/'
     | '/_authenticated/stok/masuk/'
+    | '/_authenticated/stok/opname/'
+    | '/_authenticated/stok/rusak/'
     | '/_authenticated/tu/setoran/'
     | '/_authenticated/tu/topup/'
   fileRoutesById: FileRoutesById
@@ -605,6 +631,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTuSetoranIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/stok/rusak/': {
+      id: '/_authenticated/stok/rusak/'
+      path: '/stok/rusak'
+      fullPath: '/stok/rusak/'
+      preLoaderRoute: typeof AuthenticatedStokRusakIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/stok/opname/': {
+      id: '/_authenticated/stok/opname/'
+      path: '/stok/opname'
+      fullPath: '/stok/opname/'
+      preLoaderRoute: typeof AuthenticatedStokOpnameIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/stok/masuk/': {
       id: '/_authenticated/stok/masuk/'
       path: '/stok/masuk'
@@ -656,6 +696,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedSaldoKoreksiIndexRoute: typeof AuthenticatedSaldoKoreksiIndexRoute
   AuthenticatedStokMasukIndexRoute: typeof AuthenticatedStokMasukIndexRoute
+  AuthenticatedStokOpnameIndexRoute: typeof AuthenticatedStokOpnameIndexRoute
+  AuthenticatedStokRusakIndexRoute: typeof AuthenticatedStokRusakIndexRoute
   AuthenticatedTuSetoranIndexRoute: typeof AuthenticatedTuSetoranIndexRoute
   AuthenticatedTuTopupIndexRoute: typeof AuthenticatedTuTopupIndexRoute
 }
@@ -671,6 +713,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedSaldoKoreksiIndexRoute: AuthenticatedSaldoKoreksiIndexRoute,
   AuthenticatedStokMasukIndexRoute: AuthenticatedStokMasukIndexRoute,
+  AuthenticatedStokOpnameIndexRoute: AuthenticatedStokOpnameIndexRoute,
+  AuthenticatedStokRusakIndexRoute: AuthenticatedStokRusakIndexRoute,
   AuthenticatedTuSetoranIndexRoute: AuthenticatedTuSetoranIndexRoute,
   AuthenticatedTuTopupIndexRoute: AuthenticatedTuTopupIndexRoute,
 }

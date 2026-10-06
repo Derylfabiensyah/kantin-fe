@@ -7,6 +7,9 @@ import type {
   BarangMasukSingleRequest,
   BarangMasukPembalikRequest,
   JenisMutasiStok,
+  OpnameRequest,
+  OpnameBatchRequest,
+  OpnameBatchResponse,
 } from '../types'
 
 interface ApiResponse<T> {
@@ -139,5 +142,53 @@ export const stokApi = {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
     return res.data.data
+  },
+
+  /**
+   * Penyesuaian stok opname fisik per item (PRD §7.3)
+   */
+  async sesuaikanOpname(payload: OpnameRequest): Promise<HasilMutasiStok> {
+    const res = await apiClient.post<ApiResponse<HasilMutasiStok>>(
+      '/api/stok/opname',
+      payload
+    )
+    return res.data.data
+  },
+
+  /**
+   * Penyesuaian stok opname batch multi-item (PRD §7.3) — transaksi atomik
+   */
+  async sesuaikanOpnameBatch(
+    payload: OpnameBatchRequest
+  ): Promise<OpnameBatchResponse> {
+    const res = await apiClient.post<ApiResponse<OpnameBatchResponse>>(
+      '/api/stok/opname-batch',
+      payload
+    )
+    return res.data.data
+  },
+
+  /**
+   * Catat barang rusak harian non-opname (mengurangi stok sistem langsung)
+   */
+  async catatBarangRusak(params: {
+    menuId: number
+    qtyRusak: number
+    stokSistem: number
+    alasan: string
+    referensiId: string
+  }): Promise<OpnameBatchResponse> {
+    const qtyFisik = Math.max(0, params.stokSistem - params.qtyRusak)
+    return this.sesuaikanOpnameBatch({
+      referensiId: params.referensiId,
+      items: [
+        {
+          menuId: params.menuId,
+          qtyFisik,
+          alasan: params.alasan,
+          rusak: true,
+        },
+      ],
+    })
   },
 }

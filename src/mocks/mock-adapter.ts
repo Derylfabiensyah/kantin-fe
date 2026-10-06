@@ -3,16 +3,25 @@
  * Mengintersep request saat VITE_USE_MOCK=true sehingga tim frontend bisa mengembangkan UI
  * tanpa perlu menunggu backend berjalan.
  */
-
-import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import type {
+  AxiosInstance,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from 'axios'
 import {
   MOCK_MENU,
   MOCK_KATEGORI,
   MOCK_SISWA,
   MOCK_KARTU_TAMU,
+  MOCK_SETORAN_KAS,
+  MOCK_KOREKSI_BENDAHARA,
+  MOCK_TRANSAKSI_SESI_TUTUP,
   type MenuItemMock,
   type KartuSiswaMock,
   type KartuTamuMock,
+  type SetoranKasTUMock,
+  type MutasiKoreksiMock,
+  type TransaksiSesiTutupMock,
 } from './mock-data'
 
 export interface MockResponseData {
@@ -40,52 +49,63 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
   const kategoriList = [...MOCK_KATEGORI]
   const siswaList: KartuSiswaMock[] = [...MOCK_SISWA]
   const kartuTamuList: KartuTamuMock[] = [...MOCK_KARTU_TAMU]
+  const setoranKasList: SetoranKasTUMock[] = JSON.parse(
+    JSON.stringify(MOCK_SETORAN_KAS)
+  )
+  const koreksiList: MutasiKoreksiMock[] = JSON.parse(
+    JSON.stringify(MOCK_KOREKSI_BENDAHARA)
+  )
+  const transaksiSesiTutupList: TransaksiSesiTutupMock[] = JSON.parse(
+    JSON.stringify(MOCK_TRANSAKSI_SESI_TUTUP)
+  )
 
-  axiosInstance.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
-    const url = config.url || ''
-    const method = (config.method || 'get').toLowerCase()
+  axiosInstance.interceptors.request.use(
+    async (config: InternalAxiosRequestConfig) => {
+      const url = config.url || ''
+      const method = (config.method || 'get').toLowerCase()
 
-    // Cek apakah request harus di-handle oleh mock
-    const mockResponse = handleMockRequest(url, method, config.data)
-    if (mockResponse) {
-      // Buat custom adapter yang langsung resolve response mock
-      config.adapter = async () => {
-        // Simulasi latensi jaringan natural (100ms - 250ms)
-        await new Promise((r) => setTimeout(r, 150))
+      // Cek apakah request harus di-handle oleh mock
+      const mockResponse = handleMockRequest(url, method, config.data)
+      if (mockResponse) {
+        // Buat custom adapter yang langsung resolve response mock
+        config.adapter = async () => {
+          // Simulasi latensi jaringan natural (100ms - 250ms)
+          await new Promise((r) => setTimeout(r, 150))
 
-        if (mockResponse.status >= 200 && mockResponse.status < 300) {
-          return {
-            data: mockResponse.data,
-            status: mockResponse.status,
-            statusText: 'OK',
-            headers: {},
-            config,
-          } as AxiosResponse
-        } else {
-          const errMsg = mockResponse.data?.message || 'Mock Error'
-          const error = new Error(errMsg) as Error & {
-            response?: {
-              data: MockResponseData
-              status: number
-              statusText: string
-              headers: Record<string, string>
-              config: InternalAxiosRequestConfig
+          if (mockResponse.status >= 200 && mockResponse.status < 300) {
+            return {
+              data: mockResponse.data,
+              status: mockResponse.status,
+              statusText: 'OK',
+              headers: {},
+              config,
+            } as AxiosResponse
+          } else {
+            const errMsg = mockResponse.data?.message || 'Mock Error'
+            const error = new Error(errMsg) as Error & {
+              response?: {
+                data: MockResponseData
+                status: number
+                statusText: string
+                headers: Record<string, string>
+                config: InternalAxiosRequestConfig
+              }
             }
+            error.response = {
+              data: mockResponse.data,
+              status: mockResponse.status,
+              statusText: 'Error',
+              headers: {},
+              config,
+            }
+            throw error
           }
-          error.response = {
-            data: mockResponse.data,
-            status: mockResponse.status,
-            statusText: 'Error',
-            headers: {},
-            config,
-          }
-          throw error
         }
       }
-    }
 
-    return config
-  })
+      return config
+    }
+  )
 
   function handleMockRequest(
     url: string,
@@ -105,7 +125,9 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
 
     // --- 1. Auth Login Staf ---
     if (url.includes('/api/v1/auth/login') && method === 'post') {
-      const email = String(payload.email || payload.username || '').toLowerCase()
+      const email = String(
+        payload.email || payload.username || ''
+      ).toLowerCase()
       const password = String(payload.password || '')
 
       if (password === 'salah' || password === 'wrong') {
@@ -120,7 +142,13 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
 
       let detectedRole = 'admin'
-      let roleList = ['ROLE_ADMIN', 'ROLE_PENGELOLA_KANTIN', 'ROLE_PETUGAS_KANTIN', 'ROLE_TU_SEKOLAH', 'ROLE_BENDAHARA']
+      let roleList = [
+        'ROLE_ADMIN',
+        'ROLE_PENGELOLA_KANTIN',
+        'ROLE_PETUGAS_KANTIN',
+        'ROLE_TU_SEKOLAH',
+        'ROLE_BENDAHARA',
+      ]
       let namaStaf = 'Wibisana Bama (Admin)'
 
       if (email.includes('kasir')) {
@@ -173,7 +201,8 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       if (method === 'get') {
         if (targetId) {
           const item = menuList.find((m) => m.id === targetId)
-          if (!item) return { status: 404, data: { message: 'Menu tidak ditemukan' } }
+          if (!item)
+            return { status: 404, data: { message: 'Menu tidak ditemukan' } }
           return {
             status: 200,
             data: {
@@ -217,8 +246,11 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
 
       if (method === 'post') {
-        const nextId = menuList.length > 0 ? Math.max(...menuList.map((m) => m.id)) + 1 : 1
-        const kat = kategoriList.find((k) => k.id === Number(payload.kategoriId))
+        const nextId =
+          menuList.length > 0 ? Math.max(...menuList.map((m) => m.id)) + 1 : 1
+        const kat = kategoriList.find(
+          (k) => k.id === Number(payload.kategoriId)
+        )
         const newItem: MenuItemMock = {
           id: nextId,
           nama: String(payload.nama || ''),
@@ -256,18 +288,33 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
 
       if (method === 'put' && targetId) {
         const idx = menuList.findIndex((m) => m.id === targetId)
-        if (idx === -1) return { status: 404, data: { message: 'Menu tidak ditemukan' } }
-        const kat = kategoriList.find((k) => k.id === Number(payload.kategoriId))
+        if (idx === -1)
+          return { status: 404, data: { message: 'Menu tidak ditemukan' } }
+        const kat = kategoriList.find(
+          (k) => k.id === Number(payload.kategoriId)
+        )
         menuList[idx] = {
           ...menuList[idx],
           nama: String(payload.nama || menuList[idx].nama),
           kategori_id: Number(payload.kategoriId) || menuList[idx].kategori_id,
           kategori_nama: kat ? kat.nama : menuList[idx].kategori_nama,
-          harga_jual: payload.hargaJual !== undefined ? Number(payload.hargaJual) : menuList[idx].harga_jual,
+          harga_jual:
+            payload.hargaJual !== undefined
+              ? Number(payload.hargaJual)
+              : menuList[idx].harga_jual,
           satuan: String(payload.satuan || menuList[idx].satuan),
-          stok_minimum: payload.stokMinimum !== undefined ? Number(payload.stokMinimum) : menuList[idx].stok_minimum,
-          foto_url: payload.fotoUrl !== undefined ? String(payload.fotoUrl || '') : menuList[idx].foto_url,
-          is_active: payload.aktif !== undefined ? Boolean(payload.aktif) : menuList[idx].is_active,
+          stok_minimum:
+            payload.stokMinimum !== undefined
+              ? Number(payload.stokMinimum)
+              : menuList[idx].stok_minimum,
+          foto_url:
+            payload.fotoUrl !== undefined
+              ? String(payload.fotoUrl || '')
+              : menuList[idx].foto_url,
+          is_active:
+            payload.aktif !== undefined
+              ? Boolean(payload.aktif)
+              : menuList[idx].is_active,
         }
         return {
           status: 200,
@@ -292,7 +339,8 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
 
       if (method === 'delete' && targetId) {
         const idx = menuList.findIndex((m) => m.id === targetId)
-        if (idx === -1) return { status: 404, data: { message: 'Menu tidak ditemukan' } }
+        if (idx === -1)
+          return { status: 404, data: { message: 'Menu tidak ditemukan' } }
         // Soft delete
         menuList[idx].is_active = false
         return {
@@ -318,7 +366,9 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
           urutan: k.id,
           isActive: k.is_active,
           aktif: k.is_active,
-          jumlahItem: menuList.filter((m) => m.kategori_id === k.id && m.is_active).length,
+          jumlahItem: menuList.filter(
+            (m) => m.kategori_id === k.id && m.is_active
+          ).length,
         }))
         return {
           status: 200,
@@ -331,7 +381,10 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
 
       if (method === 'post') {
-        const nextId = kategoriList.length > 0 ? Math.max(...kategoriList.map((k) => k.id)) + 1 : 1
+        const nextId =
+          kategoriList.length > 0
+            ? Math.max(...kategoriList.map((k) => k.id)) + 1
+            : 1
         const newKat = {
           id: nextId,
           nama: String(payload.nama || ''),
@@ -359,7 +412,8 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
 
       if (method === 'put' && targetId) {
         const idx = kategoriList.findIndex((k) => k.id === targetId)
-        if (idx === -1) return { status: 404, data: { message: 'Kategori tidak ditemukan' } }
+        if (idx === -1)
+          return { status: 404, data: { message: 'Kategori tidak ditemukan' } }
         kategoriList[idx] = {
           ...kategoriList[idx],
           nama: String(payload.nama || kategoriList[idx].nama),
@@ -376,7 +430,9 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
               urutan: Number(payload.urutan) || kategoriList[idx].id,
               isActive: kategoriList[idx].is_active,
               aktif: kategoriList[idx].is_active,
-              jumlahItem: menuList.filter((m) => m.kategori_id === targetId && m.is_active).length,
+              jumlahItem: menuList.filter(
+                (m) => m.kategori_id === targetId && m.is_active
+              ).length,
             },
           },
         }
@@ -384,14 +440,17 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
 
       if (method === 'delete' && targetId) {
         // Pengecekan aturan bisnis: jika kategori masih digunakan menu aktif, tidak bisa dihapus
-        const activeUsage = menuList.some((m) => m.kategori_id === targetId && m.is_active)
+        const activeUsage = menuList.some(
+          (m) => m.kategori_id === targetId && m.is_active
+        )
         if (activeUsage) {
           return {
             status: 400,
             data: {
               code: 400,
               status: 'BAD_REQUEST',
-              message: 'Kategori ini masih digunakan oleh menu aktif. Nonaktifkan atau pindahkan menu terlebih dahulu sebelum menghapus kategori.',
+              message:
+                'Kategori ini masih digunakan oleh menu aktif. Nonaktifkan atau pindahkan menu terlebih dahulu sebelum menghapus kategori.',
             },
           }
         }
@@ -435,12 +494,19 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       const items = trxPayload.items || []
 
       if (!kartuUid) {
-        return { status: 400, data: { message: 'UID kartu tidak boleh kosong' } }
+        return {
+          status: 400,
+          data: { message: 'UID kartu tidak boleh kosong' },
+        }
       }
 
       // Validasi 1: Kartu dikenal?
-      const siswa = siswaList.find((s) => s.uid.toUpperCase() === kartuUid.toUpperCase())
-      const kartuTamu = kartuTamuList.find((k) => k.uid.toUpperCase() === kartuUid.toUpperCase())
+      const siswa = siswaList.find(
+        (s) => s.uid.toUpperCase() === kartuUid.toUpperCase()
+      )
+      const kartuTamu = kartuTamuList.find(
+        (k) => k.uid.toUpperCase() === kartuUid.toUpperCase()
+      )
 
       if (!siswa && !kartuTamu) {
         return { status: 404, data: { message: 'Kartu tidak dikenal' } }
@@ -450,7 +516,11 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       if (siswa?.is_blocked || (kartuTamu && !kartuTamu.is_active)) {
         return {
           status: 400,
-          data: { message: siswa ? 'Kartu diblokir, hubungi orang tua' : 'Kartu tamu diblokir' },
+          data: {
+            message: siswa
+              ? 'Kartu diblokir, hubungi orang tua'
+              : 'Kartu tamu diblokir',
+          },
         }
       }
 
@@ -459,14 +529,19 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       for (const cartItem of items) {
         const menuItem = menuList.find((m) => m.id === cartItem.menu_id)
         if (!menuItem) {
-          return { status: 404, data: { message: `Menu ID ${cartItem.menu_id} tidak ditemukan` } }
+          return {
+            status: 404,
+            data: { message: `Menu ID ${cartItem.menu_id} tidak ditemukan` },
+          }
         }
 
         // Validasi 4: Stok cukup?
         if (menuItem.stok < cartItem.qty) {
           return {
             status: 400,
-            data: { message: `Stok ${menuItem.nama} tidak cukup (sisa ${menuItem.stok})` },
+            data: {
+              message: `Stok ${menuItem.nama} tidak cukup (sisa ${menuItem.stok})`,
+            },
           }
         }
 
@@ -484,10 +559,15 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       // Validasi 5: Limit harian (hanya untuk siswa)
       if (siswa && siswa.limit_harian > 0) {
         if (siswa.belanja_hari_ini + totalBelanja > siswa.limit_harian) {
-          const sisaLimit = Math.max(0, siswa.limit_harian - siswa.belanja_hari_ini)
+          const sisaLimit = Math.max(
+            0,
+            siswa.limit_harian - siswa.belanja_hari_ini
+          )
           return {
             status: 400,
-            data: { message: `Melebihi limit harian (sisa Rp ${sisaLimit.toLocaleString('id-ID')})` },
+            data: {
+              message: `Melebihi limit harian (sisa Rp ${sisaLimit.toLocaleString('id-ID')})`,
+            },
           }
         }
       }
@@ -572,7 +652,10 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
     }
 
     // --- 6. TU: Pencarian Siswa & Kartu Tamu (Backend-aligned /api/kartu-tamu) ---
-    if (url.includes('/api/v1/tu/siswa') && method === 'get') {
+    if (
+      (url.includes('/api/v1/tu/siswa') || url.includes('/api/tu/siswa')) &&
+      method === 'get'
+    ) {
       return {
         status: 200,
         data: {
@@ -583,11 +666,122 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
     }
 
-    // Saldo Query: GET /api/saldo?subjekTipe=KARTU_TAMU&subjekId=...
-    if (url.includes('/api/saldo') && !url.includes('/api/saldo/topup') && !url.includes('/api/saldo/koreksi') && method === 'get') {
+    // --- 7. TU: Setoran Kas TU Harian ---
+    // GET /api/v1/tu/setoran or /api/tu/setoran
+    if (
+      (url.includes('/api/v1/tu/setoran') || url.includes('/api/tu/setoran')) &&
+      !url.includes('/konfirmasi') &&
+      method === 'get'
+    ) {
       const urlObj = new URL(url, 'http://localhost')
-      const subjekTipe = urlObj.searchParams.get('subjekTipe')
+      const tanggalParam = urlObj.searchParams.get('tanggal')
+      const petugasIdParam = urlObj.searchParams.get('petugasId')
+      const statusParam = urlObj.searchParams.get('status')
+
+      let filtered = [...setoranKasList]
+      if (tanggalParam) {
+        filtered = filtered.filter((s) => s.tanggal === tanggalParam)
+      }
+      if (petugasIdParam) {
+        filtered = filtered.filter(
+          (s) => s.petugas_id === Number(petugasIdParam)
+        )
+      }
+      if (statusParam && statusParam !== 'ALL') {
+        filtered = filtered.filter((s) => s.status === statusParam)
+      }
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Daftar setoran kas TU berhasil diambil',
+          data: filtered,
+        },
+      }
+    }
+
+    // POST /api/v1/tu/setoran/konfirmasi or /api/tu/setoran/konfirmasi or /api/v1/tu/setoran/:id/konfirmasi
+    if (
+      (url.includes('/api/v1/tu/setoran') || url.includes('/api/tu/setoran')) &&
+      (url.includes('/konfirmasi') || method === 'post')
+    ) {
+      const idMatch = url.match(/\/setoran\/([^/]+)\/konfirmasi/)
+      const targetId =
+        (idMatch ? idMatch[1] : (payload.id as string)) ||
+        (payload.setoran_id as string)
+      const uangFisik = Number(payload.uang_fisik ?? payload.uangFisik) || 0
+      const catatan = String(payload.catatan ?? payload.keterangan ?? '').trim()
+      const bendaharaNama = String(
+        payload.bendahara_nama ?? 'Siti Rahma (Bendahara)'
+      )
+
+      const setoranIdx = setoranKasList.findIndex((s) => s.id === targetId)
+      if (setoranIdx === -1) {
+        return {
+          status: 404,
+          data: {
+            code: 404,
+            status: 'NOT_FOUND',
+            message: `Setoran kas dengan ID ${targetId} tidak ditemukan`,
+          },
+        }
+      }
+
+      const item = setoranKasList[setoranIdx]
+      const selisih = uangFisik - item.total_sistem
+
+      if (selisih !== 0 && !catatan) {
+        return {
+          status: 400,
+          data: {
+            code: 400,
+            status: 'BAD_REQUEST',
+            message:
+              'Terdapat selisih kas fisik! Alasan / Berita acara selisih wajib diisi.',
+          },
+        }
+      }
+
+      setoranKasList[setoranIdx] = {
+        ...item,
+        uang_fisik: uangFisik,
+        selisih,
+        status: 'TERKONFIRMASI',
+        catatan:
+          catatan ||
+          (selisih === 0
+            ? 'Uang fisik pas sesuai total sistem'
+            : `Selisih kas ${selisih < 0 ? 'kurang' : 'lebih'} Rp ${Math.abs(selisih).toLocaleString('id-ID')}`),
+        bendahara_id: 10,
+        bendahara_nama: bendaharaNama,
+        konfirmasi_pada: new Date().toISOString(),
+      }
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Setoran kas TU berhasil dikonfirmasi bendahara',
+          data: setoranKasList[setoranIdx],
+        },
+      }
+    }
+
+    // --- 8. Saldo Query (Siswa & Kartu Tamu) ---
+    // GET /api/saldo?subjekTipe=...&subjekId=...
+    if (
+      url.includes('/api/saldo') &&
+      !url.includes('/api/saldo/topup') &&
+      !url.includes('/api/saldo/koreksi') &&
+      method === 'get'
+    ) {
+      const urlObj = new URL(url, 'http://localhost')
+      const subjekTipe = urlObj.searchParams.get('subjekTipe') || 'SISWA'
       const subjekId = Number(urlObj.searchParams.get('subjekId'))
+
       if (subjekTipe === 'KARTU_TAMU') {
         const kt = kartuTamuList.find((k) => k.id === subjekId)
         return {
@@ -596,53 +790,273 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
             code: 200,
             status: 'SUCCESS',
             data: {
+              subjekTipe: 'KARTU_TAMU',
+              subjekId,
               saldo: kt ? kt.saldo : 0,
               belanjaHariIni: 0,
               limitHarian: null,
+              mutasiTerbaru: [],
+            },
+          },
+        }
+      } else {
+        const siswa = siswaList.find((s) => s.siswa_id === subjekId)
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            data: {
+              subjekTipe: 'SISWA',
+              subjekId,
+              saldo: siswa ? siswa.saldo : 0,
+              belanjaHariIni: siswa ? siswa.belanja_hari_ini : 0,
+              limitHarian: siswa ? siswa.limit_harian : null,
+              mutasiTerbaru: [],
             },
           },
         }
       }
     }
 
-    // Koreksi Saldo: POST /api/saldo/koreksi
-    if (url.includes('/api/saldo/koreksi') && method === 'post') {
-      const subjekTipe = (payload.subjekTipe as string) || 'KARTU_TAMU'
-      const subjekId = Number(payload.subjekId)
-      const arah = (payload.arah as string) || 'DEBIT'
-      const nominal = Number(payload.nominal) || 0
-      if (subjekTipe === 'KARTU_TAMU') {
-        const kt = kartuTamuList.find((k) => k.id === subjekId)
-        if (kt) {
-          if (arah === 'DEBIT') {
-            kt.saldo = Math.max(0, kt.saldo - nominal)
-          } else {
-            kt.saldo += nominal
-          }
-        }
-      }
+    // --- 9. Mutasi Koreksi Bendahara ---
+    // GET /api/saldo/koreksi (Riwayat Mutasi Koreksi)
+    if (
+      (url.includes('/api/saldo/koreksi') ||
+        url.includes('/api/v1/bendahara/koreksi')) &&
+      method === 'get'
+    ) {
       return {
         status: 200,
         data: {
           code: 200,
           status: 'SUCCESS',
-          message: 'Koreksi saldo berhasil',
+          message: 'Daftar riwayat mutasi koreksi bendahara berhasil dimuat',
+          data: koreksiList,
+        },
+      }
+    }
+
+    // GET /api/transaksi/sesi-tutup or /api/v1/kasir/transaksi-lampau
+    if (
+      (url.includes('/api/transaksi/sesi-tutup') ||
+        url.includes('/api/v1/kasir/transaksi-lampau')) &&
+      method === 'get'
+    ) {
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          data: transaksiSesiTutupList,
+        },
+      }
+    }
+
+    // POST /api/saldo/koreksi (Eksekusi Koreksi Saldo / Pembalik Transaksi)
+    if (url.includes('/api/saldo/koreksi') && method === 'post') {
+      const subjekTipe =
+        ((payload.subjekTipe || payload.subjek_tipe) as string) || 'SISWA'
+      const subjekId = Number(payload.subjekId ?? payload.subjek_id)
+      const arah = String(payload.arah || 'DEBIT').toUpperCase() as
+        | 'DEBIT'
+        | 'KREDIT'
+      const nominal = Number(payload.nominal) || 0
+      const alasan = String(payload.alasan || '').trim()
+      const referensiId = String(
+        payload.referensiId ||
+          payload.referensi_id ||
+          `BA-KOR-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${Math.floor(1000 + Math.random() * 9000)}`
+      ).trim()
+      const jenisKoreksi = String(
+        payload.jenisKoreksi || payload.jenis_koreksi || 'PENYESUAIAN_AUDIT'
+      ) as
+        | 'SALAH_INPUT_TOPUP'
+        | 'PEMBALIK_TRANSAKSI_KASIR'
+        | 'PENYESUAIAN_AUDIT'
+      const transaksiTerkaitId =
+        payload.transaksiTerkaitId || payload.transaksi_terkait_id
+
+      if (!subjekId || nominal <= 0) {
+        return {
+          status: 400,
           data: {
+            code: 400,
+            status: 'BAD_REQUEST',
+            message: 'Subjek ID dan nominal koreksi valid (> 0) wajib diisi',
+          },
+        }
+      }
+
+      if (!alasan) {
+        return {
+          status: 400,
+          data: {
+            code: 400,
+            status: 'BAD_REQUEST',
+            message: 'Alasan koreksi audit wajib diisi (PRD §9.2 & §11.7)',
+          },
+        }
+      }
+
+      if (!referensiId) {
+        return {
+          status: 400,
+          data: {
+            code: 400,
+            status: 'BAD_REQUEST',
+            message:
+              'Nomor Berita Acara / Referensi koreksi wajib diisi untuk integritas audit & idempotency',
+          },
+        }
+      }
+
+      let subjekNama: string
+      let subjekInfo: string
+      let saldoSebelum: number
+      let saldoSetelah: number
+
+      if (subjekTipe === 'SISWA') {
+        const siswa = siswaList.find((s) => s.siswa_id === subjekId)
+        if (!siswa) {
+          return {
+            status: 404,
+            data: {
+              code: 404,
+              status: 'NOT_FOUND',
+              message: 'Siswa tidak ditemukan',
+            },
+          }
+        }
+        subjekNama = siswa.nama
+        subjekInfo = `${siswa.kelas} (NIS: ${siswa.nis})`
+        saldoSebelum = siswa.saldo
+
+        if (arah === 'DEBIT') {
+          if (siswa.saldo < nominal) {
+            return {
+              status: 400,
+              data: {
+                code: 400,
+                status: 'BAD_REQUEST',
+                message: `Koreksi DEBIT ditolak: Saldo siswa saat ini (Rp ${siswa.saldo.toLocaleString('id-ID')}) tidak mencukupi untuk dikurangi Rp ${nominal.toLocaleString('id-ID')} (saldo tidak boleh minus)`,
+              },
+            }
+          }
+          siswa.saldo -= nominal
+        } else {
+          siswa.saldo += nominal
+        }
+        saldoSetelah = siswa.saldo
+      } else {
+        // KARTU_TAMU
+        const kt = kartuTamuList.find((k) => k.id === subjekId)
+        if (!kt) {
+          return {
+            status: 404,
+            data: {
+              code: 404,
+              status: 'NOT_FOUND',
+              message: 'Kartu tamu tidak ditemukan',
+            },
+          }
+        }
+        subjekNama = kt.label_pemegang || `Kartu ${kt.nomor_kartu}`
+        subjekInfo = `Kartu: ${kt.nomor_kartu}`
+        saldoSebelum = kt.saldo
+
+        if (arah === 'DEBIT') {
+          if (kt.saldo < nominal) {
+            return {
+              status: 400,
+              data: {
+                code: 400,
+                status: 'BAD_REQUEST',
+                message: `Koreksi DEBIT ditolak: Saldo kartu tamu saat ini (Rp ${kt.saldo.toLocaleString('id-ID')}) tidak mencukupi untuk dikurangi Rp ${nominal.toLocaleString('id-ID')}`,
+              },
+            }
+          }
+          kt.saldo -= nominal
+        } else {
+          kt.saldo += nominal
+        }
+        saldoSetelah = kt.saldo
+      }
+
+      // Tandai transaksi sesi tutup terkait jika ada
+      if (transaksiTerkaitId) {
+        const trIdx = transaksiSesiTutupList.findIndex(
+          (t) => t.id === String(transaksiTerkaitId)
+        )
+        if (trIdx !== -1) {
+          transaksiSesiTutupList[trIdx].status = 'DIKOREKSI'
+          transaksiSesiTutupList[trIdx].koreksi_referensi_id = referensiId
+        }
+      }
+
+      const newKoreksi: MutasiKoreksiMock = {
+        id: `KOR-${Date.now()}`,
+        referensi_id: referensiId,
+        waktu: new Date().toISOString(),
+        subjek_tipe: subjekTipe as 'SISWA' | 'KARTU_TAMU',
+        subjek_id: subjekId,
+        subjek_nama: subjekNama,
+        subjek_info: subjekInfo,
+        jenis_koreksi: jenisKoreksi,
+        arah,
+        nominal,
+        saldo_sebelum: saldoSebelum,
+        saldo_setelah: saldoSetelah,
+        alasan,
+        bendahara_id: 10,
+        bendahara_nama: 'Siti Rahma (Bendahara)',
+        transaksi_terkait_id: transaksiTerkaitId
+          ? String(transaksiTerkaitId)
+          : undefined,
+      }
+
+      koreksiList.unshift(newKoreksi)
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Mutasi koreksi bendahara berhasil dicatat di ledger saldo',
+          data: {
+            subjekTipe,
             subjekId,
             nominal,
             arah,
+            saldoSebelum,
+            saldoSetelah,
+            referensiId,
+            alasan,
+            mutasi: newKoreksi,
           },
         },
       }
     }
 
     // Kartu Tamu Endpoints: /api/kartu-tamu and /api/v1/tu/kartu-tamu
-    if (url.includes('/api/kartu-tamu') || url.includes('/api/v1/tu/kartu-tamu')) {
+    if (
+      url.includes('/api/kartu-tamu') ||
+      url.includes('/api/v1/tu/kartu-tamu')
+    ) {
       // POST: Buat kartu baru
       if (method === 'post') {
-        const nomor = (payload.nomorKartu as string) || (payload.nomor_kartu as string) || `KT-00${kartuTamuList.length + 1}`
-        const uid = (payload.rfidUid as string) || (payload.uid as string) || `04KT${Date.now().toString().slice(-4)}`
-        const catatan = (payload.catatan as string) || (payload.label_pemegang as string) || ''
+        const nomor =
+          (payload.nomorKartu as string) ||
+          (payload.nomor_kartu as string) ||
+          `KT-00${kartuTamuList.length + 1}`
+        const uid =
+          (payload.rfidUid as string) ||
+          (payload.uid as string) ||
+          `04KT${Date.now().toString().slice(-4)}`
+        const catatan =
+          (payload.catatan as string) ||
+          (payload.label_pemegang as string) ||
+          ''
         const newCard: KartuTamuMock = {
           id: Date.now(),
           nomor_kartu: nomor,
@@ -748,24 +1162,38 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
     }
 
     // --- 7. TU: Topup Tunai Saldo Siswa (Sesuai Backend SaldoController /api/saldo/topup) ---
-    if ((url.includes('/api/saldo/topup') || url.includes('/api/v1/tu/topup')) && method === 'post') {
+    if (
+      (url.includes('/api/saldo/topup') || url.includes('/api/v1/tu/topup')) &&
+      method === 'post'
+    ) {
       const subjekTipe = (payload.subjekTipe as string) || 'SISWA'
       const subjekId = Number(payload.subjekId ?? payload.siswa_id)
       const nominal = Number(payload.nominal) || 0
-      const penyetor = (payload.penyetor as string) || (payload.nama_penyetor as string) || 'Orang Tua / Wali'
-      const petugasNama = (payload.petugas_nama as string) || 'Wibisana Bama (Petugas TU)'
+      const penyetor =
+        (payload.penyetor as string) ||
+        (payload.nama_penyetor as string) ||
+        'Orang Tua / Wali'
+      const petugasNama =
+        (payload.petugas_nama as string) || 'Wibisana Bama (Petugas TU)'
 
       const now = new Date()
       const dateCode = now.toISOString().slice(0, 10).replace(/-/g, '')
       const randomSeq = Math.floor(1000 + Math.random() * 9000)
-      const referensiId = (payload.referensiId as string) || `TU-TOPUP-${dateCode}-${randomSeq}`
+      const referensiId =
+        (payload.referensiId as string) || `TU-TOPUP-${dateCode}-${randomSeq}`
 
       if (!subjekId || nominal <= 0) {
-        return { status: 400, data: { message: 'ID subjek dan nominal top-up valid wajib diisi' } }
+        return {
+          status: 400,
+          data: { message: 'ID subjek dan nominal top-up valid wajib diisi' },
+        }
       }
 
       if (!referensiId || referensiId.trim() === '') {
-        return { status: 400, data: { message: 'Nomor referensi/bukti wajib diisi' } }
+        return {
+          status: 400,
+          data: { message: 'Nomor referensi/bukti wajib diisi' },
+        }
       }
 
       if (subjekTipe === 'SISWA') {
@@ -775,7 +1203,10 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
         }
 
         if (siswa.is_blocked) {
-          return { status: 400, data: { message: 'Top-up ditolak: Kartu siswa sedang diblokir' } }
+          return {
+            status: 400,
+            data: { message: 'Top-up ditolak: Kartu siswa sedang diblokir' },
+          }
         }
 
         const MAX_SALDO = 500000
@@ -783,7 +1214,9 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
           return {
             status: 400,
             data: {
-              message: `Top-up ditolak: Saldo baru (Rp ${(siswa.saldo + nominal).toLocaleString(
+              message: `Top-up ditolak: Saldo baru (Rp ${(
+                siswa.saldo + nominal
+              ).toLocaleString(
                 'id-ID'
               )}) melebihi batas saldo maksimal sekolah (Rp ${MAX_SALDO.toLocaleString('id-ID')})`,
             },
@@ -842,7 +1275,10 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
         // KARTU_TAMU
         const kartuTamu = kartuTamuList.find((k) => k.id === subjekId)
         if (!kartuTamu) {
-          return { status: 404, data: { message: 'Kartu tamu tidak ditemukan' } }
+          return {
+            status: 404,
+            data: { message: 'Kartu tamu tidak ditemukan' },
+          }
         }
         kartuTamu.saldo += nominal
 

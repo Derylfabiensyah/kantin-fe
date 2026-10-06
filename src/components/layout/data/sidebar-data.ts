@@ -6,6 +6,7 @@ import {
   Boxes,
   Banknote,
   Receipt,
+  ReceiptText,
   CreditCard,
   ArrowLeftRight,
   ShieldCheck,
@@ -85,7 +86,7 @@ export const sidebarData: SidebarData = {
     },
     {
       title: 'Layanan TU & Kartu',
-      roles: ['admin', 'tu'],
+      roles: ['admin', 'tu', 'bendahara'],
       items: [
         {
           title: 'Top-up Tunai Siswa',
@@ -108,6 +109,11 @@ export const sidebarData: SidebarData = {
       title: 'Saldo & Pengawasan',
       roles: ['admin', 'bendahara'],
       items: [
+        {
+          title: 'Mutasi Koreksi Bendahara',
+          url: '/saldo/koreksi',
+          icon: ReceiptText,
+        },
         {
           title: 'Refund Saldo Siswa',
           url: '/saldo/refund',

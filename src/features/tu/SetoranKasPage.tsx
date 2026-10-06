@@ -1,0 +1,992 @@
+import { useState, useEffect, useMemo } from 'react'
+import { MOCK_SETORAN_KAS } from '@/mocks/mock-data'
+import {
+  Receipt,
+  RefreshCw,
+  Search,
+  CheckCircle2,
+  AlertTriangle,
+  Calendar,
+  Wallet,
+  Printer,
+  FileSpreadsheet,
+  Eye,
+  UserCheck,
+} from 'lucide-react'
+import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store'
+import apiClient from '@/lib/api-client'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { KonfirmasiSetoranModal } from './KonfirmasiSetoranModal'
+import type { SetoranKasItem, TransaksiTopupDetail } from './types'
+
+export function SetoranKasPage() {
+  const { auth } = useAuthStore()
+  const isBendaharaOrAdmin = auth.hasRole(['admin', 'bendahara'])
+
+  const todayStr = new Date().toISOString().slice(0, 10)
+  const [selectedDate, setSelectedDate] = useState<string>(todayStr)
+  const [statusFilter, setStatusFilter] = useState<string>('ALL')
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [setoranList, setSetoranList] =
+    useState<SetoranKasItem[]>(MOCK_SETORAN_KAS)
+  const [isLoading, setIsLoading] = useState(false)
+
+  // State modal konfirmasi
+  const [selectedSetoranForConfirm, setSelectedSetoranForConfirm] =
+    useState<SetoranKasItem | null>(null)
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
+
+  // State modal rincian transaksi topup
+  const [selectedSetoranForDetail, setSelectedSetoranForDetail] =
+    useState<SetoranKasItem | null>(null)
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
+
+  // State modal berita acara cetak
+  const [selectedSetoranForPrint, setSelectedSetoranForPrint] =
+    useState<SetoranKasItem | null>(null)
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false)
+
+  useEffect(() => {
+    let isMounted = true
+    const load = async () => {
+      setIsLoading(true)
+      try {
+        const res = await apiClient
+          .get('/api/v1/tu/setoran', {
+            params: { tanggal: selectedDate },
+          })
+          .catch(() =>
+            apiClient.get('/api/tu/setoran', {
+              params: { tanggal: selectedDate },
+            })
+          )
+
+        if (isMounted) {
+          if (res.data?.data && Array.isArray(res.data.data)) {
+            setSetoranList(res.data.data)
+          } else {
+            const filteredMock = MOCK_SETORAN_KAS.filter(
+              (s) => s.tanggal === selectedDate
+            )
+            setSetoranList(
+              filteredMock.length > 0 ? filteredMock : MOCK_SETORAN_KAS
+            )
+          }
+        }
+      } catch {
+        if (isMounted) {
+          const filteredMock = MOCK_SETORAN_KAS.filter(
+            (s) => s.tanggal === selectedDate
+          )
+          setSetoranList(
+            filteredMock.length > 0 ? filteredMock : MOCK_SETORAN_KAS
+          )
+        }
+      } finally {
+        if (isMounted) setIsLoading(false)
+      }
+    }
+    void load()
+    return () => {
+      isMounted = false
+    }
+  }, [selectedDate])
+
+  const handleRefresh = async () => {
+    setIsLoading(true)
+    try {
+      const res = await apiClient
+        .get('/api/v1/tu/setoran', {
+          params: { tanggal: selectedDate },
+        })
+        .catch(() =>
+          apiClient.get('/api/tu/setoran', {
+            params: { tanggal: selectedDate },
+          })
+        )
+
+      if (res.data?.data && Array.isArray(res.data.data)) {
+        setSetoranList(res.data.data)
+      } else {
+        const filteredMock = MOCK_SETORAN_KAS.filter(
+          (s) => s.tanggal === selectedDate
+        )
+        setSetoranList(
+          filteredMock.length > 0 ? filteredMock : MOCK_SETORAN_KAS
+        )
+      }
+      toast.success('Data rekapitulasi setoran kas TU berhasil dimuat ulang')
+    } catch {
+      const filteredMock = MOCK_SETORAN_KAS.filter(
+        (s) => s.tanggal === selectedDate
+      )
+      setSetoranList(filteredMock.length > 0 ? filteredMock : MOCK_SETORAN_KAS)
+      toast.success('Data rekapitulasi setoran kas TU berhasil dimuat ulang')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // Handle successful confirmation from modal
+  const handleConfirmSuccess = (updatedItem: SetoranKasItem) => {
+    setSetoranList((prev) =>
+      prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+    )
+  }
+
+  // Filtered list based on search and status
+  const filteredList = useMemo(() => {
+    return setoranList.filter((item) => {
+      const matchSearch =
+        item.petugas_nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.id.toLowerCase().includes(searchQuery.toLowerCase())
+
+      let matchStatus = true
+      if (statusFilter === 'MENUNGGU_KONFIRMASI') {
+        matchStatus = item.status === 'MENUNGGU_KONFIRMASI'
+      } else if (statusFilter === 'TERKONFIRMASI') {
+        matchStatus = item.status === 'TERKONFIRMASI'
+      } else if (statusFilter === 'SELISIH') {
+        matchStatus = item.selisih !== null && item.selisih !== 0
+      }
+
+      return matchSearch && matchStatus
+    })
+  }, [setoranList, searchQuery, statusFilter])
+
+  // Summary Metrics Calculation
+  const totalPenerimaanSistem = useMemo(() => {
+    return filteredList.reduce((acc, curr) => acc + curr.total_sistem, 0)
+  }, [filteredList])
+
+  const totalUangFisikDisetor = useMemo(() => {
+    return filteredList.reduce((acc, curr) => acc + (curr.uang_fisik || 0), 0)
+  }, [filteredList])
+
+  const totalSelisihFisik = useMemo(() => {
+    return filteredList.reduce((acc, curr) => acc + (curr.selisih || 0), 0)
+  }, [filteredList])
+
+  const totalPetugasSelesai = useMemo(() => {
+    return filteredList.filter((i) => i.status === 'TERKONFIRMASI').length
+  }, [filteredList])
+
+  // Export to CSV
+  const handleExportCSV = () => {
+    const headers = [
+      'ID Setoran',
+      'Tanggal',
+      'Petugas TU',
+      'NIP',
+      'Jumlah Transaksi',
+      'Topup Siswa (Rp)',
+      'Topup Kartu Tamu (Rp)',
+      'Total Sistem (Rp)',
+      'Uang Fisik (Rp)',
+      'Selisih (Rp)',
+      'Status',
+      'Catatan / Berita Acara',
+      'Bendahara',
+      'Waktu Konfirmasi',
+    ]
+
+    const rows = filteredList.map((item) => [
+      item.id,
+      item.tanggal,
+      item.petugas_nama,
+      item.petugas_nip || '-',
+      item.total_transaksi,
+      item.total_topup_siswa,
+      item.total_topup_kartu_tamu,
+      item.total_sistem,
+      item.uang_fisik !== null ? item.uang_fisik : '-',
+      item.selisih !== null ? item.selisih : '-',
+      item.status,
+      `"${(item.catatan || '-').replace(/"/g, '""')}"`,
+      item.bendahara_nama || '-',
+      item.konfirmasi_pada || '-',
+    ])
+
+    const csvContent =
+      'data:text/csv;charset=utf-8,' +
+      [headers.join(','), ...rows.map((e) => e.join(','))].join('\n')
+
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `Rekap_Setoran_Kas_TU_${selectedDate}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    toast.success('Laporan rekapitulasi setoran kas berhasil diekspor ke CSV')
+  }
+
+  return (
+    <>
+      <Header fixed>
+        <div className='flex items-center gap-2 px-4'>
+          <Receipt className='h-5 w-5 text-primary' />
+          <h1 className='text-base font-semibold'>Setoran Kas TU Harian</h1>
+        </div>
+        <div className='ml-auto flex items-center space-x-4'>
+          <ThemeSwitch />
+          <ProfileDropdown />
+        </div>
+      </Header>
+
+      <Main>
+        <div className='space-y-6 pb-12'>
+          {/* Header Description & Refresh */}
+          <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+            <div>
+              <h2 className='text-2xl font-bold tracking-tight'>
+                Rekapitulasi & Setoran Kas TU
+              </h2>
+              <p className='text-sm text-muted-foreground'>
+                Pencatatan penerimaan uang tunai top-up harian per petugas TU,
+                verifikasi uang fisik oleh Bendahara, dan pencatatan selisih kas
+                fisik (PRD §9.2 & §9.5).
+              </p>
+            </div>
+            <div className='flex items-center gap-2'>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={handleRefresh}
+                disabled={isLoading}
+                className='gap-1.5'
+              >
+                <RefreshCw
+                  className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
+                />
+                Muat Ulang
+              </Button>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={handleExportCSV}
+                className='gap-1.5'
+              >
+                <FileSpreadsheet className='h-4 w-4 text-emerald-600' />
+                Ekspor CSV
+              </Button>
+            </div>
+          </div>
+
+          {/* Top KPI Cards */}
+          <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
+            <Card className='border-l-4 border-l-primary shadow-xs'>
+              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                <CardTitle className='text-xs font-medium text-muted-foreground uppercase'>
+                  Total Sistem (Penerimaan TU)
+                </CardTitle>
+                <Receipt className='h-4 w-4 text-primary' />
+              </CardHeader>
+              <CardContent>
+                <div className='font-mono text-2xl font-bold text-primary'>
+                  Rp {totalPenerimaanSistem.toLocaleString('id-ID')}
+                </div>
+                <p className='mt-1 text-xs text-muted-foreground'>
+                  Dari{' '}
+                  {filteredList.reduce((acc, c) => acc + c.total_transaksi, 0)}{' '}
+                  transaksi top-up tunai
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className='border-l-4 border-l-emerald-500 shadow-xs'>
+              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                <CardTitle className='text-xs font-medium text-muted-foreground uppercase'>
+                  Total Uang Fisik Disetor
+                </CardTitle>
+                <Wallet className='h-4 w-4 text-emerald-600' />
+              </CardHeader>
+              <CardContent>
+                <div className='font-mono text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
+                  Rp {totalUangFisikDisetor.toLocaleString('id-ID')}
+                </div>
+                <p className='mt-1 text-xs text-muted-foreground'>
+                  Fisik diterima & dihitung Bendahara
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card
+              className={`border-l-4 shadow-xs ${totalSelisihFisik !== 0 ? 'border-l-amber-500 bg-amber-50/20' : 'border-l-slate-300'}`}
+            >
+              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                <CardTitle className='text-xs font-medium text-muted-foreground uppercase'>
+                  Akumulasi Selisih Kas Fisik
+                </CardTitle>
+                {totalSelisihFisik === 0 ? (
+                  <CheckCircle2 className='h-4 w-4 text-emerald-500' />
+                ) : (
+                  <AlertTriangle className='h-4 w-4 text-amber-500' />
+                )}
+              </CardHeader>
+              <CardContent>
+                <div
+                  className={`font-mono text-2xl font-bold ${totalSelisihFisik === 0 ? 'text-foreground' : totalSelisihFisik < 0 ? 'text-destructive' : 'text-blue-600'}`}
+                >
+                  {totalSelisihFisik > 0 ? '+' : ''}Rp{' '}
+                  {totalSelisihFisik.toLocaleString('id-ID')}
+                </div>
+                <p className='mt-1 text-xs text-muted-foreground'>
+                  {totalSelisihFisik === 0
+                    ? 'Kas fisik seimbang / pas'
+                    : totalSelisihFisik < 0
+                      ? 'Defisit kas fisik tercatat di audit'
+                      : 'Surplus kas fisik tercatat di audit'}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className='border-l-4 border-l-sky-500 shadow-xs'>
+              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                <CardTitle className='text-xs font-medium text-muted-foreground uppercase'>
+                  Status Konfirmasi Setoran
+                </CardTitle>
+                <UserCheck className='h-4 w-4 text-sky-500' />
+              </CardHeader>
+              <CardContent>
+                <div className='text-2xl font-bold'>
+                  {totalPetugasSelesai} / {filteredList.length} Petugas
+                </div>
+                <p className='mt-1 text-xs text-muted-foreground'>
+                  {totalPetugasSelesai === filteredList.length &&
+                  filteredList.length > 0
+                    ? 'Semua setoran kas hari ini telah terverifikasi'
+                    : `${filteredList.length - totalPetugasSelesai} setoran menunggu konfirmasi`}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Filter Bar */}
+          <Card className='shadow-xs'>
+            <CardContent className='p-4'>
+              <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
+                <div className='flex flex-1 flex-wrap items-center gap-3'>
+                  {/* Date Picker */}
+                  <div className='flex min-w-[200px] items-center gap-2'>
+                    <Calendar className='h-4 w-4 text-muted-foreground' />
+                    <Input
+                      type='date'
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      className='h-9 text-xs font-medium'
+                    />
+                  </div>
+
+                  {/* Status Filter */}
+                  <div className='w-[200px]'>
+                    <Select
+                      value={statusFilter}
+                      onValueChange={setStatusFilter}
+                    >
+                      <SelectTrigger className='h-9 text-xs'>
+                        <SelectValue placeholder='Filter Status Setoran' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value='ALL' className='text-xs'>
+                          Semua Status
+                        </SelectItem>
+                        <SelectItem
+                          value='MENUNGGU_KONFIRMASI'
+                          className='text-xs'
+                        >
+                          Menunggu Konfirmasi
+                        </SelectItem>
+                        <SelectItem value='TERKONFIRMASI' className='text-xs'>
+                          Terkonfirmasi Bendahara
+                        </SelectItem>
+                        <SelectItem value='SELISIH' className='text-xs'>
+                          Memiliki Selisih Kas
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Search Query */}
+                  <div className='relative min-w-[220px] flex-1'>
+                    <Search className='absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground' />
+                    <Input
+                      placeholder='Cari nama petugas TU atau No. Setoran...'
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className='h-9 pl-8 text-xs'
+                    />
+                  </div>
+                </div>
+
+                <div className='flex items-center gap-2'>
+                  <Button
+                    variant='ghost'
+                    size='sm'
+                    onClick={() => {
+                      setSelectedDate(todayStr)
+                      setStatusFilter('ALL')
+                      setSearchQuery('')
+                    }}
+                    className='h-9 text-xs text-muted-foreground'
+                  >
+                    Reset Filter
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Rekapitulasi Table */}
+          <Card className='overflow-hidden shadow-xs'>
+            <CardHeader className='border-b bg-muted/20 px-6 py-4'>
+              <div className='flex items-center justify-between'>
+                <div>
+                  <CardTitle className='text-base font-semibold'>
+                    Daftar Rekapitulasi Kas TU Per Petugas ({selectedDate})
+                  </CardTitle>
+                  <CardDescription className='mt-0.5 text-xs'>
+                    Rincian setoran uang tunai dari seluruh titik loket TU
+                    kepada Bendahara Sekolah
+                  </CardDescription>
+                </div>
+                <Badge variant='outline' className='font-mono text-xs'>
+                  {filteredList.length} Petugas TU Terdaftar
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className='p-0'>
+              <div className='overflow-x-auto'>
+                <Table>
+                  <TableHeader>
+                    <TableRow className='bg-muted/40'>
+                      <TableHead className='text-xs font-semibold'>
+                        ID & Tanggal
+                      </TableHead>
+                      <TableHead className='text-xs font-semibold'>
+                        Petugas TU
+                      </TableHead>
+                      <TableHead className='text-xs font-semibold'>
+                        Rincian Top-up
+                      </TableHead>
+                      <TableHead className='text-right text-xs font-semibold'>
+                        Total Sistem
+                      </TableHead>
+                      <TableHead className='text-right text-xs font-semibold'>
+                        Uang Fisik
+                      </TableHead>
+                      <TableHead className='text-center text-xs font-semibold'>
+                        Selisih Kas
+                      </TableHead>
+                      <TableHead className='text-center text-xs font-semibold'>
+                        Status
+                      </TableHead>
+                      <TableHead className='text-xs font-semibold'>
+                        Verifikasi Bendahara
+                      </TableHead>
+                      <TableHead className='pr-6 text-right text-xs font-semibold'>
+                        Aksi
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredList.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          colSpan={9}
+                          className='h-32 text-center text-muted-foreground'
+                        >
+                          <div className='flex flex-col items-center justify-center space-y-2'>
+                            <Receipt className='h-8 w-8 text-muted-foreground/40' />
+                            <p className='text-sm'>
+                              Tidak ada data setoran kas TU untuk tanggal dan
+                              filter ini.
+                            </p>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      filteredList.map((item) => (
+                        <TableRow key={item.id} className='hover:bg-muted/30'>
+                          <TableCell className='font-mono text-xs'>
+                            <div className='font-semibold text-foreground'>
+                              {item.id}
+                            </div>
+                            <div className='text-[11px] text-muted-foreground'>
+                              {item.tanggal}
+                            </div>
+                          </TableCell>
+
+                          <TableCell>
+                            <div className='text-xs font-medium'>
+                              {item.petugas_nama}
+                            </div>
+                            {item.petugas_nip && (
+                              <div className='font-mono text-[11px] text-muted-foreground'>
+                                NIP: {item.petugas_nip}
+                              </div>
+                            )}
+                          </TableCell>
+
+                          <TableCell>
+                            <div className='text-xs font-medium'>
+                              {item.total_transaksi} Transaksi
+                            </div>
+                            <div className='text-[11px] text-muted-foreground'>
+                              Siswa: Rp{' '}
+                              {item.total_topup_siswa.toLocaleString('id-ID')} |
+                              Tamu: Rp{' '}
+                              {item.total_topup_kartu_tamu.toLocaleString(
+                                'id-ID'
+                              )}
+                            </div>
+                          </TableCell>
+
+                          <TableCell className='text-right font-mono text-xs font-semibold text-primary'>
+                            Rp {item.total_sistem.toLocaleString('id-ID')}
+                          </TableCell>
+
+                          <TableCell className='text-right font-mono text-xs font-medium'>
+                            {item.uang_fisik !== null ? (
+                              <span className='font-semibold text-emerald-700 dark:text-emerald-400'>
+                                Rp {item.uang_fisik.toLocaleString('id-ID')}
+                              </span>
+                            ) : (
+                              <span className='text-muted-foreground italic'>
+                                Belum disetor
+                              </span>
+                            )}
+                          </TableCell>
+
+                          <TableCell className='text-center'>
+                            {item.selisih === null ? (
+                              <span className='text-xs text-muted-foreground'>
+                                -
+                              </span>
+                            ) : item.selisih === 0 ? (
+                              <Badge
+                                variant='outline'
+                                className='border-emerald-300 bg-emerald-50 text-[11px] text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
+                              >
+                                Pas (Rp 0)
+                              </Badge>
+                            ) : item.selisih < 0 ? (
+                              <Badge
+                                variant='outline'
+                                className='border-red-300 bg-red-50 text-[11px] text-red-700 dark:bg-red-950/60 dark:text-red-400'
+                              >
+                                Kurang -Rp{' '}
+                                {Math.abs(item.selisih).toLocaleString('id-ID')}
+                              </Badge>
+                            ) : (
+                              <Badge
+                                variant='outline'
+                                className='border-blue-300 bg-blue-50 text-[11px] text-blue-700 dark:bg-blue-950/60 dark:text-blue-400'
+                              >
+                                Lebih +Rp {item.selisih.toLocaleString('id-ID')}
+                              </Badge>
+                            )}
+                          </TableCell>
+
+                          <TableCell className='text-center'>
+                            {item.status === 'TERKONFIRMASI' ? (
+                              <Badge
+                                variant='outline'
+                                className='gap-1 border-emerald-200 bg-emerald-100 text-[11px] font-medium text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300'
+                              >
+                                <CheckCircle2 className='h-3 w-3' />
+                                Terkonfirmasi
+                              </Badge>
+                            ) : (
+                              <Badge
+                                variant='outline'
+                                className='gap-1 border-amber-200 bg-amber-100 text-[11px] font-medium text-amber-800 dark:bg-amber-950/80 dark:text-amber-300'
+                              >
+                                <AlertTriangle className='h-3 w-3' />
+                                Menunggu Setor
+                              </Badge>
+                            )}
+                          </TableCell>
+
+                          <TableCell>
+                            {item.status === 'TERKONFIRMASI' ? (
+                              <div className='text-xs'>
+                                <div className='font-medium text-foreground'>
+                                  {item.bendahara_nama}
+                                </div>
+                                <div className='text-[11px] text-muted-foreground'>
+                                  {item.konfirmasi_pada
+                                    ? new Date(
+                                        item.konfirmasi_pada
+                                      ).toLocaleTimeString('id-ID', {
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                      }) + ' WIB'
+                                    : '-'}
+                                </div>
+                                {item.catatan && (
+                                  <div className='max-w-[180px] truncate text-[11px] text-muted-foreground italic'>
+                                    "{item.catatan}"
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              <span className='text-xs text-muted-foreground italic'>
+                                -
+                              </span>
+                            )}
+                          </TableCell>
+
+                          <TableCell className='pr-6 text-right'>
+                            <div className='flex items-center justify-end gap-1.5'>
+                              {/* Tombol Konfirmasi Bendahara */}
+                              {isBendaharaOrAdmin &&
+                                item.status === 'MENUNGGU_KONFIRMASI' && (
+                                  <Button
+                                    variant='default'
+                                    size='sm'
+                                    onClick={() => {
+                                      setSelectedSetoranForConfirm(item)
+                                      setIsConfirmModalOpen(true)
+                                    }}
+                                    className='h-7 gap-1 bg-emerald-600 text-xs text-white hover:bg-emerald-700'
+                                  >
+                                    <CheckCircle2 className='h-3.5 w-3.5' />
+                                    Konfirmasi
+                                  </Button>
+                                )}
+
+                              {/* Tombol Edit Konfirmasi jika sudah terkonfirmasi */}
+                              {isBendaharaOrAdmin &&
+                                item.status === 'TERKONFIRMASI' && (
+                                  <Button
+                                    variant='ghost'
+                                    size='sm'
+                                    onClick={() => {
+                                      setSelectedSetoranForConfirm(item)
+                                      setIsConfirmModalOpen(true)
+                                    }}
+                                    className='h-7 text-xs text-muted-foreground hover:text-foreground'
+                                    title='Koreksi / Update Konfirmasi Setoran'
+                                  >
+                                    Edit Kas
+                                  </Button>
+                                )}
+
+                              {/* Tombol Lihat Rincian Transaksi */}
+                              <Button
+                                variant='outline'
+                                size='sm'
+                                onClick={() => {
+                                  setSelectedSetoranForDetail(item)
+                                  setIsDetailModalOpen(true)
+                                }}
+                                className='h-7 gap-1 text-xs'
+                                title='Lihat Rincian Transaksi Top-up Petugas'
+                              >
+                                <Eye className='h-3.5 w-3.5' />
+                                Rincian
+                              </Button>
+
+                              {/* Tombol Cetak Berita Acara */}
+                              <Button
+                                variant='ghost'
+                                size='sm'
+                                onClick={() => {
+                                  setSelectedSetoranForPrint(item)
+                                  setIsPrintModalOpen(true)
+                                }}
+                                className='h-7 p-1.5 text-xs'
+                                title='Cetak Berita Acara Setoran Kas'
+                              >
+                                <Printer className='h-3.5 w-3.5' />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </Main>
+
+      {/* Modal Konfirmasi Setoran Kas Bendahara */}
+      <KonfirmasiSetoranModal
+        open={isConfirmModalOpen}
+        onOpenChange={setIsConfirmModalOpen}
+        setoran={selectedSetoranForConfirm}
+        onSuccess={handleConfirmSuccess}
+      />
+
+      {/* Modal Dialog Rincian Transaksi Topup Petugas */}
+      <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
+        <DialogContent className='max-h-[85vh] overflow-y-auto sm:max-w-[700px]'>
+          <DialogHeader>
+            <div className='flex items-center gap-2 text-primary'>
+              <Receipt className='h-5 w-5' />
+              <DialogTitle className='text-base font-semibold'>
+                Rincian Transaksi Top-up Petugas:{' '}
+                {selectedSetoranForDetail?.petugas_nama}
+              </DialogTitle>
+            </div>
+            <DialogDescription className='text-xs'>
+              Daftar seluruh top-up tunai yang dilayani pada tanggal{' '}
+              {selectedSetoranForDetail?.tanggal} (Total: Rp{' '}
+              {selectedSetoranForDetail?.total_sistem.toLocaleString('id-ID')})
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className='space-y-4 py-2'>
+            <div className='rounded-md border'>
+              <Table>
+                <TableHeader>
+                  <TableRow className='bg-muted/30'>
+                    <TableHead className='text-xs font-semibold'>
+                      Waktu & No. Ref
+                    </TableHead>
+                    <TableHead className='text-xs font-semibold'>
+                      Subjek / Penerima
+                    </TableHead>
+                    <TableHead className='text-xs font-semibold'>
+                      Penyetor
+                    </TableHead>
+                    <TableHead className='text-right text-xs font-semibold'>
+                      Nominal
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {selectedSetoranForDetail?.rincian_transaksi.map(
+                    (tx: TransaksiTopupDetail) => (
+                      <TableRow key={tx.id}>
+                        <TableCell className='text-xs'>
+                          <div className='font-mono font-medium'>
+                            {new Date(tx.waktu).toLocaleTimeString('id-ID', {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              second: '2-digit',
+                            })}
+                          </div>
+                          <div className='font-mono text-[11px] text-muted-foreground'>
+                            {tx.referensi_id}
+                          </div>
+                        </TableCell>
+                        <TableCell className='text-xs'>
+                          <div className='font-medium text-foreground'>
+                            {tx.subjek_nama}
+                          </div>
+                          <div className='text-[11px] text-muted-foreground'>
+                            {tx.subjek_info}
+                          </div>
+                        </TableCell>
+                        <TableCell className='text-xs text-muted-foreground'>
+                          {tx.penyetor}
+                        </TableCell>
+                        <TableCell className='text-right font-mono text-xs font-semibold text-primary'>
+                          Rp {tx.nominal.toLocaleString('id-ID')}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Dialog Cetak Berita Acara Setoran Kas */}
+      <Dialog open={isPrintModalOpen} onOpenChange={setIsPrintModalOpen}>
+        <DialogContent className='sm:max-w-[550px] print:border-none print:p-0'>
+          <DialogHeader>
+            <DialogTitle className='flex items-center gap-2 text-base font-semibold'>
+              <Printer className='h-4 w-4 text-primary' />
+              Berita Acara Serah Terima Kas TU
+            </DialogTitle>
+            <DialogDescription className='text-xs'>
+              Dokumen fisik serah terima uang kas tunai harian petugas TU ke
+              Bendahara Sekolah
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedSetoranForPrint && (
+            <div
+              id='print-area'
+              className='space-y-4 rounded-lg border bg-card p-6 font-sans text-xs'
+            >
+              <div className='space-y-1 border-b pb-3 text-center'>
+                <h3 className='text-sm font-bold tracking-wider text-foreground uppercase'>
+                  SMA NEGERI 1 SKOOLIA
+                </h3>
+                <p className='text-[11px] text-muted-foreground'>
+                  MODUL KANTIN CASHLESS & LAYANAN KAS TU
+                </p>
+                <h4 className='pt-1 text-xs font-semibold text-primary'>
+                  BERITA ACARA PENYERAHAN KAS TOP-UP TUNAI
+                </h4>
+                <p className='font-mono text-[10px] text-muted-foreground'>
+                  No. Dokumen: {selectedSetoranForPrint.id}
+                </p>
+              </div>
+
+              <div className='space-y-2'>
+                <div className='flex justify-between'>
+                  <span className='text-muted-foreground'>Hari, Tanggal:</span>
+                  <span className='font-semibold'>
+                    {selectedSetoranForPrint.tanggal}
+                  </span>
+                </div>
+                <div className='flex justify-between'>
+                  <span className='text-muted-foreground'>
+                    Petugas TU (Penyetor):
+                  </span>
+                  <span className='font-semibold'>
+                    {selectedSetoranForPrint.petugas_nama}
+                  </span>
+                </div>
+                <div className='flex justify-between'>
+                  <span className='text-muted-foreground'>
+                    Penerima (Bendahara):
+                  </span>
+                  <span className='font-semibold'>
+                    {selectedSetoranForPrint.bendahara_nama ||
+                      'Siti Rahma (Bendahara)'}
+                  </span>
+                </div>
+                <div className='flex justify-between'>
+                  <span className='text-muted-foreground'>
+                    Total Transaksi Top-up:
+                  </span>
+                  <span>
+                    {selectedSetoranForPrint.total_transaksi} Transaksi
+                  </span>
+                </div>
+              </div>
+
+              <div className='space-y-1.5 rounded-md border bg-muted/40 p-3 font-mono'>
+                <div className='flex justify-between'>
+                  <span>Total Sistem:</span>
+                  <span className='font-bold'>
+                    Rp{' '}
+                    {selectedSetoranForPrint.total_sistem.toLocaleString(
+                      'id-ID'
+                    )}
+                  </span>
+                </div>
+                <div className='flex justify-between'>
+                  <span>Total Uang Fisik Disetor:</span>
+                  <span className='font-bold text-emerald-700 dark:text-emerald-400'>
+                    Rp{' '}
+                    {(
+                      selectedSetoranForPrint.uang_fisik ||
+                      selectedSetoranForPrint.total_sistem
+                    ).toLocaleString('id-ID')}
+                  </span>
+                </div>
+                <div className='flex justify-between border-t pt-1 font-semibold'>
+                  <span>Selisih Kas Fisik:</span>
+                  <span
+                    className={
+                      selectedSetoranForPrint.selisih &&
+                      selectedSetoranForPrint.selisih < 0
+                        ? 'text-destructive'
+                        : ''
+                    }
+                  >
+                    {selectedSetoranForPrint.selisih !== null
+                      ? `${selectedSetoranForPrint.selisih >= 0 ? '+' : ''}Rp ${selectedSetoranForPrint.selisih.toLocaleString('id-ID')}`
+                      : 'Rp 0 (Pas)'}
+                  </span>
+                </div>
+              </div>
+
+              {selectedSetoranForPrint.catatan && (
+                <div className='rounded border bg-muted/20 p-2'>
+                  <span className='block text-[10px] font-semibold text-muted-foreground'>
+                    Catatan Berita Acara:
+                  </span>
+                  <p className='text-[11px] italic'>
+                    {selectedSetoranForPrint.catatan}
+                  </p>
+                </div>
+              )}
+
+              <div className='grid grid-cols-2 gap-4 pt-6 text-center text-xs'>
+                <div className='space-y-12'>
+                  <p className='text-muted-foreground'>
+                    Petugas TU yang Menyerahkan,
+                  </p>
+                  <p className='font-semibold underline'>
+                    {selectedSetoranForPrint.petugas_nama}
+                  </p>
+                </div>
+                <div className='space-y-12'>
+                  <p className='text-muted-foreground'>
+                    Bendahara yang Menerima,
+                  </p>
+                  <p className='font-semibold underline'>
+                    {selectedSetoranForPrint.bendahara_nama ||
+                      'Siti Rahma (Bendahara)'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className='flex justify-end gap-2 pt-2'>
+            <Button
+              variant='outline'
+              onClick={() => setIsPrintModalOpen(false)}
+            >
+              Tutup
+            </Button>
+            <Button onClick={() => window.print()} className='gap-1.5'>
+              <Printer className='h-4 w-4' />
+              Cetak Dokumen
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}

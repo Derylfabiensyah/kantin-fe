@@ -37,7 +37,12 @@ import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_a
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedTuTopupIndexRouteImport } from './routes/_authenticated/tu/topup/index'
+import { Route as AuthenticatedTuSetoranIndexRouteImport } from './routes/_authenticated/tu/setoran/index'
+import { Route as AuthenticatedStokRusakIndexRouteImport } from './routes/_authenticated/stok/rusak/index'
+import { Route as AuthenticatedStokOpnameIndexRouteImport } from './routes/_authenticated/stok/opname/index'
+import { Route as AuthenticatedStokMasukIndexRouteImport } from './routes/_authenticated/stok/masuk/index'
 import { Route as AuthenticatedSaldoRefundIndexRouteImport } from './routes/_authenticated/saldo/refund/index'
+import { Route as AuthenticatedSaldoKoreksiIndexRouteImport } from './routes/_authenticated/saldo/koreksi/index'
 
 const KasirRouteRoute = KasirRouteRouteImport.update({
   id: '/kasir',
@@ -190,10 +195,40 @@ const AuthenticatedTuTopupIndexRoute =
     path: '/tu/topup/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedTuSetoranIndexRoute =
+  AuthenticatedTuSetoranIndexRouteImport.update({
+    id: '/tu/setoran/',
+    path: '/tu/setoran/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedStokRusakIndexRoute =
+  AuthenticatedStokRusakIndexRouteImport.update({
+    id: '/stok/rusak/',
+    path: '/stok/rusak/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedStokOpnameIndexRoute =
+  AuthenticatedStokOpnameIndexRouteImport.update({
+    id: '/stok/opname/',
+    path: '/stok/opname/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedStokMasukIndexRoute =
+  AuthenticatedStokMasukIndexRouteImport.update({
+    id: '/stok/masuk/',
+    path: '/stok/masuk/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSaldoRefundIndexRoute =
   AuthenticatedSaldoRefundIndexRouteImport.update({
     id: '/saldo/refund/',
     path: '/saldo/refund/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSaldoKoreksiIndexRoute =
+  AuthenticatedSaldoKoreksiIndexRouteImport.update({
+    id: '/saldo/koreksi/',
+    path: '/saldo/koreksi/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
@@ -224,7 +259,12 @@ export interface FileRoutesByFullPath {
   '/menu/': typeof AuthenticatedMenuIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
+  '/saldo/koreksi/': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/saldo/refund/': typeof AuthenticatedSaldoRefundIndexRoute
+  '/stok/masuk/': typeof AuthenticatedStokMasukIndexRoute
+  '/stok/opname/': typeof AuthenticatedStokOpnameIndexRoute
+  '/stok/rusak/': typeof AuthenticatedStokRusakIndexRoute
+  '/tu/setoran/': typeof AuthenticatedTuSetoranIndexRoute
   '/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
 }
 export interface FileRoutesByTo {
@@ -252,7 +292,12 @@ export interface FileRoutesByTo {
   '/menu': typeof AuthenticatedMenuIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/saldo/koreksi': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/saldo/refund': typeof AuthenticatedSaldoRefundIndexRoute
+  '/stok/masuk': typeof AuthenticatedStokMasukIndexRoute
+  '/stok/opname': typeof AuthenticatedStokOpnameIndexRoute
+  '/stok/rusak': typeof AuthenticatedStokRusakIndexRoute
+  '/tu/setoran': typeof AuthenticatedTuSetoranIndexRoute
   '/tu/topup': typeof AuthenticatedTuTopupIndexRoute
 }
 export interface FileRoutesById {
@@ -284,7 +329,12 @@ export interface FileRoutesById {
   '/_authenticated/menu/': typeof AuthenticatedMenuIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/saldo/koreksi/': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/_authenticated/saldo/refund/': typeof AuthenticatedSaldoRefundIndexRoute
+  '/_authenticated/stok/masuk/': typeof AuthenticatedStokMasukIndexRoute
+  '/_authenticated/stok/opname/': typeof AuthenticatedStokOpnameIndexRoute
+  '/_authenticated/stok/rusak/': typeof AuthenticatedStokRusakIndexRoute
+  '/_authenticated/tu/setoran/': typeof AuthenticatedTuSetoranIndexRoute
   '/_authenticated/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
 }
 export interface FileRouteTypes {
@@ -316,7 +366,12 @@ export interface FileRouteTypes {
     | '/menu/'
     | '/settings/'
     | '/users/'
+    | '/saldo/koreksi/'
     | '/saldo/refund/'
+    | '/stok/masuk/'
+    | '/stok/opname/'
+    | '/stok/rusak/'
+    | '/tu/setoran/'
     | '/tu/topup/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -344,7 +399,12 @@ export interface FileRouteTypes {
     | '/menu'
     | '/settings'
     | '/users'
+    | '/saldo/koreksi'
     | '/saldo/refund'
+    | '/stok/masuk'
+    | '/stok/opname'
+    | '/stok/rusak'
+    | '/tu/setoran'
     | '/tu/topup'
   id:
     | '__root__'
@@ -375,7 +435,12 @@ export interface FileRouteTypes {
     | '/_authenticated/menu/'
     | '/_authenticated/settings/'
     | '/_authenticated/users/'
+    | '/_authenticated/saldo/koreksi/'
     | '/_authenticated/saldo/refund/'
+    | '/_authenticated/stok/masuk/'
+    | '/_authenticated/stok/opname/'
+    | '/_authenticated/stok/rusak/'
+    | '/_authenticated/tu/setoran/'
     | '/_authenticated/tu/topup/'
   fileRoutesById: FileRoutesById
 }
@@ -592,11 +657,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTuTopupIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/tu/setoran/': {
+      id: '/_authenticated/tu/setoran/'
+      path: '/tu/setoran'
+      fullPath: '/tu/setoran/'
+      preLoaderRoute: typeof AuthenticatedTuSetoranIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/stok/rusak/': {
+      id: '/_authenticated/stok/rusak/'
+      path: '/stok/rusak'
+      fullPath: '/stok/rusak/'
+      preLoaderRoute: typeof AuthenticatedStokRusakIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/stok/opname/': {
+      id: '/_authenticated/stok/opname/'
+      path: '/stok/opname'
+      fullPath: '/stok/opname/'
+      preLoaderRoute: typeof AuthenticatedStokOpnameIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/stok/masuk/': {
+      id: '/_authenticated/stok/masuk/'
+      path: '/stok/masuk'
+      fullPath: '/stok/masuk/'
+      preLoaderRoute: typeof AuthenticatedStokMasukIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/saldo/refund/': {
       id: '/_authenticated/saldo/refund/'
       path: '/saldo/refund'
       fullPath: '/saldo/refund/'
       preLoaderRoute: typeof AuthenticatedSaldoRefundIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/saldo/koreksi/': {
+      id: '/_authenticated/saldo/koreksi/'
+      path: '/saldo/koreksi'
+      fullPath: '/saldo/koreksi/'
+      preLoaderRoute: typeof AuthenticatedSaldoKoreksiIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
   }
@@ -635,7 +735,12 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedKontrolSiswaIndexRoute: typeof AuthenticatedKontrolSiswaIndexRoute
   AuthenticatedMenuIndexRoute: typeof AuthenticatedMenuIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedSaldoKoreksiIndexRoute: typeof AuthenticatedSaldoKoreksiIndexRoute
   AuthenticatedSaldoRefundIndexRoute: typeof AuthenticatedSaldoRefundIndexRoute
+  AuthenticatedStokMasukIndexRoute: typeof AuthenticatedStokMasukIndexRoute
+  AuthenticatedStokOpnameIndexRoute: typeof AuthenticatedStokOpnameIndexRoute
+  AuthenticatedStokRusakIndexRoute: typeof AuthenticatedStokRusakIndexRoute
+  AuthenticatedTuSetoranIndexRoute: typeof AuthenticatedTuSetoranIndexRoute
   AuthenticatedTuTopupIndexRoute: typeof AuthenticatedTuTopupIndexRoute
 }
 
@@ -649,7 +754,12 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedKontrolSiswaIndexRoute: AuthenticatedKontrolSiswaIndexRoute,
   AuthenticatedMenuIndexRoute: AuthenticatedMenuIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedSaldoKoreksiIndexRoute: AuthenticatedSaldoKoreksiIndexRoute,
   AuthenticatedSaldoRefundIndexRoute: AuthenticatedSaldoRefundIndexRoute,
+  AuthenticatedStokMasukIndexRoute: AuthenticatedStokMasukIndexRoute,
+  AuthenticatedStokOpnameIndexRoute: AuthenticatedStokOpnameIndexRoute,
+  AuthenticatedStokRusakIndexRoute: AuthenticatedStokRusakIndexRoute,
+  AuthenticatedTuSetoranIndexRoute: AuthenticatedTuSetoranIndexRoute,
   AuthenticatedTuTopupIndexRoute: AuthenticatedTuTopupIndexRoute,
 }
 

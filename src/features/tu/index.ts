@@ -1,3 +1,6 @@
 export * from './TopupTunaiPage'
 export * from './StudentSearchCard'
 export * from './PrintSlipModal'
+export * from './SetoranKasPage'
+export * from './KonfirmasiSetoranModal'
+export * from './types'

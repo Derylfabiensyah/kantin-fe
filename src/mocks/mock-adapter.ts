@@ -1540,7 +1540,229 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
     }
 
+    if (url.includes('/api/stok/opname-batch') && method === 'post') {
+      const referensiId = String(
+        payload.referensiId || `OPN-${Date.now()}`
+      ).trim()
+      const items =
+        (payload.items as Array<{
+          menuId: number
+          qtyFisik: number
+          alasan: string
+          rusak?: boolean
+        }>) || []
+
+      const hasilItems: Array<{
+        menuId: number
+        stokSebelum: number
+        stokFisik: number
+        selisih: number
+        jenis: string | null
+        mutasiId: number | null
+        stokSetelah: number
+      }> = []
+
+      let jumlahBerubah = 0
+      let jumlahTanpaSelisih = 0
+      const now = new Date()
+
+      for (const it of items) {
+        const targetMenu = menuList.find((m) => m.id === Number(it.menuId))
+        const stokSebelum = targetMenu ? targetMenu.stok : 0
+        const stokFisik = Number(it.qtyFisik) || 0
+        const selisih = stokFisik - stokSebelum
+
+        if (selisih === 0) {
+          jumlahTanpaSelisih++
+          hasilItems.push({
+            menuId: Number(it.menuId),
+            stokSebelum,
+            stokFisik,
+            selisih: 0,
+            jenis: null,
+            mutasiId: null,
+            stokSetelah: stokSebelum,
+          })
+          continue
+        }
+
+        jumlahBerubah++
+        const jenis =
+          selisih < 0
+            ? it.rusak
+              ? 'BARANG_RUSAK'
+              : 'OPNAME_KELUAR'
+            : 'OPNAME_MASUK'
+
+        const arah = selisih > 0 ? 'MASUK' : 'KELUAR'
+        const stokSetelah = stokFisik
+        if (targetMenu) {
+          targetMenu.stok = stokSetelah
+        }
+
+        const newId =
+          riwayatStokList.length > 0
+            ? Math.max(...riwayatStokList.map((r) => r.id)) + 1
+            : 1
+
+        const itemMutasi: MockRiwayatItem = {
+          id: newId,
+          menuId: Number(it.menuId),
+          menuNama: targetMenu ? targetMenu.nama : `Menu #${it.menuId}`,
+          arah,
+          jenis,
+          qty: Math.abs(selisih),
+          hargaBeliSatuan: targetMenu
+            ? targetMenu.hpp || Math.round(targetMenu.harga_jual * 0.7)
+            : 0,
+          totalNilai:
+            Math.abs(selisih) *
+            (targetMenu
+              ? targetMenu.hpp || Math.round(targetMenu.harga_jual * 0.7)
+              : 0),
+          hppSnapshot: targetMenu
+            ? targetMenu.hpp || Math.round(targetMenu.harga_jual * 0.7)
+            : 0,
+          stokSetelah,
+          referensiTipe: jenis,
+          referensiId,
+          alasan: it.alasan,
+          mutasiAsalId: null,
+          sudahDibalik: null,
+          sisaDapatDibalik: null,
+          dapatDibalik: false,
+          aktorId: 1,
+          waktu: now.toISOString(),
+        }
+        riwayatStokList.unshift(itemMutasi)
+
+        hasilItems.push({
+          menuId: Number(it.menuId),
+          stokSebelum,
+          stokFisik,
+          selisih,
+          jenis,
+          mutasiId: newId,
+          stokSetelah,
+        })
+      }
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Penyesuaian stok batch tercatat',
+          data: {
+            referensiId,
+            jumlahBerubah,
+            jumlahTanpaSelisih,
+            items: hasilItems,
+          },
+        },
+      }
+    }
+
+    if (
+      url.includes('/api/stok/opname') &&
+      !url.includes('/opname-batch') &&
+      method === 'post'
+    ) {
+      const menuId = Number(payload.menuId)
+      const qtyFisik = Number(payload.qtyFisik) || 0
+      const alasan = String(payload.alasan || '').trim()
+      const referensiId = String(
+        payload.referensiId || `OPN-${Date.now()}`
+      ).trim()
+
+      const targetMenu = menuList.find((m) => m.id === menuId)
+      const stokSebelum = targetMenu ? targetMenu.stok : 0
+      const selisih = qtyFisik - stokSebelum
+
+      if (targetMenu) {
+        targetMenu.stok = qtyFisik
+      }
+
+      const jenis = selisih < 0 ? 'OPNAME_KELUAR' : 'OPNAME_MASUK'
+      const arah = selisih > 0 ? 'MASUK' : 'KELUAR'
+      const now = new Date()
+      const newId =
+        riwayatStokList.length > 0
+          ? Math.max(...riwayatStokList.map((r) => r.id)) + 1
+          : 1
+
+      if (selisih !== 0) {
+        const itemMutasi: MockRiwayatItem = {
+          id: newId,
+          menuId,
+          menuNama: targetMenu ? targetMenu.nama : `Menu #${menuId}`,
+          arah,
+          jenis,
+          qty: Math.abs(selisih),
+          hargaBeliSatuan: targetMenu
+            ? targetMenu.hpp || Math.round(targetMenu.harga_jual * 0.7)
+            : 0,
+          totalNilai:
+            Math.abs(selisih) *
+            (targetMenu
+              ? targetMenu.hpp || Math.round(targetMenu.harga_jual * 0.7)
+              : 0),
+          hppSnapshot: targetMenu
+            ? targetMenu.hpp || Math.round(targetMenu.harga_jual * 0.7)
+            : 0,
+          stokSetelah: qtyFisik,
+          referensiTipe: jenis,
+          referensiId,
+          alasan,
+          mutasiAsalId: null,
+          sudahDibalik: null,
+          sisaDapatDibalik: null,
+          dapatDibalik: false,
+          aktorId: 1,
+          waktu: now.toISOString(),
+        }
+        riwayatStokList.unshift(itemMutasi)
+      }
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Penyesuaian stok tercatat',
+          data: {
+            mutasiId: newId,
+            menuId,
+            stokSebelum,
+            stokSesudah: qtyFisik,
+            hppSebelum: targetMenu
+              ? targetMenu.hpp || Math.round(targetMenu.harga_jual * 0.7)
+              : 0,
+            hppSesudah: targetMenu
+              ? targetMenu.hpp || Math.round(targetMenu.harga_jual * 0.7)
+              : 0,
+            jenis,
+            waktu: now.toISOString(),
+          },
+        },
+      }
+    }
+
     if (url.includes('/api/stok/riwayat') && method === 'get') {
+      const urlObj = new URL(url, 'http://localhost')
+      const jenisParam = urlObj.searchParams.get('jenis')
+      const menuIdParam = urlObj.searchParams.get('menuId')
+
+      let filtered = [...riwayatStokList]
+      if (jenisParam) {
+        filtered = filtered.filter((r) => r.jenis === jenisParam)
+      }
+      if (menuIdParam) {
+        filtered = filtered.filter((r) => r.menuId === Number(menuIdParam))
+      }
+
       return {
         status: 200,
         data: {
@@ -1549,8 +1771,8 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
           status: 'SUCCESS',
           message: 'Riwayat mutasi stok berhasil dimuat',
           data: {
-            items: riwayatStokList,
-            total: riwayatStokList.length,
+            items: filtered,
+            total: filtered.length,
             halaman: 0,
             ukuran: 50,
             totalHalaman: 1,

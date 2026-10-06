@@ -9,6 +9,7 @@ export type JenisMutasiStok =
   | 'PENJUALAN_VOID'
   | 'OPNAME_MASUK'
   | 'OPNAME_KELUAR'
+  | 'BARANG_RUSAK'
 
 export interface RiwayatStokItem {
   id: number
@@ -147,3 +148,90 @@ export const barangMasukPembalikSchema = z.object({
 export type BarangMasukPembalikFormValues = z.infer<
   typeof barangMasukPembalikSchema
 >
+
+// --- STOK OPNAME & BARANG RUSAK (PRD §7.3) ---
+
+export interface OpnameRequest {
+  menuId: number
+  qtyFisik: number
+  alasan: string
+  referensiId: string
+}
+
+export interface OpnameBatchItemRequest {
+  menuId: number
+  qtyFisik: number
+  alasan: string
+  rusak?: boolean
+}
+
+export interface OpnameBatchRequest {
+  referensiId: string
+  items: OpnameBatchItemRequest[]
+}
+
+export interface OpnameBatchHasilItem {
+  menuId: number
+  stokSebelum: number
+  stokFisik: number
+  selisih: number
+  jenis?: JenisMutasiStok | null
+  mutasiId?: number | null
+  stokSetelah: number
+}
+
+export interface OpnameBatchResponse {
+  referensiId: string
+  jumlahBerubah: number
+  jumlahTanpaSelisih: number
+  items: OpnameBatchHasilItem[]
+}
+
+export const KATEGORI_ALASAN_OPNAME = [
+  { value: 'Rusak', label: 'Barang Rusak / Kemasan Rusak', isRusak: true },
+  { value: 'Kedaluwarsa', label: 'Kedaluwarsa / Basi', isRusak: true },
+  { value: 'Hilang', label: 'Barang Hilang / Selisih Kurang', isRusak: false },
+  { value: 'Salah Hitung', label: 'Koreksi Salah Hitung', isRusak: false },
+  { value: 'Lainnya', label: 'Lainnya (Perlu Keterangan)', isRusak: false },
+] as const
+
+export type KategoriAlasanOpnameValue =
+  (typeof KATEGORI_ALASAN_OPNAME)[number]['value']
+
+export interface OpnameRowState {
+  menuId: number
+  nama: string
+  kategoriNama?: string
+  satuan: string
+  stokSistem: number
+  hpp: number
+  hargaJual: number
+  qtyFisik: number | ''
+  selisih: number // qtyFisik - stokSistem
+  nilaiSelisih: number // |selisih| * hpp
+  alasan: string
+  keterangan: string
+  rusak: boolean
+}
+
+export const barangRusakFormSchema = z.object({
+  menuId: z.number().min(1, 'Menu wajib dipilih'),
+  qtyRusak: z
+    .number()
+    .int('Qty harus bilangan bulat')
+    .min(1, 'Qty minimal 1 unit'),
+  kategoriAlasan: z.string().min(1, 'Kategori alasan wajib dipilih'),
+  keterangan: z
+    .string()
+    .trim()
+    .max(255, 'Catatan maksimal 255 karakter')
+    .optional(),
+  referensiId: z
+    .string()
+    .trim()
+    .min(1, 'Nomor referensi wajib diisi')
+    .max(60, 'Nomor referensi maksimal 60 karakter'),
+})
+
+export type BarangRusakFormValues = z.infer<typeof barangRusakFormSchema>
+

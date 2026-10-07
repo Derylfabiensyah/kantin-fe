@@ -155,9 +155,18 @@ export const sidebarData: SidebarData = {
         },
         {
           title: 'Pengaturan Kantin',
-          url: '/pengaturan',
           icon: Settings,
           roles: ['admin'],
+          items: [
+            {
+              title: 'Operasional Kantin',
+              url: '/pengaturan',
+            },
+            {
+              title: 'Manajemen Titik Kasir',
+              url: '/pengaturan/titik-kasir',
+            },
+          ],
         },
       ],
     },

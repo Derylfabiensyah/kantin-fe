@@ -28,9 +28,10 @@ export interface StudentFeedbackModalProps {
   onComplete: () => void
   onVoid: (transaksiId: number) => void
   isVoiding?: boolean
+  durasiDetik?: number
 }
 
-const COUNTDOWN_SECONDS = 3
+const DEFAULT_COUNTDOWN_SECONDS = 3
 
 export const StudentFeedbackModal: React.FC<StudentFeedbackModalProps> = ({
   open,
@@ -39,11 +40,14 @@ export const StudentFeedbackModal: React.FC<StudentFeedbackModalProps> = ({
   onComplete,
   onVoid,
   isVoiding = false,
+  durasiDetik = DEFAULT_COUNTDOWN_SECONDS,
 }) => {
-  const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS)
+  const effectiveDuration =
+    durasiDetik && durasiDetik > 0 ? durasiDetik : DEFAULT_COUNTDOWN_SECONDS
+  const [countdown, setCountdown] = useState(effectiveDuration)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  // Mulai hitung mundur 3 detik saat modal terbuka
+  // Mulai hitung mundur saat modal terbuka, tersinkronisasi dengan durasi pengaturan operasional
   useEffect(() => {
     if (!open || !data || isVoiding) return
 
@@ -61,7 +65,7 @@ export const StudentFeedbackModal: React.FC<StudentFeedbackModalProps> = ({
     return () => {
       if (timerRef.current) clearInterval(timerRef.current)
     }
-  }, [open, data, isVoiding, onComplete])
+  }, [open, data, isVoiding, onComplete, effectiveDuration])
 
   if (!data) return null
 

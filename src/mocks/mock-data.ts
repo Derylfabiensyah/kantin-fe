@@ -1003,3 +1003,84 @@ export const MOCK_TRANSAKSI_SESI_TUTUP: TransaksiSesiTutupMock[] = [
     koreksi_referensi_id: 'BA-KOR-20261004-001',
   },
 ]
+
+// ==========================================
+// PENGATURAN OPERASIONAL KANTIN & TITIK KASIR (PRD §9.1 & §10)
+// ==========================================
+
+export interface PengaturanKantinMock {
+  sekolah_id?: number
+  nama_kantin: string
+  jam_tutup_kasir: string
+  jam_tutup_otomatis?: string
+  konfirmasi_manual: boolean
+  durasi_foto_detik: number
+  min_topup: number
+  max_topup: number
+  max_saldo_siswa: number
+  max_saldo_kartu_tamu: number
+  disimpan?: boolean
+  updated_at?: string
+  updated_by?: string
+}
+
+export interface TitikKasirMock {
+  id: number
+  sekolah_id: number
+  nama: string
+  kode: string
+  is_active: boolean
+  aktif?: boolean
+  created_at: string
+  updated_at: string
+}
+
+export const MOCK_PENGATURAN_KANTIN: PengaturanKantinMock = {
+  sekolah_id: 1,
+  nama_kantin: 'Kantin Sehat SKOOLIA',
+  jam_tutup_kasir: '23:59',
+  jam_tutup_otomatis: '23:59:00',
+  konfirmasi_manual: false,
+  durasi_foto_detik: 3,
+  min_topup: 5000,
+  max_topup: 500000,
+  max_saldo_siswa: 1000000,
+  max_saldo_kartu_tamu: 500000,
+  disimpan: true,
+  updated_at: '2026-10-01T08:00:00Z',
+  updated_by: 'Admin Sekolah',
+}
+
+export const MOCK_TITIK_KASIR: TitikKasirMock[] = [
+  {
+    id: 1,
+    sekolah_id: 1,
+    nama: 'Kasir 1 - Kantin Utama',
+    kode: 'POS-01',
+    is_active: true,
+    aktif: true,
+    created_at: '2026-09-01T07:00:00Z',
+    updated_at: '2026-09-01T07:00:00Z',
+  },
+  {
+    id: 2,
+    sekolah_id: 1,
+    nama: 'Kasir 2 - Pujasera Samping',
+    kode: 'POS-02',
+    is_active: true,
+    aktif: true,
+    created_at: '2026-09-10T07:00:00Z',
+    updated_at: '2026-09-10T07:00:00Z',
+  },
+  {
+    id: 3,
+    sekolah_id: 1,
+    nama: 'Kasir 3 - Koperasi & Snack',
+    kode: 'POS-03',
+    is_active: false,
+    aktif: false,
+    created_at: '2026-09-15T07:00:00Z',
+    updated_at: '2026-09-15T07:00:00Z',
+  },
+]
+

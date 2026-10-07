@@ -30,6 +30,7 @@ export interface RiwayatStokItem {
   sisaDapatDibalik?: number | null
   dapatDibalik: boolean
   aktorId?: number | null
+  aktorNama?: string | null
   waktu: string
 }
 
@@ -48,6 +49,19 @@ export interface StokResponse {
   hpp: number
   nilaiPersediaan: number
   menipis: boolean
+}
+
+export interface InventarisItem {
+  menuId: number
+  nama: string
+  kategoriId?: number | null
+  stok: number
+  stokMinimum: number
+  hpp: number
+  nilaiPersediaan: number
+  menipis: boolean
+  namaMenu?: string
+  stokBerjalan?: number
 }
 
 export interface HasilMutasiStok {

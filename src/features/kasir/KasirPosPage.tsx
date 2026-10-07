@@ -7,15 +7,36 @@ import {
   RefreshCw,
   Keyboard,
   Radio,
+  Store,
+  Clock,
+  AlertTriangle,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useCartStore } from '@/stores/useCartStore'
+import { usePengaturanStore } from '@/stores/usePengaturanStore'
 import { formatRupiah } from '@/lib/formatters'
 import { useBeepAudio } from '@/hooks/useBeepAudio'
 import { useRfidScanner } from '@/hooks/useRfidScanner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import {
   Sheet,
   SheetContent,
@@ -47,10 +68,22 @@ export const KasirPosPage: React.FC = () => {
   )
   const [mobileCartOpen, setMobileCartOpen] = useState(false)
 
+  // Pengaturan operasional & Titik Kasir store
+  const {
+    pengaturan,
+    fetchPengaturan,
+    titikKasirList,
+    fetchTitikKasir,
+    activeTitikKasirId,
+    setActiveTitikKasirId,
+  } = usePengaturanStore()
+
   // Modals & Transaksi state
   const [manualRfidOpen, setManualRfidOpen] = useState(false)
   const [studentModalOpen, setStudentModalOpen] = useState(false)
   const [errorModalOpen, setErrorModalOpen] = useState(false)
+  const [confirmManualOpen, setConfirmManualOpen] = useState(false)
+  const [pendingScannedUid, setPendingScannedUid] = useState<string | null>(null)
   const [successData, setSuccessData] = useState<TapTransaksiData | null>(null)
   const [errorInfo, setErrorInfo] = useState<TransactionErrorInfo | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -62,22 +95,24 @@ export const KasirPosPage: React.FC = () => {
     useCartStore()
   const { playSuccess, playError, playVoid } = useBeepAudio()
 
-  // Muat data katalog menu & kategori
+  // Muat data katalog menu & kategori serta pengaturan operasional
   const loadKatalogData = useCallback(async () => {
     try {
       setLoading(true)
       const [menuData, kategoriData] = await Promise.all([
         katalogApi.getMenuList(undefined, true),
         katalogApi.getKategoriList(true),
+        fetchPengaturan(),
+        fetchTitikKasir(true),
       ])
       setMenus(menuData)
       setKategoris(kategoriData)
     } catch {
-      toast.error('Gagal memuat katalog menu POS')
+      toast.error('Gagal memuat katalog menu atau pengaturan POS')
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [fetchPengaturan, fetchTitikKasir])
 
   useEffect(() => {
     let isMounted = true
@@ -86,6 +121,8 @@ export const KasirPosPage: React.FC = () => {
         const [menuData, kategoriData] = await Promise.all([
           katalogApi.getMenuList(undefined, true),
           katalogApi.getKategoriList(true),
+          fetchPengaturan(),
+          fetchTitikKasir(true),
         ])
         if (isMounted) {
           setMenus(menuData)
@@ -94,7 +131,7 @@ export const KasirPosPage: React.FC = () => {
         }
       } catch {
         if (isMounted) {
-          toast.error('Gagal memuat katalog menu POS')
+          toast.error('Gagal memuat katalog menu atau pengaturan POS')
           setLoading(false)
         }
       }
@@ -104,7 +141,18 @@ export const KasirPosPage: React.FC = () => {
     return () => {
       isMounted = false
     }
-  }, [])
+  }, [fetchPengaturan, fetchTitikKasir])
+
+  // Cek apakah waktu saat ini telah melewati batas jam tutup kasir otomatis
+  const isPastClosingTime = useMemo(() => {
+    const jamTutup = pengaturan.jamTutupOtomatis || '23:59'
+    const [targetH, targetM] = jamTutup.split(':').map(Number)
+    if (isNaN(targetH) || isNaN(targetM)) return false
+    const now = new Date()
+    const currentMinutes = now.getHours() * 60 + now.getMinutes()
+    const targetMinutes = targetH * 60 + targetM
+    return currentMinutes >= targetMinutes
+  }, [pengaturan.jamTutupOtomatis])
 
   // Shortcut keyboard: tombol '/' untuk fokus input search, 'Escape' untuk bersihkan / blur
   useEffect(() => {
@@ -179,18 +227,10 @@ export const KasirPosPage: React.FC = () => {
     setSelectedKategoriId(null)
   }
 
-  // Eksekusi transaksi tap RFID
-  const handleProcessTap = useCallback(
+  // Eksekusi transaksi tap RFID ke backend
+  const executeTapTransaction = useCallback(
     async (scannedUid: string) => {
       if (!scannedUid || isProcessing) return
-
-      if (items.length === 0) {
-        playError()
-        toast.warning(
-          'Keranjang belanja kosong! Pilih menu makanan atau minuman terlebih dahulu.'
-        )
-        return
-      }
 
       const idempotencyKey = generateIdempotencyKey()
       setIsProcessing(true)
@@ -203,6 +243,7 @@ export const KasirPosPage: React.FC = () => {
             qty: it.qty,
           })),
           idempotencyKey,
+          titikKasirId: activeTitikKasirId ?? undefined,
         })
 
         // Transaksi Sukses
@@ -235,13 +276,44 @@ export const KasirPosPage: React.FC = () => {
         setIsProcessing(false)
       }
     },
-    [items, isProcessing, playSuccess, playError]
+    [items, isProcessing, activeTitikKasirId, playSuccess, playError]
+  )
+
+  // Handler proses tap RFID: konfirmasi manual (jika aktif) atau eksekusi langsung
+  const handleProcessTap = useCallback(
+    async (scannedUid: string) => {
+      if (!scannedUid || isProcessing) return
+
+      if (items.length === 0) {
+        playError()
+        toast.warning(
+          'Keranjang belanja kosong! Pilih menu makanan atau minuman terlebih dahulu.'
+        )
+        return
+      }
+
+      // Langkah konfirmasi manual sesuai pengaturan operasional kantin (PRD §6.2)
+      if (pengaturan.konfirmasiManual) {
+        setPendingScannedUid(scannedUid)
+        setConfirmManualOpen(true)
+        return
+      }
+
+      await executeTapTransaction(scannedUid)
+    },
+    [
+      items,
+      isProcessing,
+      pengaturan.konfirmasiManual,
+      executeTapTransaction,
+      playError,
+    ]
   )
 
   // Integrasi USB RFID Reader Hook
   useRfidScanner({
     onScan: handleProcessTap,
-    enabled: !studentModalOpen && !isProcessing,
+    enabled: !studentModalOpen && !isProcessing && !confirmManualOpen,
   })
 
   // Selesai transaksi (hitung mundur selesai atau tombol selesai ditekan)
@@ -327,6 +399,44 @@ export const KasirPosPage: React.FC = () => {
               <span className='hidden md:inline'>Manual UID</span>
             </Button>
 
+            {/* Titik Kasir Selector */}
+            <div className='hidden sm:flex items-center gap-1.5'>
+              <Store className='h-4 w-4 text-muted-foreground' />
+              <Select
+                value={activeTitikKasirId ? String(activeTitikKasirId) : ''}
+                onValueChange={(val) =>
+                  setActiveTitikKasirId(val ? Number(val) : null)
+                }
+              >
+                <SelectTrigger className='h-10 w-[150px] bg-background text-xs font-medium'>
+                  <SelectValue placeholder='Pilih Titik' />
+                </SelectTrigger>
+                <SelectContent>
+                  {titikKasirList.length === 0 ? (
+                    <SelectItem value='none' disabled>
+                      Tidak ada titik
+                    </SelectItem>
+                  ) : (
+                    titikKasirList.map((tk) => (
+                      <SelectItem key={tk.id} value={String(tk.id)}>
+                        {tk.nama} ({tk.kode})
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Jam Tutup Otomatis Badge */}
+            <Badge
+              variant={isPastClosingTime ? 'destructive' : 'outline'}
+              className='hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 text-xs'
+              title={`Kasir otomatis tutup pada pukul ${pengaturan.jamTutupOtomatis || '23:59'}`}
+            >
+              <Clock className='h-3.5 w-3.5' />
+              <span>Tutup: {pengaturan.jamTutupOtomatis || '23:59'}</span>
+            </Badge>
+
             {/* Status Indikator Reader USB */}
             <Badge
               variant='secondary'
@@ -351,6 +461,16 @@ export const KasirPosPage: React.FC = () => {
               />
             </Button>
           </div>
+
+          {/* Banner Peringatan Tutup Otomatis */}
+          {isPastClosingTime && (
+            <div className='flex items-center gap-2 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs text-amber-800 dark:text-amber-300'>
+              <AlertTriangle className='h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400' />
+              <span>
+                <strong>Perhatian:</strong> Melewati jam operasional tutup ({pengaturan.jamTutupOtomatis || '23:59'}).
+              </span>
+            </div>
+          )}
 
           {/* Filter Pills Kategori */}
           <div className='scrollbar-none flex items-center gap-1.5 overflow-x-auto pb-1'>
@@ -460,7 +580,7 @@ export const KasirPosPage: React.FC = () => {
         isProcessing={isProcessing}
       />
 
-      {/* Modal Feedback Siswa (Foto 3 Detik + Tombol Batalkan / Void) */}
+      {/* Modal Feedback Siswa (Foto Sesuai Pengaturan Durasi + Tombol Batalkan / Void) */}
       <StudentFeedbackModal
         key={
           successData?.transaksi_id ||
@@ -473,7 +593,59 @@ export const KasirPosPage: React.FC = () => {
         onComplete={handleTransactionComplete}
         onVoid={handleTransactionVoid}
         isVoiding={isVoiding}
+        durasiDetik={pengaturan.durasiFotoDetik}
       />
+
+      {/* Dialog Konfirmasi Manual Transaksi (Fitur Pengaturan Operasional) */}
+      <AlertDialog
+        open={confirmManualOpen}
+        onOpenChange={setConfirmManualOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Konfirmasi Pembayaran Kasir</AlertDialogTitle>
+            <AlertDialogDescription>
+              Mode konfirmasi manual aktif. Harap verifikasi kembali sebelum memproses transaksi tap kartu.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className='space-y-2 rounded-lg border bg-muted/40 p-3 text-sm'>
+            <div className='flex justify-between'>
+              <span className='text-muted-foreground'>UID Kartu:</span>
+              <span className='font-mono font-semibold'>{pendingScannedUid}</span>
+            </div>
+            <div className='flex justify-between'>
+              <span className='text-muted-foreground'>Total Item:</span>
+              <span className='font-medium'>{totalItems()} item</span>
+            </div>
+            <div className='flex justify-between border-t pt-2 text-base font-bold'>
+              <span>Total Tagihan:</span>
+              <span className='text-primary'>{formatRupiah(totalHarga())}</span>
+            </div>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => {
+                setConfirmManualOpen(false)
+                setPendingScannedUid(null)
+              }}
+            >
+              Batalkan
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async () => {
+                if (pendingScannedUid) {
+                  const uid = pendingScannedUid
+                  setConfirmManualOpen(false)
+                  setPendingScannedUid(null)
+                  await executeTapTransaction(uid)
+                }
+              }}
+            >
+              Ya, Proses Transaksi
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Modal Error Transaksi Ditolak (Kekurangan Saldo & Validasi 6 Tahap) */}
       <TransactionErrorModal

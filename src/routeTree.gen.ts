@@ -26,6 +26,7 @@ import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-p
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedPengaturanIndexRouteImport } from './routes/_authenticated/pengaturan/index'
 import { Route as AuthenticatedMenuIndexRouteImport } from './routes/_authenticated/menu/index'
 import { Route as AuthenticatedKontrolSiswaIndexRouteImport } from './routes/_authenticated/kontrol-siswa/index'
 import { Route as AuthenticatedKategoriIndexRouteImport } from './routes/_authenticated/kategori/index'
@@ -45,6 +46,7 @@ import { Route as AuthenticatedStokKartuIndexRouteImport } from './routes/_authe
 import { Route as AuthenticatedStokInventarisIndexRouteImport } from './routes/_authenticated/stok/inventaris/index'
 import { Route as AuthenticatedSaldoRefundIndexRouteImport } from './routes/_authenticated/saldo/refund/index'
 import { Route as AuthenticatedSaldoKoreksiIndexRouteImport } from './routes/_authenticated/saldo/koreksi/index'
+import { Route as AuthenticatedPengaturanTitikKasirIndexRouteImport } from './routes/_authenticated/pengaturan/titik-kasir/index'
 
 const KasirRouteRoute = KasirRouteRouteImport.update({
   id: '/kasir',
@@ -131,6 +133,12 @@ const AuthenticatedSettingsIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedPengaturanIndexRoute =
+  AuthenticatedPengaturanIndexRouteImport.update({
+    id: '/pengaturan/',
+    path: '/pengaturan/',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedMenuIndexRoute = AuthenticatedMenuIndexRouteImport.update({
   id: '/menu/',
@@ -245,6 +253,12 @@ const AuthenticatedSaldoKoreksiIndexRoute =
     path: '/saldo/koreksi/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPengaturanTitikKasirIndexRoute =
+  AuthenticatedPengaturanTitikKasirIndexRouteImport.update({
+    id: '/pengaturan/titik-kasir/',
+    path: '/pengaturan/titik-kasir/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -271,8 +285,10 @@ export interface FileRoutesByFullPath {
   '/kategori/': typeof AuthenticatedKategoriIndexRoute
   '/kontrol-siswa/': typeof AuthenticatedKontrolSiswaIndexRoute
   '/menu/': typeof AuthenticatedMenuIndexRoute
+  '/pengaturan/': typeof AuthenticatedPengaturanIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
+  '/pengaturan/titik-kasir/': typeof AuthenticatedPengaturanTitikKasirIndexRoute
   '/saldo/koreksi/': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/saldo/refund/': typeof AuthenticatedSaldoRefundIndexRoute
   '/stok/inventaris/': typeof AuthenticatedStokInventarisIndexRoute
@@ -306,8 +322,10 @@ export interface FileRoutesByTo {
   '/kategori': typeof AuthenticatedKategoriIndexRoute
   '/kontrol-siswa': typeof AuthenticatedKontrolSiswaIndexRoute
   '/menu': typeof AuthenticatedMenuIndexRoute
+  '/pengaturan': typeof AuthenticatedPengaturanIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/pengaturan/titik-kasir': typeof AuthenticatedPengaturanTitikKasirIndexRoute
   '/saldo/koreksi': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/saldo/refund': typeof AuthenticatedSaldoRefundIndexRoute
   '/stok/inventaris': typeof AuthenticatedStokInventarisIndexRoute
@@ -345,8 +363,10 @@ export interface FileRoutesById {
   '/_authenticated/kategori/': typeof AuthenticatedKategoriIndexRoute
   '/_authenticated/kontrol-siswa/': typeof AuthenticatedKontrolSiswaIndexRoute
   '/_authenticated/menu/': typeof AuthenticatedMenuIndexRoute
+  '/_authenticated/pengaturan/': typeof AuthenticatedPengaturanIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/pengaturan/titik-kasir/': typeof AuthenticatedPengaturanTitikKasirIndexRoute
   '/_authenticated/saldo/koreksi/': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/_authenticated/saldo/refund/': typeof AuthenticatedSaldoRefundIndexRoute
   '/_authenticated/stok/inventaris/': typeof AuthenticatedStokInventarisIndexRoute
@@ -384,8 +404,10 @@ export interface FileRouteTypes {
     | '/kategori/'
     | '/kontrol-siswa/'
     | '/menu/'
+    | '/pengaturan/'
     | '/settings/'
     | '/users/'
+    | '/pengaturan/titik-kasir/'
     | '/saldo/koreksi/'
     | '/saldo/refund/'
     | '/stok/inventaris/'
@@ -419,8 +441,10 @@ export interface FileRouteTypes {
     | '/kategori'
     | '/kontrol-siswa'
     | '/menu'
+    | '/pengaturan'
     | '/settings'
     | '/users'
+    | '/pengaturan/titik-kasir'
     | '/saldo/koreksi'
     | '/saldo/refund'
     | '/stok/inventaris'
@@ -457,8 +481,10 @@ export interface FileRouteTypes {
     | '/_authenticated/kategori/'
     | '/_authenticated/kontrol-siswa/'
     | '/_authenticated/menu/'
+    | '/_authenticated/pengaturan/'
     | '/_authenticated/settings/'
     | '/_authenticated/users/'
+    | '/_authenticated/pengaturan/titik-kasir/'
     | '/_authenticated/saldo/koreksi/'
     | '/_authenticated/saldo/refund/'
     | '/_authenticated/stok/inventaris/'
@@ -606,6 +632,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/pengaturan/': {
+      id: '/_authenticated/pengaturan/'
+      path: '/pengaturan'
+      fullPath: '/pengaturan/'
+      preLoaderRoute: typeof AuthenticatedPengaturanIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/menu/': {
       id: '/_authenticated/menu/'
       path: '/menu'
@@ -739,6 +772,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSaldoKoreksiIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/pengaturan/titik-kasir/': {
+      id: '/_authenticated/pengaturan/titik-kasir/'
+      path: '/pengaturan/titik-kasir'
+      fullPath: '/pengaturan/titik-kasir/'
+      preLoaderRoute: typeof AuthenticatedPengaturanTitikKasirIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -774,7 +814,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedKategoriIndexRoute: typeof AuthenticatedKategoriIndexRoute
   AuthenticatedKontrolSiswaIndexRoute: typeof AuthenticatedKontrolSiswaIndexRoute
   AuthenticatedMenuIndexRoute: typeof AuthenticatedMenuIndexRoute
+  AuthenticatedPengaturanIndexRoute: typeof AuthenticatedPengaturanIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedPengaturanTitikKasirIndexRoute: typeof AuthenticatedPengaturanTitikKasirIndexRoute
   AuthenticatedSaldoKoreksiIndexRoute: typeof AuthenticatedSaldoKoreksiIndexRoute
   AuthenticatedSaldoRefundIndexRoute: typeof AuthenticatedSaldoRefundIndexRoute
   AuthenticatedStokInventarisIndexRoute: typeof AuthenticatedStokInventarisIndexRoute
@@ -795,7 +837,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedKategoriIndexRoute: AuthenticatedKategoriIndexRoute,
   AuthenticatedKontrolSiswaIndexRoute: AuthenticatedKontrolSiswaIndexRoute,
   AuthenticatedMenuIndexRoute: AuthenticatedMenuIndexRoute,
+  AuthenticatedPengaturanIndexRoute: AuthenticatedPengaturanIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedPengaturanTitikKasirIndexRoute:
+    AuthenticatedPengaturanTitikKasirIndexRoute,
   AuthenticatedSaldoKoreksiIndexRoute: AuthenticatedSaldoKoreksiIndexRoute,
   AuthenticatedSaldoRefundIndexRoute: AuthenticatedSaldoRefundIndexRoute,
   AuthenticatedStokInventarisIndexRoute: AuthenticatedStokInventarisIndexRoute,

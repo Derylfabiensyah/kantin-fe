@@ -17,6 +17,8 @@ import {
   MOCK_SETORAN_KAS,
   MOCK_KOREKSI_BENDAHARA,
   MOCK_TRANSAKSI_SESI_TUTUP,
+  MOCK_PENGATURAN_KANTIN,
+  MOCK_TITIK_KASIR,
   type MenuItemMock,
   type KartuSiswaMock,
   type KartuTamuMock,
@@ -24,6 +26,8 @@ import {
   type SetoranKasTUMock,
   type MutasiKoreksiMock,
   type TransaksiSesiTutupMock,
+  type PengaturanKantinMock,
+  type TitikKasirMock,
 } from './mock-data'
 
 export interface MockResponseData {
@@ -60,6 +64,10 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
   )
   const transaksiSesiTutupList: TransaksiSesiTutupMock[] = JSON.parse(
     JSON.stringify(MOCK_TRANSAKSI_SESI_TUTUP)
+  )
+  let pengaturanKantin: PengaturanKantinMock = { ...MOCK_PENGATURAN_KANTIN }
+  const titikKasirList: TitikKasirMock[] = JSON.parse(
+    JSON.stringify(MOCK_TITIK_KASIR)
   )
 
   const idempotencyStore = new Map<
@@ -2390,6 +2398,396 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
             status: 'SUCCESS',
             message: 'Pengaturan kontrol siswa berhasil diperbarui',
             data: s,
+          },
+        }
+      }
+    }
+
+    // --- 11. Pengaturan Operasional Kantin (PRD §9.1 & §10, issue #15 & #42) ---
+    if (
+      url.includes('/api/pengaturan-kantin/titik-kasir') ||
+      url.includes('/api/titik-kasir')
+    ) {
+      const match = url.match(/(?:\/titik-kasir|\/titik-kasir\/)(\d+)/)
+      const targetId = match ? Number(match[1]) : null
+
+      // GET detail satu titik kasir
+      if (method === 'get' && targetId) {
+        const item = titikKasirList.find((t) => t.id === targetId)
+        if (!item) {
+          return { status: 404, data: { message: 'Titik kasir tidak ditemukan' } }
+        }
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            responseCode: 200,
+            status: 'SUCCESS',
+            data: {
+              id: item.id,
+              nama: item.nama,
+              kode: item.kode,
+              aktif: item.aktif !== undefined ? item.aktif : item.is_active,
+              createdAt: item.created_at,
+              updatedAt: item.updated_at,
+            },
+          },
+        }
+      }
+
+      // GET daftar titik kasir
+      if (method === 'get') {
+        const urlObj = new URL(url, 'http://localhost')
+        const hanyaAktif =
+          urlObj.searchParams.get('hanyaAktif') === 'true' ||
+          urlObj.searchParams.get('aktif') === 'true'
+
+        const filtered = hanyaAktif
+          ? titikKasirList.filter((t) => t.is_active || t.aktif)
+          : [...titikKasirList]
+
+        const formatted = filtered.map((t) => ({
+          id: t.id,
+          nama: t.nama,
+          kode: t.kode,
+          aktif: t.aktif !== undefined ? t.aktif : t.is_active,
+          createdAt: t.created_at,
+          updatedAt: t.updated_at,
+        }))
+
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            responseCode: 200,
+            status: 'SUCCESS',
+            data: formatted,
+          },
+        }
+      }
+
+      // POST buat titik kasir baru
+      if (method === 'post' && !targetId) {
+        const p = (payload || {}) as Record<string, unknown>
+        const nama = String(p.nama || '').trim()
+        const kode = String(p.kode || '').trim().toUpperCase()
+        const isActive =
+          p.aktif !== undefined
+            ? Boolean(p.aktif)
+            : p.is_active !== undefined
+              ? Boolean(p.is_active)
+              : true
+
+        if (!nama) {
+          return {
+            status: 400,
+            data: { message: 'Nama titik kasir wajib diisi' },
+          }
+        }
+
+        if (kode && titikKasirList.some((t) => t.kode.toUpperCase() === kode)) {
+          return {
+            status: 400,
+            data: { message: `Kode perangkat "${kode}" sudah terdaftar` },
+          }
+        }
+
+        const nextId =
+          titikKasirList.length > 0
+            ? Math.max(...titikKasirList.map((t) => t.id)) + 1
+            : 1
+        const nowIso = new Date().toISOString()
+
+        const newItem: TitikKasirMock = {
+          id: nextId,
+          sekolah_id: 1,
+          nama,
+          kode: kode || `POS-${String(nextId).padStart(2, '0')}`,
+          is_active: isActive,
+          aktif: isActive,
+          created_at: nowIso,
+          updated_at: nowIso,
+        }
+
+        titikKasirList.push(newItem)
+
+        return {
+          status: 201,
+          data: {
+            code: 201,
+            responseCode: 201,
+            status: 'SUCCESS',
+            message: 'Titik kasir dibuat',
+            data: {
+              id: newItem.id,
+              nama: newItem.nama,
+              kode: newItem.kode,
+              aktif: newItem.aktif,
+              createdAt: newItem.created_at,
+              updatedAt: newItem.updated_at,
+            },
+          },
+        }
+      }
+
+      // PATCH toggle status aktif/nonaktif
+      if (
+        (method === 'patch' || (method === 'put' && url.includes('/toggle'))) &&
+        targetId
+      ) {
+        const p = (payload || {}) as Record<string, unknown>
+        const item = titikKasirList.find((t) => t.id === targetId)
+        if (!item) {
+          return { status: 404, data: { message: 'Titik kasir tidak ditemukan' } }
+        }
+
+        const nextStatus =
+          p.aktif !== undefined
+            ? Boolean(p.aktif)
+            : p.is_active !== undefined
+              ? Boolean(p.is_active)
+              : !item.aktif
+
+        item.is_active = nextStatus
+        item.aktif = nextStatus
+        item.updated_at = new Date().toISOString()
+
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            responseCode: 200,
+            status: 'SUCCESS',
+            message: `Titik kasir "${item.nama}" diperbarui`,
+            data: {
+              id: item.id,
+              nama: item.nama,
+              kode: item.kode,
+              aktif: item.aktif,
+              createdAt: item.created_at,
+              updatedAt: item.updated_at,
+            },
+          },
+        }
+      }
+
+      // PUT ubah titik kasir
+      if (method === 'put' && targetId) {
+        const p = (payload || {}) as Record<string, unknown>
+        const item = titikKasirList.find((t) => t.id === targetId)
+        if (!item) {
+          return { status: 404, data: { message: 'Titik kasir tidak ditemukan' } }
+        }
+
+        const kode = String(p.kode || item.kode).trim().toUpperCase()
+        if (
+          kode &&
+          titikKasirList.some((t) => t.id !== targetId && t.kode.toUpperCase() === kode)
+        ) {
+          return {
+            status: 400,
+            data: { message: `Kode perangkat "${kode}" sudah digunakan titik kasir lain` },
+          }
+        }
+
+        if (p.nama !== undefined) {
+          item.nama = String(p.nama).trim()
+        }
+        item.kode = kode
+        if (p.aktif !== undefined) {
+          item.aktif = Boolean(p.aktif)
+          item.is_active = Boolean(p.aktif)
+        } else if (p.is_active !== undefined) {
+          item.aktif = Boolean(p.is_active)
+          item.is_active = Boolean(p.is_active)
+        }
+        item.updated_at = new Date().toISOString()
+
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            responseCode: 200,
+            status: 'SUCCESS',
+            message: 'Titik kasir diperbarui',
+            data: {
+              id: item.id,
+              nama: item.nama,
+              kode: item.kode,
+              aktif: item.aktif,
+              createdAt: item.created_at,
+              updatedAt: item.updated_at,
+            },
+          },
+        }
+      }
+
+      // DELETE nonaktifkan titik kasir (soft delete / hapus)
+      if (method === 'delete' && targetId) {
+        const idx = titikKasirList.findIndex((t) => t.id === targetId)
+        if (idx === -1) {
+          return { status: 404, data: { message: 'Titik kasir tidak ditemukan' } }
+        }
+
+        const target = titikKasirList[idx]
+        target.is_active = false
+        target.aktif = false
+        target.updated_at = new Date().toISOString()
+
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            responseCode: 200,
+            status: 'SUCCESS',
+            message: `Titik kasir "${target.nama}" dinonaktifkan`,
+            data: {
+              id: target.id,
+              nama: target.nama,
+              kode: target.kode,
+              aktif: false,
+              createdAt: target.created_at,
+              updatedAt: target.updated_at,
+            },
+          },
+        }
+      }
+    }
+
+    // --- 12. Pengaturan Operasional Kantin (PRD §9.1 & §10) ---
+    if (
+      url.includes('/api/pengaturan-kantin') ||
+      url.includes('/api/pengaturan')
+    ) {
+      if (method === 'get') {
+        const jamTutup =
+          pengaturanKantin.jam_tutup_otomatis ||
+          pengaturanKantin.jam_tutup_kasir ||
+          '23:59:00'
+
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            responseCode: 200,
+            status: 'SUCCESS',
+            data: {
+              sekolahId: 1,
+              namaKantin: pengaturanKantin.nama_kantin,
+              jamTutupOtomatis: jamTutup,
+              konfirmasiManual: Boolean(pengaturanKantin.konfirmasi_manual),
+              durasiFotoDetik: Number(pengaturanKantin.durasi_foto_detik) || 3,
+              minTopup: Number(pengaturanKantin.min_topup) || 5000,
+              maksTopup: Number(pengaturanKantin.max_topup) || 500000,
+              batasSaldoSiswa: Number(pengaturanKantin.max_saldo_siswa) || 1000000,
+              batasSaldoKartuTamu:
+                Number(pengaturanKantin.max_saldo_kartu_tamu) || 500000,
+              disimpan: true,
+              updatedAt: pengaturanKantin.updated_at || new Date().toISOString(),
+            },
+          },
+        }
+      }
+
+      if (method === 'put') {
+        const p = (payload || {}) as Record<string, unknown>
+        const namaKantin =
+          p.namaKantin !== undefined
+            ? String(p.namaKantin)
+            : p.nama_kantin !== undefined
+              ? String(p.nama_kantin)
+              : String(pengaturanKantin.nama_kantin)
+
+        const jamTutupRaw = String(
+          p.jamTutupOtomatis ||
+          p.jam_tutup_otomatis ||
+          p.jamTutupKasir ||
+          p.jam_tutup_kasir ||
+          '23:59'
+        )
+        const jamTutupFormatted =
+          jamTutupRaw.length === 5 ? `${jamTutupRaw}:00` : jamTutupRaw
+
+        const konfirmasi =
+          p.konfirmasiManual !== undefined
+            ? Boolean(p.konfirmasiManual)
+            : p.konfirmasi_manual !== undefined
+              ? Boolean(p.konfirmasi_manual)
+              : Boolean(pengaturanKantin.konfirmasi_manual)
+
+        const durasiFoto =
+          p.durasiFotoDetik !== undefined
+            ? Number(p.durasiFotoDetik)
+            : p.durasi_foto_detik !== undefined
+              ? Number(p.durasi_foto_detik)
+              : Number(pengaturanKantin.durasi_foto_detik)
+
+        const minTopup =
+          p.minTopup !== undefined
+            ? Number(p.minTopup)
+            : p.min_topup !== undefined
+              ? Number(p.min_topup)
+              : Number(pengaturanKantin.min_topup)
+
+        const maksTopup =
+          p.maksTopup !== undefined
+            ? Number(p.maksTopup)
+            : p.max_topup !== undefined
+              ? Number(p.max_topup)
+              : Number(pengaturanKantin.max_topup)
+
+        const batasSaldoSiswa =
+          p.batasSaldoSiswa !== undefined
+            ? Number(p.batasSaldoSiswa)
+            : p.max_saldo_siswa !== undefined
+              ? Number(p.max_saldo_siswa)
+              : Number(pengaturanKantin.max_saldo_siswa)
+
+        const batasSaldoKartuTamu =
+          p.batasSaldoKartuTamu !== undefined
+            ? Number(p.batasSaldoKartuTamu)
+            : p.max_saldo_kartu_tamu !== undefined
+              ? Number(p.max_saldo_kartu_tamu)
+              : Number(pengaturanKantin.max_saldo_kartu_tamu)
+
+        const nowIso = new Date().toISOString()
+
+        pengaturanKantin = {
+          ...pengaturanKantin,
+          nama_kantin: namaKantin,
+          jam_tutup_kasir: jamTutupFormatted.substring(0, 5),
+          jam_tutup_otomatis: jamTutupFormatted,
+          konfirmasi_manual: konfirmasi,
+          durasi_foto_detik: durasiFoto,
+          min_topup: minTopup,
+          max_topup: maksTopup,
+          max_saldo_siswa: batasSaldoSiswa,
+          max_saldo_kartu_tamu: batasSaldoKartuTamu,
+          disimpan: true,
+          updated_at: nowIso,
+          updated_by: 'Admin Sekolah (Tervalidasi kantin-be)',
+        }
+
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            responseCode: 200,
+            status: 'SUCCESS',
+            message: 'Pengaturan kantin diperbarui',
+            data: {
+              sekolahId: 1,
+              namaKantin,
+              jamTutupOtomatis: jamTutupFormatted,
+              konfirmasiManual: konfirmasi,
+              durasiFotoDetik: durasiFoto,
+              minTopup,
+              maksTopup,
+              batasSaldoSiswa,
+              batasSaldoKartuTamu,
+              disimpan: true,
+              updatedAt: nowIso,
+            },
           },
         }
       }

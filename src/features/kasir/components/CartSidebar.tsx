@@ -26,11 +26,15 @@ import { Separator } from '@/components/ui/separator'
 
 export interface CartSidebarProps {
   onCheckout?: () => void
+  onManualRfidOpen?: () => void
+  isProcessing?: boolean
   className?: string
 }
 
 export const CartSidebar: React.FC<CartSidebarProps> = ({
   onCheckout,
+  onManualRfidOpen,
+  isProcessing = false,
   className = '',
 }) => {
   const {
@@ -222,16 +226,33 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({
         </div>
 
         {/* Tombol Lanjut ke Bayar / Tap RFID */}
-        <Button
-          type='button'
-          size='lg'
-          disabled={isCartEmpty}
-          onClick={onCheckout}
-          className='h-12 w-full touch-manipulation gap-2 text-sm font-bold shadow-md sm:text-base'
-        >
-          <CreditCard className='h-5 w-5' />
-          <span>Bayar / Tap Kartu</span>
-        </Button>
+        <div className='flex flex-col gap-2'>
+          <Button
+            type='button'
+            size='lg'
+            disabled={isCartEmpty || isProcessing}
+            onClick={onCheckout}
+            className='h-12 w-full touch-manipulation gap-2 text-sm font-bold shadow-md sm:text-base'
+          >
+            <CreditCard className='h-5 w-5' />
+            <span>
+              {isProcessing ? 'Memproses Transaksi...' : 'Bayar / Tap Kartu'}
+            </span>
+          </Button>
+
+          {onManualRfidOpen && (
+            <Button
+              type='button'
+              variant='outline'
+              size='sm'
+              disabled={isCartEmpty || isProcessing}
+              onClick={onManualRfidOpen}
+              className='h-8 w-full text-xs text-muted-foreground hover:text-foreground'
+            >
+              Input Manual UID (Uji Coba)
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Dialog Konfirmasi Kosongkan Keranjang */}

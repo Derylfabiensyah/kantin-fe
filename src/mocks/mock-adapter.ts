@@ -62,6 +62,20 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
     JSON.stringify(MOCK_TRANSAKSI_SESI_TUTUP)
   )
 
+  const idempotencyStore = new Map<
+    string,
+    { status: number; data: MockResponseData }
+  >()
+  const recordedTransactions = new Map<
+    number,
+    {
+      total: number
+      siswaUid?: string
+      kartuTamuUid?: string
+      items: { menuId: number; qty: number }[]
+    }
+  >()
+
   interface MockRiwayatItem {
     id: number
     menuId: number
@@ -556,11 +570,31 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
     }
 
-    // --- 4. Kasir: Transaksi Tap Kartu (Validasi 6 Tahap) ---
-    if (url.includes('/api/v1/kasir/transaksi') && method === 'post') {
-      const trxPayload = payload as TransaksiPayload
-      const kartuUid = trxPayload.kartu_uid || ''
-      const items = trxPayload.items || []
+    // --- 4. Kasir: Transaksi Tap Kartu (Validasi 6 Tahap & Idempotency) ---
+    if (
+      (url.includes('/api/v1/kasir/transaksi') ||
+        url.includes('/api/kasir/tap')) &&
+      method === 'post' &&
+      !url.includes('/void')
+    ) {
+      const trxPayload = payload as TransaksiPayload & {
+        rfidUid?: string
+        idempotency_key?: string
+        idempotencyKey?: string
+      }
+      const kartuUid = trxPayload.kartu_uid || trxPayload.rfidUid || ''
+      const items = (trxPayload.items || []).map((it) => ({
+        menu_id:
+          it.menu_id ?? (it as unknown as { menuId?: number }).menuId ?? 0,
+        qty: it.qty,
+      }))
+      const idempKey =
+        trxPayload.idempotency_key || trxPayload.idempotencyKey || ''
+
+      // Cek Idempotency: Jika request dengan idempotency_key yang sama sudah pernah diproses, kembalikan respons yang sama
+      if (idempKey && idempotencyStore.has(idempKey)) {
+        return idempotencyStore.get(idempKey)!
+      }
 
       if (!kartuUid) {
         return {
@@ -616,12 +650,18 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
 
         // Validasi 3: Item atau Kategori diblokir ortu?
         const isItemBlocked = siswa?.blocked_items?.includes(menuItem.id)
-        const isCategoryBlocked = siswa?.blocked_categories?.includes(menuItem.kategori_id)
+        const isCategoryBlocked = siswa?.blocked_categories?.includes(
+          menuItem.kategori_id
+        )
         if (isItemBlocked || isCategoryBlocked) {
-          const detail = isCategoryBlocked ? ` (Kategori ${menuItem.kategori_nama})` : ''
+          const detail = isCategoryBlocked
+            ? ` (Kategori ${menuItem.kategori_nama})`
+            : ''
           return {
             status: 400,
-            data: { message: `Item ${menuItem.nama}${detail} diblokir oleh orang tua` },
+            data: {
+              message: `Item ${menuItem.nama}${detail} diblokir oleh orang tua`,
+            },
           }
         }
 
@@ -629,7 +669,11 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
 
       // Validasi 5: Limit harian (hanya untuk siswa dengan limit aktif)
-      if (siswa && siswa.limit_harian_enabled !== false && siswa.limit_harian > 0) {
+      if (
+        siswa &&
+        siswa.limit_harian_enabled !== false &&
+        siswa.limit_harian > 0
+      ) {
         if (siswa.belanja_hari_ini + totalBelanja > siswa.limit_harian) {
           const sisaLimit = Math.max(
             0,
@@ -672,31 +716,99 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
         }
       }
 
-      return {
+      const trxId = Date.now()
+      recordedTransactions.set(trxId, {
+        total: totalBelanja,
+        siswaUid: siswa ? siswa.uid : undefined,
+        kartuTamuUid: kartuTamu ? kartuTamu.uid : undefined,
+        items: items.map((it) => ({ menuId: it.menu_id, qty: it.qty })),
+      })
+
+      const successResponse = {
         status: 200,
         data: {
           code: 200,
           status: 'SUCCESS',
           message: 'Transaksi berhasil',
           data: {
-            transaksi_id: Date.now(),
+            transaksi_id: trxId,
+            transaksiId: trxId,
             total: totalBelanja,
             waktu: new Date().toISOString(),
             pembeli: siswa
               ? {
-                  tipe: 'SISWA',
+                  tipe: 'SISWA' as const,
+                  subjekTipe: 'SISWA' as const,
                   nama: siswa.nama,
                   kelas: siswa.kelas,
                   nis: siswa.nis,
                   foto_url: siswa.foto_url,
+                  fotoUrl: siswa.foto_url,
                   sisa_saldo: siswa.saldo,
+                  saldoSisa: siswa.saldo,
                 }
               : {
-                  tipe: 'KARTU_TAMU',
+                  tipe: 'KARTU_TAMU' as const,
+                  subjekTipe: 'KARTU_TAMU' as const,
                   nomor_kartu: kartuTamu!.nomor_kartu,
                   label_pemegang: kartuTamu!.label_pemegang,
+                  nama: kartuTamu!.label_pemegang,
                   sisa_saldo: kartuTamu!.saldo,
+                  saldoSisa: kartuTamu!.saldo,
                 },
+          },
+        },
+      }
+
+      if (idempKey) {
+        idempotencyStore.set(idempKey, successResponse)
+      }
+
+      return successResponse
+    }
+
+    // --- 4b. Kasir: Void Transaksi Darurat ---
+    const voidMatch = url.match(/\/kasir\/transaksi\/(\d+)\/void/)
+    if (voidMatch && method === 'post') {
+      const trxId = Number(voidMatch[1])
+      const trx = recordedTransactions.get(trxId)
+      if (trx) {
+        if (trx.siswaUid) {
+          const targetSiswa = siswaList.find((s) => s.uid === trx.siswaUid)
+          if (targetSiswa) {
+            targetSiswa.saldo += trx.total
+            targetSiswa.belanja_hari_ini = Math.max(
+              0,
+              targetSiswa.belanja_hari_ini - trx.total
+            )
+          }
+        } else if (trx.kartuTamuUid) {
+          const targetKartu = kartuTamuList.find(
+            (k) => k.uid === trx.kartuTamuUid
+          )
+          if (targetKartu) {
+            targetKartu.saldo += trx.total
+          }
+        }
+
+        for (const item of trx.items) {
+          const targetMenu = menuList.find((m) => m.id === item.menuId)
+          if (targetMenu) {
+            targetMenu.stok += item.qty
+          }
+        }
+        recordedTransactions.delete(trxId)
+      }
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Transaksi berhasil dibatalkan (void)',
+          data: {
+            transaksi_id: trxId,
+            status: 'VOID',
           },
         },
       }
@@ -1838,9 +1950,12 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
     }
 
-
     // --- 9. Refund Saldo Siswa Keluar / Lulus (PRD §9.3) ---
-    if ((url.includes('/api/v1/tu/siswa/nonaktif') || url.includes('/api/saldo/refund/siswa-nonaktif')) && method === 'get') {
+    if (
+      (url.includes('/api/v1/tu/siswa/nonaktif') ||
+        url.includes('/api/saldo/refund/siswa-nonaktif')) &&
+      method === 'get'
+    ) {
       return {
         status: 200,
         data: {
@@ -1853,27 +1968,49 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
     }
 
     // POST: Refund ke Orang Tua (Tunai / Transfer Bank)
-    if (url.includes('/api/saldo/refund') && !url.includes('/api/saldo/refund/siswa-nonaktif') && method === 'post') {
+    if (
+      url.includes('/api/saldo/refund') &&
+      !url.includes('/api/saldo/refund/siswa-nonaktif') &&
+      method === 'post'
+    ) {
       const siswaId = Number(payload.siswaId ?? payload.siswa_id)
       const metode = (payload.metode as string) || 'TUNAI'
-      const namaPenerima = String(payload.namaPenerima || payload.nama_penerima || 'Orang Tua / Wali')
-      const kontakPenerima = String(payload.kontakPenerima || payload.kontak_penerima || '')
+      const namaPenerima = String(
+        payload.namaPenerima || payload.nama_penerima || 'Orang Tua / Wali'
+      )
+      const kontakPenerima = String(
+        payload.kontakPenerima || payload.kontak_penerima || ''
+      )
       const bank = payload.bank ? String(payload.bank) : undefined
-      const noRekening = payload.noRekening ? String(payload.noRekening) : undefined
-      const namaRekening = payload.namaRekening ? String(payload.namaRekening) : undefined
+      const noRekening = payload.noRekening
+        ? String(payload.noRekening)
+        : undefined
+      const namaRekening = payload.namaRekening
+        ? String(payload.namaRekening)
+        : undefined
       const buktiUrl = payload.buktiUrl ? String(payload.buktiUrl) : undefined
-      const catatan = String(payload.catatan || 'Refund sisa saldo siswa keluar/lulus')
+      const catatan = String(
+        payload.catatan || 'Refund sisa saldo siswa keluar/lulus'
+      )
 
       const target = siswaNonaktifList.find((s) => s.siswa_id === siswaId)
       if (!target) {
-        return { status: 404, data: { message: 'Data siswa nonaktif tidak ditemukan' } }
+        return {
+          status: 404,
+          data: { message: 'Data siswa nonaktif tidak ditemukan' },
+        }
       }
 
       if (target.saldo <= 0) {
-        return { status: 400, data: { message: 'Siswa tidak memiliki sisa saldo (saldo Rp 0)' } }
+        return {
+          status: 400,
+          data: { message: 'Siswa tidak memiliki sisa saldo (saldo Rp 0)' },
+        }
       }
 
-      const refNo = String(payload.referensiId || `REFUND-${Date.now().toString().slice(-6)}`)
+      const refNo = String(
+        payload.referensiId || `REFUND-${Date.now().toString().slice(-6)}`
+      )
       const now = new Date().toISOString()
       const nominalRefund = target.saldo
 
@@ -1895,7 +2032,9 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
 
       // Sinkronkan ke daftar siswa aktif jika ada
-      const activeMatch = siswaList.find((s) => s.siswa_id === siswaId || s.uid === target.rfid_uid)
+      const activeMatch = siswaList.find(
+        (s) => s.siswa_id === siswaId || s.uid === target.rfid_uid
+      )
       if (activeMatch) {
         activeMatch.saldo = 0
         activeMatch.is_blocked = true
@@ -1933,25 +2072,49 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
     // POST: Pindah Saldo ke Saudara Kandung (Atomik)
     if (url.includes('/api/saldo/transfer-saudara') && method === 'post') {
       const siswaAsalId = Number(payload.siswaAsalId ?? payload.siswa_asal_id)
-      const siswaTujuanId = Number(payload.siswaTujuanId ?? payload.siswa_tujuan_id)
-      const beritaAcara = String(payload.beritaAcara || payload.berita_acara || 'Pindah saldo ke saudara kandung')
+      const siswaTujuanId = Number(
+        payload.siswaTujuanId ?? payload.siswa_tujuan_id
+      )
+      const beritaAcara = String(
+        payload.beritaAcara ||
+          payload.berita_acara ||
+          'Pindah saldo ke saudara kandung'
+      )
 
       const asal = siswaNonaktifList.find((s) => s.siswa_id === siswaAsalId)
       const tujuan = siswaList.find((s) => s.siswa_id === siswaTujuanId)
 
       if (!asal || !tujuan) {
-        return { status: 404, data: { message: 'Data siswa asal atau siswa penerima tidak ditemukan' } }
+        return {
+          status: 404,
+          data: {
+            message: 'Data siswa asal atau siswa penerima tidak ditemukan',
+          },
+        }
       }
 
       if (asal.saldo <= 0) {
-        return { status: 400, data: { message: 'Siswa asal tidak memiliki sisa saldo untuk dipindahkan' } }
+        return {
+          status: 400,
+          data: {
+            message: 'Siswa asal tidak memiliki sisa saldo untuk dipindahkan',
+          },
+        }
       }
 
       if (tujuan.is_blocked) {
-        return { status: 400, data: { message: 'Kartu siswa tujuan sedang diblokir, tidak dapat menerima transfer' } }
+        return {
+          status: 400,
+          data: {
+            message:
+              'Kartu siswa tujuan sedang diblokir, tidak dapat menerima transfer',
+          },
+        }
       }
 
-      const refNo = String(payload.referensiId || `TRF-SDR-${Date.now().toString().slice(-6)}`)
+      const refNo = String(
+        payload.referensiId || `TRF-SDR-${Date.now().toString().slice(-6)}`
+      )
       const now = new Date().toISOString()
       const nominalTransfer = asal.saldo
       const saldoAwalTujuan = tujuan.saldo
@@ -2022,7 +2185,8 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       if (method === 'get') {
         if (targetId) {
           const s = siswaList.find((item) => item.siswa_id === targetId)
-          if (!s) return { status: 404, data: { message: 'Siswa tidak ditemukan' } }
+          if (!s)
+            return { status: 404, data: { message: 'Siswa tidak ditemukan' } }
           return {
             status: 200,
             data: {
@@ -2044,7 +2208,8 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
 
       if (method === 'put' && targetId) {
         const s = siswaList.find((item) => item.siswa_id === targetId)
-        if (!s) return { status: 404, data: { message: 'Siswa tidak ditemukan' } }
+        if (!s)
+          return { status: 404, data: { message: 'Siswa tidak ditemukan' } }
 
         if (payload.limit_harian !== undefined) {
           s.limit_harian = Number(payload.limit_harian) || 0
@@ -2055,11 +2220,19 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
             s.limit_harian = 0
           }
         }
-        if (payload.blocked_items !== undefined && Array.isArray(payload.blocked_items)) {
+        if (
+          payload.blocked_items !== undefined &&
+          Array.isArray(payload.blocked_items)
+        ) {
           s.blocked_items = payload.blocked_items.map((id) => Number(id))
         }
-        if (payload.blocked_categories !== undefined && Array.isArray(payload.blocked_categories)) {
-          s.blocked_categories = payload.blocked_categories.map((id) => Number(id))
+        if (
+          payload.blocked_categories !== undefined &&
+          Array.isArray(payload.blocked_categories)
+        ) {
+          s.blocked_categories = payload.blocked_categories.map((id) =>
+            Number(id)
+          )
         }
         if (payload.catatan_kontrol !== undefined) {
           s.catatan_kontrol = String(payload.catatan_kontrol)

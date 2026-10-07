@@ -1,8 +1,18 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'
-import { Search, X, ShoppingCart, Layers, RefreshCw } from 'lucide-react'
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
+import {
+  Search,
+  X,
+  ShoppingCart,
+  Layers,
+  RefreshCw,
+  Keyboard,
+  Radio,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import { useCartStore } from '@/stores/useCartStore'
 import { formatRupiah } from '@/lib/formatters'
+import { useBeepAudio } from '@/hooks/useBeepAudio'
+import { useRfidScanner } from '@/hooks/useRfidScanner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -14,8 +24,18 @@ import {
 } from '@/components/ui/sheet'
 import { katalogApi } from '@/features/katalog/api/katalog-api'
 import type { MenuItem, KategoriItem } from '@/features/katalog/types'
+import {
+  kasirApi,
+  generateIdempotencyKey,
+  type TapTransaksiData,
+} from './api/kasir-api'
 import CartSidebar from './components/CartSidebar'
+import ManualRfidModal from './components/ManualRfidModal'
 import MenuGrid from './components/MenuGrid'
+import StudentFeedbackModal from './components/StudentFeedbackModal'
+import TransactionErrorModal, {
+  type TransactionErrorInfo,
+} from './components/TransactionErrorModal'
 
 export const KasirPosPage: React.FC = () => {
   const [menus, setMenus] = useState<MenuItem[]>([])
@@ -27,12 +47,23 @@ export const KasirPosPage: React.FC = () => {
   )
   const [mobileCartOpen, setMobileCartOpen] = useState(false)
 
+  // Modals & Transaksi state
+  const [manualRfidOpen, setManualRfidOpen] = useState(false)
+  const [studentModalOpen, setStudentModalOpen] = useState(false)
+  const [errorModalOpen, setErrorModalOpen] = useState(false)
+  const [successData, setSuccessData] = useState<TapTransaksiData | null>(null)
+  const [errorInfo, setErrorInfo] = useState<TransactionErrorInfo | null>(null)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [isVoiding, setIsVoiding] = useState(false)
+
   const searchInputRef = useRef<HTMLInputElement>(null)
 
-  const { addItem, getItemQty, totalItems, totalHarga } = useCartStore()
+  const { items, addItem, getItemQty, totalItems, totalHarga, clearCart } =
+    useCartStore()
+  const { playSuccess, playError, playVoid } = useBeepAudio()
 
   // Muat data katalog menu & kategori
-  const loadKatalogData = async () => {
+  const loadKatalogData = useCallback(async () => {
     try {
       setLoading(true)
       const [menuData, kategoriData] = await Promise.all([
@@ -46,7 +77,7 @@ export const KasirPosPage: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     let isMounted = true
@@ -104,10 +135,8 @@ export const KasirPosPage: React.FC = () => {
   // Filter menu berdasarkan kategori & pencarian
   const filteredMenus = useMemo(() => {
     return menus.filter((item) => {
-      // Hanya tampilkan menu yang berstatus aktif
       if (!item.aktif) return false
 
-      // Filter kategori
       if (
         selectedKategoriId !== null &&
         item.kategoriId !== selectedKategoriId
@@ -115,7 +144,6 @@ export const KasirPosPage: React.FC = () => {
         return false
       }
 
-      // Filter teks pencarian (case-insensitive)
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim()
         const matchNama = item.nama.toLowerCase().includes(query)
@@ -151,15 +179,103 @@ export const KasirPosPage: React.FC = () => {
     setSelectedKategoriId(null)
   }
 
-  // Handler checkout / bayar
-  const handleCheckout = () => {
-    const count = totalItems()
-    const nominal = totalHarga()
-    if (count === 0) return
-    toast.info(
-      `Total belanja: ${formatRupiah(nominal)} (${count} item). Siap untuk tap kartu RFID.`
-    )
-  }
+  // Eksekusi transaksi tap RFID
+  const handleProcessTap = useCallback(
+    async (scannedUid: string) => {
+      if (!scannedUid || isProcessing) return
+
+      if (items.length === 0) {
+        playError()
+        toast.warning(
+          'Keranjang belanja kosong! Pilih menu makanan atau minuman terlebih dahulu.'
+        )
+        return
+      }
+
+      const idempotencyKey = generateIdempotencyKey()
+      setIsProcessing(true)
+
+      try {
+        const result = await kasirApi.prosesTap({
+          rfidUid: scannedUid,
+          items: items.map((it) => ({
+            menuId: it.menu.id,
+            qty: it.qty,
+          })),
+          idempotencyKey,
+        })
+
+        // Transaksi Sukses
+        playSuccess()
+        setSuccessData(result)
+        setStudentModalOpen(true)
+        setMobileCartOpen(false)
+        setManualRfidOpen(false)
+      } catch (err: unknown) {
+        // Transaksi Gagal (Validasi 6 Tahap)
+        playError()
+        const axiosErr = err as {
+          response?: {
+            status?: number
+            data?: { message?: string; kekurangan?: number }
+          }
+        }
+        const message =
+          axiosErr.response?.data?.message ||
+          'Terjadi kesalahan saat memproses transaksi tap'
+        const kekurangan = axiosErr.response?.data?.kekurangan
+
+        setErrorInfo({
+          message,
+          kekurangan,
+          uid: scannedUid,
+        })
+        setErrorModalOpen(true)
+      } finally {
+        setIsProcessing(false)
+      }
+    },
+    [items, isProcessing, playSuccess, playError]
+  )
+
+  // Integrasi USB RFID Reader Hook
+  useRfidScanner({
+    onScan: handleProcessTap,
+    enabled: !studentModalOpen && !isProcessing,
+  })
+
+  // Selesai transaksi (hitung mundur selesai atau tombol selesai ditekan)
+  const handleTransactionComplete = useCallback(() => {
+    setStudentModalOpen(false)
+    setSuccessData(null)
+    clearCart()
+    loadKatalogData()
+  }, [clearCart, loadKatalogData])
+
+  // Void transaksi darurat jika wajah tidak cocok
+  const handleTransactionVoid = useCallback(
+    async (transaksiId: number) => {
+      try {
+        setIsVoiding(true)
+        await kasirApi.voidTransaksi(
+          transaksiId,
+          'Wajah pembeli tidak cocok dengan foto kartu'
+        )
+        playVoid()
+        toast.warning(
+          'Transaksi berhasil dibatalkan (void). Saldo dan stok telah dikembalikan.'
+        )
+        setStudentModalOpen(false)
+        setSuccessData(null)
+        loadKatalogData()
+      } catch {
+        toast.error('Gagal membatalkan transaksi')
+      } finally {
+        setIsVoiding(false)
+      }
+    },
+    [playVoid, loadKatalogData]
+  )
 
   const hasActiveFilters = Boolean(
     searchQuery.trim() || selectedKategoriId !== null
@@ -198,6 +314,27 @@ export const KasirPosPage: React.FC = () => {
                 </kbd>
               )}
             </div>
+
+            {/* Tombol Input Manual UID */}
+            <Button
+              type='button'
+              variant='outline'
+              onClick={() => setManualRfidOpen(true)}
+              className='h-10 gap-1.5 px-3 text-xs font-semibold'
+              title='Input manual UID atau kartu pengujian'
+            >
+              <Keyboard className='h-4 w-4' />
+              <span className='hidden md:inline'>Manual UID</span>
+            </Button>
+
+            {/* Status Indikator Reader USB */}
+            <Badge
+              variant='secondary'
+              className='hidden items-center gap-1.5 border border-primary/20 bg-primary/5 px-2.5 py-1.5 text-xs text-primary lg:flex'
+            >
+              <Radio className='h-3.5 w-3.5 animate-pulse text-emerald-500' />
+              <span>RFID Aktif</span>
+            </Badge>
 
             {/* Tombol Refresh Katalog */}
             <Button
@@ -290,7 +427,11 @@ export const KasirPosPage: React.FC = () => {
 
       {/* Sisi Kanan: Panel Keranjang Belanja Desktop/Tablet Besar (>= lg) */}
       <div className='hidden h-full shrink-0 lg:flex'>
-        <CartSidebar onCheckout={handleCheckout} />
+        <CartSidebar
+          onCheckout={() => setManualRfidOpen(true)}
+          onManualRfidOpen={() => setManualRfidOpen(true)}
+          isProcessing={isProcessing}
+        />
       </div>
 
       {/* Mobile / Tablet Small Sheet Keranjang */}
@@ -303,14 +444,43 @@ export const KasirPosPage: React.FC = () => {
             <SheetTitle>Keranjang Belanja Kasir</SheetTitle>
           </SheetHeader>
           <CartSidebar
-            onCheckout={() => {
-              setMobileCartOpen(false)
-              handleCheckout()
-            }}
+            onCheckout={() => setManualRfidOpen(true)}
+            onManualRfidOpen={() => setManualRfidOpen(true)}
+            isProcessing={isProcessing}
             className='border-none'
           />
         </SheetContent>
       </Sheet>
+
+      {/* Modal Input UID Manual / Pengujian */}
+      <ManualRfidModal
+        open={manualRfidOpen}
+        onOpenChange={setManualRfidOpen}
+        onScan={handleProcessTap}
+        isProcessing={isProcessing}
+      />
+
+      {/* Modal Feedback Siswa (Foto 3 Detik + Tombol Batalkan / Void) */}
+      <StudentFeedbackModal
+        key={
+          successData?.transaksi_id ||
+          successData?.transaksiId ||
+          'student-modal'
+        }
+        open={studentModalOpen}
+        onOpenChange={setStudentModalOpen}
+        data={successData}
+        onComplete={handleTransactionComplete}
+        onVoid={handleTransactionVoid}
+        isVoiding={isVoiding}
+      />
+
+      {/* Modal Error Transaksi Ditolak (Kekurangan Saldo & Validasi 6 Tahap) */}
+      <TransactionErrorModal
+        open={errorModalOpen}
+        onOpenChange={setErrorModalOpen}
+        errorInfo={errorInfo}
+      />
     </div>
   )
 }

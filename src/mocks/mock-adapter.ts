@@ -95,6 +95,7 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
     sisaDapatDibalik: number | null
     dapatDibalik: boolean
     aktorId: number
+    aktorNama?: string | null
     waktu: string
   }
 
@@ -105,23 +106,90 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       menuNama: 'Nasi Kuning Komplit',
       arah: 'MASUK',
       jenis: 'BARANG_MASUK',
-      qty: 25,
+      qty: 30,
       hargaBeliSatuan: 10000,
-      totalNilai: 250000,
+      totalNilai: 300000,
       hppSnapshot: 10000,
-      stokSetelah: 25,
+      stokSetelah: 30,
       referensiTipe: 'BARANG_MASUK',
-      referensiId: 'BM-20261005-001',
-      alasan: null,
+      referensiId: 'BM-20261001-001',
+      alasan: 'Restock bahan baku harian',
       mutasiAsalId: null,
       sudahDibalik: 0,
-      sisaDapatDibalik: 25,
+      sisaDapatDibalik: 30,
       dapatDibalik: true,
       aktorId: 1,
-      waktu: new Date(Date.now() - 86400000).toISOString(),
+      aktorNama: 'Deryl Fabiensyah',
+      waktu: new Date(Date.now() - 3 * 86400000).toISOString(),
     },
     {
       id: 2,
+      menuId: 1,
+      menuNama: 'Nasi Kuning Komplit',
+      arah: 'KELUAR',
+      jenis: 'PENJUALAN',
+      qty: 12,
+      hargaBeliSatuan: null,
+      totalNilai: null,
+      hppSnapshot: 10000,
+      stokSetelah: 18,
+      referensiTipe: 'PENJUALAN',
+      referensiId: 'TRX-20261002-0045',
+      alasan: null,
+      mutasiAsalId: null,
+      sudahDibalik: null,
+      sisaDapatDibalik: null,
+      dapatDibalik: false,
+      aktorId: 2,
+      aktorNama: 'Kasir Kantin 1',
+      waktu: new Date(Date.now() - 2 * 86400000).toISOString(),
+    },
+    {
+      id: 3,
+      menuId: 1,
+      menuNama: 'Nasi Kuning Komplit',
+      arah: 'KELUAR',
+      jenis: 'BARANG_RUSAK',
+      qty: 2,
+      hargaBeliSatuan: null,
+      totalNilai: null,
+      hppSnapshot: 10000,
+      stokSetelah: 16,
+      referensiTipe: 'BARANG_RUSAK',
+      referensiId: 'BR-20261003-0001',
+      alasan: 'Kemasan rusak / tertindih',
+      mutasiAsalId: null,
+      sudahDibalik: null,
+      sisaDapatDibalik: null,
+      dapatDibalik: false,
+      aktorId: 1,
+      aktorNama: 'Deryl Fabiensyah',
+      waktu: new Date(Date.now() - 86400000).toISOString(),
+    },
+    {
+      id: 4,
+      menuId: 1,
+      menuNama: 'Nasi Kuning Komplit',
+      arah: 'MASUK',
+      jenis: 'OPNAME_MASUK',
+      qty: 4,
+      hargaBeliSatuan: null,
+      totalNilai: null,
+      hppSnapshot: 10000,
+      stokSetelah: 20,
+      referensiTipe: 'OPNAME_BATCH',
+      referensiId: 'OPN-20261004-001',
+      alasan: 'Hasil opname fisik sore hari',
+      mutasiAsalId: null,
+      sudahDibalik: null,
+      sisaDapatDibalik: null,
+      dapatDibalik: false,
+      aktorId: 1,
+      aktorNama: 'Deryl Fabiensyah',
+      waktu: new Date(Date.now() - 43200000).toISOString(),
+    },
+    {
+      id: 5,
       menuId: 2,
       menuNama: 'Es Teh Manis',
       arah: 'MASUK',
@@ -132,14 +200,37 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       hppSnapshot: 2000,
       stokSetelah: 50,
       referensiTipe: 'BARANG_MASUK',
-      referensiId: 'BM-20261005-002',
+      referensiId: 'BM-20261002-002',
       alasan: null,
       mutasiAsalId: null,
       sudahDibalik: 0,
       sisaDapatDibalik: 50,
       dapatDibalik: true,
       aktorId: 1,
-      waktu: new Date(Date.now() - 43200000).toISOString(),
+      aktorNama: 'Deryl Fabiensyah',
+      waktu: new Date(Date.now() - 2 * 86400000).toISOString(),
+    },
+    {
+      id: 6,
+      menuId: 2,
+      menuNama: 'Es Teh Manis',
+      arah: 'KELUAR',
+      jenis: 'PENJUALAN',
+      qty: 30,
+      hargaBeliSatuan: null,
+      totalNilai: null,
+      hppSnapshot: 2000,
+      stokSetelah: 20,
+      referensiTipe: 'PENJUALAN',
+      referensiId: 'TRX-20261003-0112',
+      alasan: null,
+      mutasiAsalId: null,
+      sudahDibalik: null,
+      sisaDapatDibalik: null,
+      dapatDibalik: false,
+      aktorId: 2,
+      aktorNama: 'Kasir Kantin 1',
+      waktu: new Date(Date.now() - 36000000).toISOString(),
     },
   ]
 
@@ -1880,6 +1971,20 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       if (menuIdParam) {
         filtered = filtered.filter((r) => r.menuId === Number(menuIdParam))
       }
+      const dariParam = urlObj.searchParams.get('dari')
+      const sampaiParam = urlObj.searchParams.get('sampai')
+      if (dariParam) {
+        const dariDate = new Date(dariParam).getTime()
+        filtered = filtered.filter(
+          (r) => new Date(r.waktu).getTime() >= dariDate
+        )
+      }
+      if (sampaiParam) {
+        const sampaiDate = new Date(sampaiParam).getTime()
+        filtered = filtered.filter(
+          (r) => new Date(r.waktu).getTime() <= sampaiDate
+        )
+      }
 
       return {
         status: 200,
@@ -1919,6 +2024,45 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
           status: 'SUCCESS',
           message: 'Daftar stok menipis',
           data: menipisList,
+        },
+      }
+    }
+
+    if (url.includes('/api/laporan/stok') && method === 'get') {
+      const urlObj = new URL(url, 'http://localhost')
+      const hanyaMenipis = urlObj.searchParams.get('hanyaMenipis') === 'true'
+
+      let list = menuList.map((m) => {
+        const hpp = m.hpp || Math.round(m.harga_jual * 0.7)
+        const stok = m.stok
+        const stokMin = m.stok_minimum || 0
+        const menipis = stok <= stokMin
+        return {
+          menuId: m.id,
+          nama: m.nama,
+          namaMenu: m.nama,
+          kategoriId: m.kategori_id,
+          stok,
+          stokBerjalan: stok,
+          stokMinimum: stokMin,
+          hpp,
+          nilaiPersediaan: stok * hpp,
+          menipis,
+        }
+      })
+
+      if (hanyaMenipis) {
+        list = list.filter((item) => item.menipis)
+      }
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Laporan stok dan nilai persediaan berhasil dimuat',
+          data: list,
         },
       }
     }

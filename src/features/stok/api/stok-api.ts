@@ -10,6 +10,7 @@ import type {
   OpnameRequest,
   OpnameBatchRequest,
   OpnameBatchResponse,
+  InventarisItem,
 } from '../types'
 
 interface ApiResponse<T> {
@@ -190,5 +191,18 @@ export const stokApi = {
         },
       ],
     })
+  },
+
+  /**
+   * Laporan stok & nilai persediaan seluruh menu (PRD §9.5, Issue #10)
+   */
+  async getInventaris(hanyaMenipis = false): Promise<InventarisItem[]> {
+    const res = await apiClient.get<ApiResponse<InventarisItem[]>>(
+      '/api/laporan/stok',
+      {
+        params: { hanyaMenipis },
+      }
+    )
+    return res.data.data || []
   },
 }

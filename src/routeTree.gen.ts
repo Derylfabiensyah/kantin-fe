@@ -41,6 +41,8 @@ import { Route as AuthenticatedTuSetoranIndexRouteImport } from './routes/_authe
 import { Route as AuthenticatedStokRusakIndexRouteImport } from './routes/_authenticated/stok/rusak/index'
 import { Route as AuthenticatedStokOpnameIndexRouteImport } from './routes/_authenticated/stok/opname/index'
 import { Route as AuthenticatedStokMasukIndexRouteImport } from './routes/_authenticated/stok/masuk/index'
+import { Route as AuthenticatedStokKartuIndexRouteImport } from './routes/_authenticated/stok/kartu/index'
+import { Route as AuthenticatedStokInventarisIndexRouteImport } from './routes/_authenticated/stok/inventaris/index'
 import { Route as AuthenticatedSaldoRefundIndexRouteImport } from './routes/_authenticated/saldo/refund/index'
 import { Route as AuthenticatedSaldoKoreksiIndexRouteImport } from './routes/_authenticated/saldo/koreksi/index'
 
@@ -219,6 +221,18 @@ const AuthenticatedStokMasukIndexRoute =
     path: '/stok/masuk/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedStokKartuIndexRoute =
+  AuthenticatedStokKartuIndexRouteImport.update({
+    id: '/stok/kartu/',
+    path: '/stok/kartu/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedStokInventarisIndexRoute =
+  AuthenticatedStokInventarisIndexRouteImport.update({
+    id: '/stok/inventaris/',
+    path: '/stok/inventaris/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSaldoRefundIndexRoute =
   AuthenticatedSaldoRefundIndexRouteImport.update({
     id: '/saldo/refund/',
@@ -261,6 +275,8 @@ export interface FileRoutesByFullPath {
   '/users/': typeof AuthenticatedUsersIndexRoute
   '/saldo/koreksi/': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/saldo/refund/': typeof AuthenticatedSaldoRefundIndexRoute
+  '/stok/inventaris/': typeof AuthenticatedStokInventarisIndexRoute
+  '/stok/kartu/': typeof AuthenticatedStokKartuIndexRoute
   '/stok/masuk/': typeof AuthenticatedStokMasukIndexRoute
   '/stok/opname/': typeof AuthenticatedStokOpnameIndexRoute
   '/stok/rusak/': typeof AuthenticatedStokRusakIndexRoute
@@ -294,6 +310,8 @@ export interface FileRoutesByTo {
   '/users': typeof AuthenticatedUsersIndexRoute
   '/saldo/koreksi': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/saldo/refund': typeof AuthenticatedSaldoRefundIndexRoute
+  '/stok/inventaris': typeof AuthenticatedStokInventarisIndexRoute
+  '/stok/kartu': typeof AuthenticatedStokKartuIndexRoute
   '/stok/masuk': typeof AuthenticatedStokMasukIndexRoute
   '/stok/opname': typeof AuthenticatedStokOpnameIndexRoute
   '/stok/rusak': typeof AuthenticatedStokRusakIndexRoute
@@ -331,6 +349,8 @@ export interface FileRoutesById {
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/saldo/koreksi/': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/_authenticated/saldo/refund/': typeof AuthenticatedSaldoRefundIndexRoute
+  '/_authenticated/stok/inventaris/': typeof AuthenticatedStokInventarisIndexRoute
+  '/_authenticated/stok/kartu/': typeof AuthenticatedStokKartuIndexRoute
   '/_authenticated/stok/masuk/': typeof AuthenticatedStokMasukIndexRoute
   '/_authenticated/stok/opname/': typeof AuthenticatedStokOpnameIndexRoute
   '/_authenticated/stok/rusak/': typeof AuthenticatedStokRusakIndexRoute
@@ -368,6 +388,8 @@ export interface FileRouteTypes {
     | '/users/'
     | '/saldo/koreksi/'
     | '/saldo/refund/'
+    | '/stok/inventaris/'
+    | '/stok/kartu/'
     | '/stok/masuk/'
     | '/stok/opname/'
     | '/stok/rusak/'
@@ -401,6 +423,8 @@ export interface FileRouteTypes {
     | '/users'
     | '/saldo/koreksi'
     | '/saldo/refund'
+    | '/stok/inventaris'
+    | '/stok/kartu'
     | '/stok/masuk'
     | '/stok/opname'
     | '/stok/rusak'
@@ -437,6 +461,8 @@ export interface FileRouteTypes {
     | '/_authenticated/users/'
     | '/_authenticated/saldo/koreksi/'
     | '/_authenticated/saldo/refund/'
+    | '/_authenticated/stok/inventaris/'
+    | '/_authenticated/stok/kartu/'
     | '/_authenticated/stok/masuk/'
     | '/_authenticated/stok/opname/'
     | '/_authenticated/stok/rusak/'
@@ -685,6 +711,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStokMasukIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/stok/kartu/': {
+      id: '/_authenticated/stok/kartu/'
+      path: '/stok/kartu'
+      fullPath: '/stok/kartu/'
+      preLoaderRoute: typeof AuthenticatedStokKartuIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/stok/inventaris/': {
+      id: '/_authenticated/stok/inventaris/'
+      path: '/stok/inventaris'
+      fullPath: '/stok/inventaris/'
+      preLoaderRoute: typeof AuthenticatedStokInventarisIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/saldo/refund/': {
       id: '/_authenticated/saldo/refund/'
       path: '/saldo/refund'
@@ -737,6 +777,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedSaldoKoreksiIndexRoute: typeof AuthenticatedSaldoKoreksiIndexRoute
   AuthenticatedSaldoRefundIndexRoute: typeof AuthenticatedSaldoRefundIndexRoute
+  AuthenticatedStokInventarisIndexRoute: typeof AuthenticatedStokInventarisIndexRoute
+  AuthenticatedStokKartuIndexRoute: typeof AuthenticatedStokKartuIndexRoute
   AuthenticatedStokMasukIndexRoute: typeof AuthenticatedStokMasukIndexRoute
   AuthenticatedStokOpnameIndexRoute: typeof AuthenticatedStokOpnameIndexRoute
   AuthenticatedStokRusakIndexRoute: typeof AuthenticatedStokRusakIndexRoute
@@ -756,6 +798,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedSaldoKoreksiIndexRoute: AuthenticatedSaldoKoreksiIndexRoute,
   AuthenticatedSaldoRefundIndexRoute: AuthenticatedSaldoRefundIndexRoute,
+  AuthenticatedStokInventarisIndexRoute: AuthenticatedStokInventarisIndexRoute,
+  AuthenticatedStokKartuIndexRoute: AuthenticatedStokKartuIndexRoute,
   AuthenticatedStokMasukIndexRoute: AuthenticatedStokMasukIndexRoute,
   AuthenticatedStokOpnameIndexRoute: AuthenticatedStokOpnameIndexRoute,
   AuthenticatedStokRusakIndexRoute: AuthenticatedStokRusakIndexRoute,

@@ -77,8 +77,12 @@ export const sidebarData: SidebarData = {
               url: '/stok/opname',
             },
             {
-              title: 'Kartu Stok & Persediaan',
+              title: 'Kartu Stok Mutasi',
               url: '/stok/kartu',
+            },
+            {
+              title: 'Laporan Inventaris',
+              url: '/stok/inventaris',
             },
           ],
         },

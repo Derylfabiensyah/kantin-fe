@@ -245,7 +245,7 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
   return (
     <form onSubmit={handleSubmit} className='space-y-6'>
       {/* Kartu Header Faktur / Nota */}
-      <Card className='border shadow-sm'>
+      <Card className='border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
         <CardHeader className='pb-3'>
           <CardTitle className='flex items-center gap-2 text-base font-semibold'>
             <FileText className='h-4 w-4 text-primary' />
@@ -272,6 +272,7 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
                 type='date'
                 value={tanggal}
                 onChange={(e) => setTanggal(e.target.value)}
+                className='bg-background'
                 required
               />
             </div>
@@ -299,6 +300,7 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
                 placeholder='Contoh: BM-20261006-0001'
                 value={referensiId}
                 onChange={(e) => setReferensiId(e.target.value)}
+                className='bg-background font-mono'
                 required
               />
             </div>
@@ -317,16 +319,17 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
                 placeholder='Contoh: CV Sumber Makmur'
                 value={namaPemasok}
                 onChange={(e) => setNamaPemasok(e.target.value)}
+                className='bg-background'
               />
             </div>
           </div>
 
           {/* Upload Nota Foto */}
-          <div className='mt-4 flex flex-wrap items-center gap-4 border-t pt-4'>
+          <div className='mt-4 flex flex-wrap items-center gap-4 border-t border-border/40 pt-4'>
             <div className='flex items-center gap-2'>
               <Label
                 htmlFor={`${formId}-nota`}
-                className='inline-flex cursor-pointer items-center gap-2 rounded-md border px-3 py-1.5 text-xs font-medium transition hover:bg-accent'
+                className='inline-flex cursor-pointer items-center gap-2 rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium transition hover:bg-accent'
               >
                 <Upload className='h-3.5 w-3.5 text-primary' />
                 <span>Upload Foto Nota / Faktur</span>
@@ -344,7 +347,7 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
             </div>
 
             {notaPreview && (
-              <div className='relative inline-flex items-center gap-2 rounded-lg border bg-card p-1'>
+              <div className='relative inline-flex items-center gap-2 rounded-lg border bg-background p-1'>
                 <img
                   src={notaPreview}
                   alt='Preview Nota'
@@ -365,7 +368,7 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
       </Card>
 
       {/* Tabel Multi-Item Restock */}
-      <Card className='border shadow-sm'>
+      <Card className='border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
         <CardHeader className='flex flex-row items-center justify-between pb-3'>
           <div>
             <CardTitle className='flex items-center gap-2 text-base font-semibold'>
@@ -382,7 +385,7 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
             variant='outline'
             size='sm'
             onClick={handleAddRow}
-            className='flex items-center gap-1.5 text-xs'
+            className='flex items-center gap-1.5 text-xs bg-background'
           >
             <Plus className='h-3.5 w-3.5' />
             Tambah Baris Menu
@@ -392,7 +395,7 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
           <div className='overflow-x-auto'>
             <Table>
               <TableHeader>
-                <TableRow className='bg-muted/40'>
+                <TableRow className='bg-muted/90'>
                   <TableHead className='w-12 text-center text-xs'>No</TableHead>
                   <TableHead className='min-w-[240px] text-xs'>
                     Pilih Menu Katalog
@@ -445,7 +448,7 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
                             handleRowChange(row.rowId, 'menuId', Number(val))
                           }
                         >
-                          <SelectTrigger className='w-full text-xs'>
+                          <SelectTrigger className='w-full text-xs bg-background'>
                             <SelectValue placeholder='-- Pilih Menu --' />
                           </SelectTrigger>
                           <SelectContent className='max-h-60'>
@@ -474,7 +477,7 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
                           type='number'
                           min='1'
                           step='1'
-                          className='h-8 text-right text-xs'
+                          className='h-8 text-right text-xs bg-background'
                           value={row.qty || ''}
                           onChange={(e) =>
                             handleRowChange(
@@ -496,7 +499,7 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
                             type='number'
                             min='0'
                             step='100'
-                            className='h-8 pl-8 text-right text-xs'
+                            className='h-8 pl-8 text-right text-xs bg-background'
                             value={row.hargaBeliPerUnit || ''}
                             onChange={(e) =>
                               handleRowChange(
@@ -547,7 +550,7 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
           </div>
 
           {/* Footer Ringkasan Biaya */}
-          <div className='flex flex-col items-center justify-between gap-4 border-t bg-muted/20 p-4 sm:flex-row'>
+          <div className='flex flex-col items-center justify-between gap-4 border-t border-border/40 bg-muted/40 p-4 sm:flex-row'>
             <div className='flex items-center gap-6 text-xs'>
               <div>
                 <span className='text-muted-foreground'>Total Item: </span>

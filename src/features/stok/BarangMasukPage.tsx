@@ -1,15 +1,10 @@
 import { useState, useEffect } from 'react'
 import {
-  Boxes,
   PlusCircle,
   History,
-  AlertTriangle,
-  RefreshCw,
-  PackageOpen,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatNumber } from '@/lib/formatters'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Header } from '@/components/layout/header'
@@ -135,7 +130,7 @@ export function BarangMasukPage() {
     <>
       {/* Top Header */}
       <Header fixed>
-        <Search />
+        <Search showKbd={false} />
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
@@ -143,89 +138,53 @@ export function BarangMasukPage() {
       </Header>
 
       <Main className='space-y-6'>
-        {/* Page Title & Badges */}
-        <div className='flex flex-col justify-between gap-4 sm:flex-row sm:items-center'>
-          <div>
-            <h1 className='flex items-center gap-2.5 text-2xl font-bold tracking-tight text-foreground'>
-              <Boxes className='h-6 w-6 text-primary' />
-              Pencatatan Barang Masuk (Restock)
-            </h1>
-            <p className='mt-1 text-xs text-muted-foreground'>
-              Catat pembelian stok dari pemasok/supplier, simulasi otomatis HPP
-              rata-rata tertimbang (PRD §7.4), dan koreksi entri pembalik.
-            </p>
-          </div>
-
-          <div className='flex items-center gap-2'>
-            <Button
-              variant='outline'
-              size='sm'
-              onClick={() => {
-                void loadMenus()
-                void loadRiwayat(currentPage, selectedJenis)
-              }}
-              className='h-8 gap-1.5 text-xs'
-            >
-              <RefreshCw className='h-3.5 w-3.5' />
-              Sinkronisasi
-            </Button>
-          </div>
+        {/* Page Title */}
+        <div>
+          <h1 className='text-2xl font-bold tracking-tight text-foreground'>
+            Pencatatan Barang Masuk (Restock)
+          </h1>
+          <p className='mt-1 text-xs text-muted-foreground'>
+            Catat pembelian stok dari pemasok/supplier, simulasi otomatis HPP
+            rata-rata tertimbang (PRD §7.4), dan koreksi entri pembalik.
+          </p>
         </div>
 
         {/* Ringkasan Status Header Cards */}
         <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
-          <Card className='border bg-card/60 shadow-sm'>
-            <CardContent className='flex items-center justify-between p-4'>
-              <div>
-                <p className='text-xs font-medium text-muted-foreground'>
-                  Menu Aktif di Katalog
-                </p>
-                <h3 className='mt-0.5 text-xl font-bold text-foreground'>
-                  {loadingMenus ? '...' : formatNumber(menus.length)} Menu
-                </h3>
-              </div>
-              <div className='rounded-lg bg-primary/10 p-2.5 text-primary'>
-                <PackageOpen className='h-5 w-5' />
-              </div>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>
+                Menu Aktif di Katalog
+              </p>
+              <h3 className='mt-0.5 text-xl font-bold text-foreground'>
+                {loadingMenus ? '...' : formatNumber(menus.length)} Menu
+              </h3>
             </CardContent>
           </Card>
 
-          <Card className='border bg-card/60 shadow-sm'>
-            <CardContent className='flex items-center justify-between p-4'>
-              <div>
-                <p className='text-xs font-medium text-muted-foreground'>
-                  Total Riwayat Mutasi
-                </p>
-                <h3 className='mt-0.5 text-xl font-bold text-foreground'>
-                  {formatNumber(totalRiwayat)} Transaksi
-                </h3>
-              </div>
-              <div className='rounded-lg bg-blue-500/10 p-2.5 text-blue-500'>
-                <History className='h-5 w-5' />
-              </div>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>
+                Total Riwayat Mutasi
+              </p>
+              <h3 className='mt-0.5 text-xl font-bold text-foreground'>
+                {formatNumber(totalRiwayat)} Transaksi
+              </h3>
             </CardContent>
           </Card>
 
-          <Card className='border bg-card/60 shadow-sm'>
-            <CardContent className='flex items-center justify-between p-4'>
-              <div>
-                <p className='text-xs font-medium text-muted-foreground'>
-                  Peringatan Stok Menipis
-                </p>
-                <h3 className='mt-0.5 text-xl font-bold text-amber-500'>
-                  {stokMenipis.length > 0 ? (
-                    <span className='flex items-center gap-1.5'>
-                      <AlertTriangle className='h-4 w-4' />
-                      {stokMenipis.length} Menu
-                    </span>
-                  ) : (
-                    'Semua Aman'
-                  )}
-                </h3>
-              </div>
-              <div className='rounded-lg bg-amber-500/10 p-2.5 text-amber-500'>
-                <AlertTriangle className='h-5 w-5' />
-              </div>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>
+                Peringatan Stok Menipis
+              </p>
+              <h3 className='mt-0.5 text-xl font-bold text-amber-500'>
+                {stokMenipis.length > 0 ? (
+                  <span>{stokMenipis.length} Menu</span>
+                ) : (
+                  'Semua Aman'
+                )}
+              </h3>
             </CardContent>
           </Card>
         </div>

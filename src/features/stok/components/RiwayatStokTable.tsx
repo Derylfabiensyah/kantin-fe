@@ -88,39 +88,57 @@ export function RiwayatStokTable({
     switch (jenis) {
       case 'BARANG_MASUK':
         return (
-          <Badge className='gap-1 border-emerald-500/30 bg-emerald-500/15 text-[11px] font-medium text-emerald-700 dark:text-emerald-400'>
-            <ArrowDownLeft className='h-3 w-3 text-emerald-500' />
+          <Badge className='gap-1 border-0 bg-emerald-500/15 text-[11px] font-medium text-emerald-700 dark:text-emerald-400'>
+            <ArrowDownLeft className='h-3 w-3 text-emerald-600 dark:text-emerald-400' />
             Barang Masuk
           </Badge>
         )
       case 'BARANG_MASUK_PEMBALIK':
         return (
-          <Badge className='gap-1 border-destructive/30 bg-destructive/15 text-[11px] font-medium text-destructive'>
+          <Badge className='gap-1 border-0 bg-destructive/15 text-[11px] font-medium text-destructive'>
             <RotateCcw className='h-3 w-3 text-destructive' />
             Pembalik Masuk
           </Badge>
         )
       case 'PENJUALAN':
         return (
-          <Badge
-            variant='outline'
-            className='gap-1 text-[11px] font-medium text-muted-foreground'
-          >
+          <Badge className='gap-1 border-0 bg-blue-500/15 text-[11px] font-medium text-blue-700 dark:text-blue-400'>
             <ArrowUpRight className='h-3 w-3 text-blue-500' />
             Penjualan
           </Badge>
         )
       case 'PENJUALAN_VOID':
         return (
-          <Badge variant='secondary' className='gap-1 text-[11px] font-medium'>
+          <Badge className='gap-1 border-0 bg-amber-500/15 text-[11px] font-medium text-amber-700 dark:text-amber-400'>
             <RotateCcw className='h-3 w-3 text-amber-500' />
             Penjualan Void
           </Badge>
         )
+      case 'OPNAME_MASUK':
+        return (
+          <Badge className='gap-1 border-0 bg-emerald-500/15 text-[11px] font-medium text-emerald-700 dark:text-emerald-400'>
+            <ArrowDownLeft className='h-3 w-3 text-emerald-600 dark:text-emerald-400' />
+            Opname Masuk
+          </Badge>
+        )
+      case 'OPNAME_KELUAR':
+        return (
+          <Badge className='gap-1 border-0 bg-purple-500/15 text-[11px] font-medium text-purple-700 dark:text-purple-400'>
+            <ArrowUpRight className='h-3 w-3 text-purple-500' />
+            Opname Keluar
+          </Badge>
+        )
+      case 'BARANG_RUSAK':
+        return (
+          <Badge className='gap-1 border-0 bg-rose-500/15 text-[11px] font-medium text-rose-700 dark:text-rose-400'>
+            <RotateCcw className='h-3 w-3 text-rose-500' />
+            Barang Rusak
+          </Badge>
+        )
       default:
         return (
-          <Badge variant='outline' className='text-[11px] font-medium'>
-            {jenis.replace(/_/g, ' ')}
+          <Badge className='border-0 bg-muted/80 text-[11px] font-medium text-muted-foreground'>
+            {String(jenis).replace(/_/g, ' ')}
           </Badge>
         )
     }
@@ -137,12 +155,12 @@ export function RiwayatStokTable({
               placeholder='Cari nama menu atau no. bukti...'
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className='h-9 pl-8 text-xs'
+              className='h-9 pl-8 text-xs bg-background'
             />
           </div>
 
           <Select value={selectedJenis} onValueChange={onJenisChange}>
-            <SelectTrigger className='h-9 w-[180px] text-xs'>
+            <SelectTrigger className='h-9 w-[180px] text-xs bg-background'>
               <SelectValue placeholder='Semua Mutasi' />
             </SelectTrigger>
             <SelectContent>
@@ -167,7 +185,7 @@ export function RiwayatStokTable({
           size='sm'
           onClick={onRefresh}
           disabled={loading}
-          className='h-9 gap-1.5 text-xs'
+          className='h-9 gap-1.5 text-xs bg-background'
         >
           <RefreshCw
             className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`}
@@ -177,11 +195,11 @@ export function RiwayatStokTable({
       </div>
 
       {/* Tabel Mutasi */}
-      <div className='overflow-hidden rounded-md border bg-card'>
+      <div className='overflow-hidden rounded-xl border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
         <div className='overflow-x-auto'>
           <Table>
             <TableHeader>
-              <TableRow className='bg-muted/40'>
+              <TableRow className='bg-muted/90'>
                 <TableHead className='w-36 text-xs'>Waktu & Tanggal</TableHead>
                 <TableHead className='w-36 text-xs'>
                   No. Bukti / Faktur
@@ -298,10 +316,10 @@ export function RiwayatStokTable({
                         {item.jenis === 'BARANG_MASUK' ? (
                           item.dapatDibalik ? (
                             <Button
-                              variant='outline'
+                              variant='ghost'
                               size='sm'
                               onClick={() => handleOpenPembalik(item)}
-                              className='h-7 gap-1 border-destructive/30 px-2.5 text-[11px] text-destructive hover:bg-destructive/10 hover:text-destructive'
+                              className='h-7 gap-1 border-0 bg-destructive/10 px-2.5 text-[11px] font-medium text-destructive hover:bg-destructive/20 hover:text-destructive'
                             >
                               <RotateCcw className='h-3 w-3' />
                               Koreksi / Balik
@@ -311,8 +329,7 @@ export function RiwayatStokTable({
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <Badge
-                                    variant='secondary'
-                                    className='cursor-help text-[10px] font-normal'
+                                    className='cursor-help border-0 bg-muted/80 text-[10px] font-normal text-muted-foreground'
                                   >
                                     Sudah Dibalik
                                   </Badge>
@@ -326,8 +343,7 @@ export function RiwayatStokTable({
                           )
                         ) : item.jenis === 'BARANG_MASUK_PEMBALIK' ? (
                           <Badge
-                            variant='outline'
-                            className='text-[10px] font-normal text-muted-foreground'
+                            className='border-0 bg-muted/80 text-[10px] font-normal text-muted-foreground'
                           >
                             Entri Pembalik
                           </Badge>
@@ -347,7 +363,7 @@ export function RiwayatStokTable({
 
         {/* Pagination Footer */}
         {totalCount > 0 && (
-          <div className='flex items-center justify-between border-t bg-muted/20 p-3 text-xs'>
+          <div className='flex items-center justify-between border-t border-border/40 bg-muted/40 p-3 text-xs'>
             <span className='text-muted-foreground'>
               Menampilkan {filteredItems.length} dari {totalCount} riwayat
             </span>
@@ -358,7 +374,7 @@ export function RiwayatStokTable({
                 size='sm'
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage <= 0 || loading}
-                className='h-8 px-2 text-xs'
+                className='h-8 px-2 text-xs bg-background'
               >
                 <ChevronLeft className='mr-1 h-3.5 w-3.5' />
                 Sebelumnya
@@ -371,7 +387,7 @@ export function RiwayatStokTable({
                 size='sm'
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage + 1 >= totalPages || loading}
-                className='h-8 px-2 text-xs'
+                className='h-8 px-2 text-xs bg-background'
               >
                 Selanjutnya
                 <ChevronRight className='ml-1 h-3.5 w-3.5' />

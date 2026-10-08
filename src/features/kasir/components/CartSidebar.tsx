@@ -28,6 +28,8 @@ export interface CartSidebarProps {
   onCheckout?: () => void
   onManualRfidOpen?: () => void
   isProcessing?: boolean
+  isOffline?: boolean
+  isSessionClosed?: boolean
   className?: string
 }
 
@@ -35,6 +37,8 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({
   onCheckout,
   onManualRfidOpen,
   isProcessing = false,
+  isOffline = false,
+  isSessionClosed = false,
   className = '',
 }) => {
   const {
@@ -230,13 +234,19 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({
           <Button
             type='button'
             size='lg'
-            disabled={isCartEmpty || isProcessing}
+            disabled={isCartEmpty || isProcessing || isOffline || isSessionClosed}
             onClick={onCheckout}
             className='h-12 w-full touch-manipulation gap-2 text-sm font-bold shadow-md sm:text-base'
           >
             <CreditCard className='h-5 w-5' />
             <span>
-              {isProcessing ? 'Memproses Transaksi...' : 'Bayar / Tap Kartu'}
+              {isOffline
+                ? 'Offline - Transaksi Tidak Tersedia'
+                : isSessionClosed
+                ? 'Sesi Kasir Telah Ditutup'
+                : isProcessing
+                ? 'Memproses Transaksi...'
+                : 'Bayar / Tap Kartu'}
             </span>
           </Button>
 
@@ -245,7 +255,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({
               type='button'
               variant='outline'
               size='sm'
-              disabled={isCartEmpty || isProcessing}
+              disabled={isCartEmpty || isProcessing || isOffline || isSessionClosed}
               onClick={onManualRfidOpen}
               className='h-8 w-full text-xs text-muted-foreground hover:text-foreground'
             >

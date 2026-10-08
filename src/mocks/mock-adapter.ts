@@ -84,6 +84,204 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
     }
   >()
 
+  interface MockSesiTrxItem {
+    id: number
+    transaksiId?: number
+    nomorReferensi: string
+    waktu: string
+    pembeliTipe: 'SISWA' | 'KARTU_TAMU'
+    pembeliNama: string
+    pembeliKelas?: string | null
+    pembeliNis?: string | null
+    pembeliFotoUrl?: string | null
+    kartuUid?: string
+    items: {
+      menuId: number
+      namaMenu: string
+      qty: number
+      hargaSatuan: number
+      subtotal: number
+    }[]
+    total: number
+    status: 'SUKSES' | 'VOID'
+    voidAlasan?: string | null
+    voidAt?: string | null
+    voidOleh?: string | null
+  }
+
+  const mockSesiTransactions: MockSesiTrxItem[] = [
+    {
+      id: 1001,
+      transaksiId: 1001,
+      nomorReferensi: 'TRX-20261008-0001',
+      waktu: new Date(Date.now() - 150 * 60000).toISOString(),
+      pembeliTipe: 'SISWA',
+      pembeliNama: 'Bima Aditya Pratama',
+      pembeliKelas: 'XII RPL 1',
+      pembeliNis: '20241001',
+      pembeliFotoUrl:
+        'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400',
+      kartuUid: 'CARD-SISWA-01',
+      items: [
+        {
+          menuId: 1,
+          namaMenu: 'Nasi Kuning Komplit',
+          qty: 1,
+          hargaSatuan: 15000,
+          subtotal: 15000,
+        },
+        {
+          menuId: 2,
+          namaMenu: 'Es Teh Manis',
+          qty: 1,
+          hargaSatuan: 4000,
+          subtotal: 4000,
+        },
+      ],
+      total: 19000,
+      status: 'SUKSES',
+    },
+    {
+      id: 1002,
+      transaksiId: 1002,
+      nomorReferensi: 'TRX-20261008-0002',
+      waktu: new Date(Date.now() - 120 * 60000).toISOString(),
+      pembeliTipe: 'SISWA',
+      pembeliNama: 'Siti Nurhaliza',
+      pembeliKelas: 'XI MIPA 2',
+      pembeliNis: '20241002',
+      pembeliFotoUrl:
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400',
+      kartuUid: 'CARD-SISWA-02',
+      items: [
+        {
+          menuId: 3,
+          namaMenu: 'Roti Bakar Coklat',
+          qty: 1,
+          hargaSatuan: 10000,
+          subtotal: 10000,
+        },
+      ],
+      total: 10000,
+      status: 'SUKSES',
+    },
+    {
+      id: 1003,
+      transaksiId: 1003,
+      nomorReferensi: 'TRX-20261008-0003',
+      waktu: new Date(Date.now() - 90 * 60000).toISOString(),
+      pembeliTipe: 'KARTU_TAMU',
+      pembeliNama: 'Tamu Dinas Pendidikan',
+      kartuUid: 'CARD-TAMU-01',
+      items: [
+        {
+          menuId: 1,
+          namaMenu: 'Nasi Kuning Komplit',
+          qty: 2,
+          hargaSatuan: 15000,
+          subtotal: 30000,
+        },
+        {
+          menuId: 4,
+          namaMenu: 'Air Mineral 600ml',
+          qty: 2,
+          hargaSatuan: 4000,
+          subtotal: 8000,
+        },
+      ],
+      total: 38000,
+      status: 'SUKSES',
+    },
+    {
+      id: 1004,
+      transaksiId: 1004,
+      nomorReferensi: 'TRX-20261008-0004',
+      waktu: new Date(Date.now() - 60 * 60000).toISOString(),
+      pembeliTipe: 'SISWA',
+      pembeliNama: 'Dewi Lestari',
+      pembeliKelas: 'X IPS 1',
+      pembeliNis: '20241004',
+      pembeliFotoUrl:
+        'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400',
+      kartuUid: 'CARD-SISWA-04',
+      items: [
+        {
+          menuId: 2,
+          namaMenu: 'Es Teh Manis',
+          qty: 1,
+          hargaSatuan: 4000,
+          subtotal: 4000,
+        },
+      ],
+      total: 4000,
+      status: 'VOID',
+      voidAlasan: 'Salah input menu',
+      voidAt: new Date(Date.now() - 55 * 60000).toISOString(),
+      voidOleh: 'Kasir Kantin 1',
+    },
+    {
+      id: 1005,
+      transaksiId: 1005,
+      nomorReferensi: 'TRX-20261008-0005',
+      waktu: new Date(Date.now() - 30 * 60000).toISOString(),
+      pembeliTipe: 'SISWA',
+      pembeliNama: 'Ahmad Fauzi',
+      pembeliKelas: 'XII TKJ 2',
+      pembeliNis: '20241005',
+      pembeliFotoUrl:
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
+      kartuUid: 'CARD-SISWA-05',
+      items: [
+        {
+          menuId: 1,
+          namaMenu: 'Nasi Kuning Komplit',
+          qty: 1,
+          hargaSatuan: 15000,
+          subtotal: 15000,
+        },
+      ],
+      total: 15000,
+      status: 'SUKSES',
+    },
+  ]
+
+  const currentSesiMock = {
+    id: 101,
+    sekolahId: 1,
+    titikKasirId: 1,
+    titikKasirNama: 'Kasir 1 - Kantin Utama',
+    tanggal: new Date().toISOString().split('T')[0],
+    status: 'TERBUKA' as 'TERBUKA' | 'DITUTUP',
+    dibukaAt: new Date(Date.now() - 180 * 60000).toISOString(),
+    ditutupAt: null as string | null,
+    ditutupOleh: null as number | null,
+    autoTutup: false,
+  }
+
+  const getLiveRekap = () => {
+    let jumlahSukses = 0
+    let jumlahVoid = 0
+    let totalBersih = 0
+    let totalVoid = 0
+    mockSesiTransactions.forEach((t) => {
+      if (t.status === 'SUKSES') {
+        jumlahSukses++
+        totalBersih += t.total
+      } else if (t.status === 'VOID') {
+        jumlahVoid++
+        totalVoid += t.total
+      }
+    })
+    return {
+      sesiKasirId: currentSesiMock.id,
+      jumlahTransaksi: jumlahSukses,
+      jumlahVoid,
+      totalBruto: totalBersih + totalVoid,
+      totalVoid,
+      totalBersih,
+    }
+  }
+
   interface MockRiwayatItem {
     id: number
     menuId: number
@@ -823,6 +1021,35 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
         items: items.map((it) => ({ menuId: it.menu_id, qty: it.qty })),
       })
 
+      const itemDetails = items.map((it) => {
+        const m = menuList.find((menu) => menu.id === it.menu_id)
+        const nama = m ? m.nama : `Menu #${it.menu_id}`
+        const harga = m ? m.harga_jual : 10000
+        return {
+          menuId: it.menu_id,
+          namaMenu: nama,
+          qty: it.qty,
+          hargaSatuan: harga,
+          subtotal: it.qty * harga,
+        }
+      })
+
+      mockSesiTransactions.unshift({
+        id: trxId,
+        transaksiId: trxId,
+        nomorReferensi: `TRX-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${String(trxId).slice(-4)}`,
+        waktu: new Date().toISOString(),
+        pembeliTipe: siswa ? 'SISWA' : 'KARTU_TAMU',
+        pembeliNama: siswa ? siswa.nama : kartuTamu!.label_pemegang,
+        pembeliKelas: siswa?.kelas,
+        pembeliNis: siswa?.nis,
+        pembeliFotoUrl: siswa?.foto_url,
+        kartuUid,
+        items: itemDetails,
+        total: totalBelanja,
+        status: 'SUKSES',
+      })
+
       const successResponse = {
         status: 200,
         data: {
@@ -866,10 +1093,25 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       return successResponse
     }
 
-    // --- 4b. Kasir: Void Transaksi Darurat ---
+    // --- 4b. Kasir: Void Transaksi (Darurat & Manual Sesi) ---
     const voidMatch = url.match(/\/kasir\/transaksi\/(\d+)\/void/)
     if (voidMatch && method === 'post') {
       const trxId = Number(voidMatch[1])
+      const voidPayload = (payload as { alasan?: string }) || {}
+      const alasanFinal =
+        voidPayload.alasan || 'Wajah pembeli tidak cocok dengan foto kartu'
+
+      // Update di mockSesiTransactions
+      const targetSesiTrx = mockSesiTransactions.find(
+        (t) => t.id === trxId || t.transaksiId === trxId
+      )
+      if (targetSesiTrx) {
+        targetSesiTrx.status = 'VOID'
+        targetSesiTrx.voidAlasan = alasanFinal
+        targetSesiTrx.voidAt = new Date().toISOString()
+        targetSesiTrx.voidOleh = 'Petugas Kasir'
+      }
+
       const trx = recordedTransactions.get(trxId)
       if (trx) {
         if (trx.siswaUid) {
@@ -908,27 +1150,119 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
           data: {
             transaksi_id: trxId,
             status: 'VOID',
+            alasan: alasanFinal,
           },
         },
       }
     }
 
-    // --- 5. Kasir: Sesi Kasir Aktif ---
-    if (url.includes('/api/v1/kasir/sesi') && method === 'get') {
+    // --- 5a. Kasir: Riwayat Transaksi Sesi Hari Ini ---
+    if (
+      (url.includes('/api/kasir/transaksi/sesi') ||
+        url.includes('/api/v1/kasir/transaksi')) &&
+      method === 'get'
+    ) {
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Riwayat transaksi sesi kasir berhasil dimuat',
+          data: [...mockSesiTransactions],
+        },
+      }
+    }
+
+    // --- 5b. Kasir: Rekapitulasi Sesi Kasir ---
+    if (
+      (url.includes('/rekap') && url.includes('/kasir/sesi')) &&
+      method === 'get'
+    ) {
+      const liveRekap = getLiveRekap()
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Rekap sesi kasir berhasil dimuat',
+          data: liveRekap,
+        },
+      }
+    }
+
+    // --- 5c. Kasir: Tutup Sesi Kasir Harian ---
+    if (
+      (url.includes('/tutup') && url.includes('/kasir/sesi')) &&
+      method === 'post'
+    ) {
+      const liveRekap = getLiveRekap()
+      currentSesiMock.status = 'DITUTUP'
+      currentSesiMock.ditutupAt = new Date().toISOString()
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Sesi kasir harian ditutup',
+          data: {
+            ...currentSesiMock,
+            totalBruto: liveRekap.totalBruto,
+            totalVoid: liveRekap.totalVoid,
+            totalBersih: liveRekap.totalBersih,
+            totalTransaksi: liveRekap.jumlahTransaksi,
+          },
+        },
+      }
+    }
+
+    // --- 5d. Kasir: Buka Sesi Kasir ---
+    if (
+      (url.includes('/buka') && url.includes('/kasir/sesi')) &&
+      method === 'post'
+    ) {
+      const liveRekap = getLiveRekap()
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Sesi kasir dibuka',
+          data: {
+            ...currentSesiMock,
+            totalBruto: liveRekap.totalBruto,
+            totalVoid: liveRekap.totalVoid,
+            totalBersih: liveRekap.totalBersih,
+            totalTransaksi: liveRekap.jumlahTransaksi,
+          },
+        },
+      }
+    }
+
+    // --- 5e. Kasir: Sesi Kasir Aktif ---
+    if (
+      (url.includes('/api/kasir/sesi/aktif') ||
+        url.includes('/api/v1/kasir/sesi') ||
+        (url.includes('/api/kasir/sesi') && !url.includes('/rekap') && !url.includes('/tutup') && !url.includes('/buka') && !url.includes('/transaksi'))) &&
+      method === 'get'
+    ) {
+      const liveRekap = getLiveRekap()
       return {
         status: 200,
         data: {
           code: 200,
           status: 'SUCCESS',
           data: {
-            sesi_id: 101,
-            titik_kasir: 'Kasir 1 - Kantin Utama',
-            tanggal: new Date().toISOString().split('T')[0],
-            status: 'TERBUKA',
-            total_transaksi: 14,
-            total_bruto: 185000,
-            total_void: 12000,
-            total_bersih: 173000,
+            ...currentSesiMock,
+            sesi_id: currentSesiMock.id,
+            titik_kasir: currentSesiMock.titikKasirNama,
+            total_transaksi: liveRekap.jumlahTransaksi,
+            total_bruto: liveRekap.totalBruto,
+            total_void: liveRekap.totalVoid,
+            total_bersih: liveRekap.totalBersih,
+            totalBruto: liveRekap.totalBruto,
+            totalVoid: liveRekap.totalVoid,
+            totalBersih: liveRekap.totalBersih,
+            totalTransaksi: liveRekap.jumlahTransaksi,
           },
         },
       }

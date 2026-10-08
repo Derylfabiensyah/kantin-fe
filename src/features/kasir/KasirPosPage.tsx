@@ -10,6 +10,8 @@ import {
   Store,
   Clock,
   AlertTriangle,
+  History,
+  Lock,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useCartStore } from '@/stores/useCartStore'
@@ -17,6 +19,8 @@ import { usePengaturanStore } from '@/stores/usePengaturanStore'
 import { formatRupiah } from '@/lib/formatters'
 import { useBeepAudio } from '@/hooks/useBeepAudio'
 import { useRfidScanner } from '@/hooks/useRfidScanner'
+import { useOnlineStatus } from '@/hooks/useOnlineStatus'
+import { OfflineBanner } from '@/components/shared/OfflineBanner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -50,6 +54,11 @@ import {
   generateIdempotencyKey,
   type TapTransaksiData,
 } from './api/kasir-api'
+import type {
+  SesiKasirData,
+  RekapSesiData,
+  TransaksiSesiItem,
+} from './types'
 import CartSidebar from './components/CartSidebar'
 import ManualRfidModal from './components/ManualRfidModal'
 import MenuGrid from './components/MenuGrid'
@@ -57,6 +66,8 @@ import StudentFeedbackModal from './components/StudentFeedbackModal'
 import TransactionErrorModal, {
   type TransactionErrorInfo,
 } from './components/TransactionErrorModal'
+import SessionHistoryModal from './components/SessionHistoryModal'
+import CloseSessionModal from './components/CloseSessionModal'
 
 export const KasirPosPage: React.FC = () => {
   const [menus, setMenus] = useState<MenuItem[]>([])
@@ -78,6 +89,17 @@ export const KasirPosPage: React.FC = () => {
     setActiveTitikKasirId,
   } = usePengaturanStore()
 
+  // Online Status & Sesi Kasir Harian
+  const isOnline = useOnlineStatus()
+  const [sesi, setSesi] = useState<SesiKasirData | null>(null)
+  const [rekapSesi, setRekapSesi] = useState<RekapSesiData | null>(null)
+  const [transactions, setTransactions] = useState<TransaksiSesiItem[]>([])
+  const [isHistoryLoading, setIsHistoryLoading] = useState(false)
+  const [historyModalOpen, setHistoryModalOpen] = useState(false)
+  const [closeSessionModalOpen, setCloseSessionModalOpen] = useState(false)
+
+  const isSessionClosed = sesi?.status === 'DITUTUP'
+
   // Modals & Transaksi state
   const [manualRfidOpen, setManualRfidOpen] = useState(false)
   const [studentModalOpen, setStudentModalOpen] = useState(false)
@@ -94,6 +116,33 @@ export const KasirPosPage: React.FC = () => {
   const { items, addItem, getItemQty, totalItems, totalHarga, clearCart } =
     useCartStore()
   const { playSuccess, playError, playVoid } = useBeepAudio()
+
+  // Muat data sesi kasir harian & transaksi sesi
+  const loadSesiData = useCallback(async () => {
+    try {
+      setIsHistoryLoading(true)
+      let currentSesi = await kasirApi.getSesiAktif(
+        activeTitikKasirId ?? undefined
+      )
+      if (!currentSesi) {
+        currentSesi = await kasirApi.bukaSesi(activeTitikKasirId ?? undefined)
+      }
+      setSesi(currentSesi)
+
+      if (currentSesi?.id) {
+        const [rekap, trxList] = await Promise.all([
+          kasirApi.getRekapSesi(currentSesi.id),
+          kasirApi.getRiwayatTransaksiSesi(currentSesi.id),
+        ])
+        setRekapSesi(rekap)
+        setTransactions(trxList)
+      }
+    } catch {
+      // Gagal memuat sesi kasir
+    } finally {
+      setIsHistoryLoading(false)
+    }
+  }, [activeTitikKasirId])
 
   // Muat data katalog menu & kategori serta pengaturan operasional
   const loadKatalogData = useCallback(async () => {
@@ -129,6 +178,7 @@ export const KasirPosPage: React.FC = () => {
           setKategoris(kategoriData)
           setLoading(false)
         }
+        await loadSesiData()
       } catch {
         if (isMounted) {
           toast.error('Gagal memuat katalog menu atau pengaturan POS')
@@ -141,7 +191,7 @@ export const KasirPosPage: React.FC = () => {
     return () => {
       isMounted = false
     }
-  }, [fetchPengaturan, fetchTitikKasir])
+  }, [fetchPengaturan, fetchTitikKasir, loadSesiData])
 
   // Cek apakah waktu saat ini telah melewati batas jam tutup kasir otomatis
   const isPastClosingTime = useMemo(() => {
@@ -282,6 +332,18 @@ export const KasirPosPage: React.FC = () => {
   // Handler proses tap RFID: konfirmasi manual (jika aktif) atau eksekusi langsung
   const handleProcessTap = useCallback(
     async (scannedUid: string) => {
+      if (!isOnline) {
+        playError()
+        toast.error('Offline - transaksi tidak tersedia saat koneksi terputus')
+        return
+      }
+
+      if (isSessionClosed) {
+        playError()
+        toast.error('Sesi kasir hari ini telah ditutup. Transaksi baru tidak diizinkan.')
+        return
+      }
+
       if (!scannedUid || isProcessing) return
 
       if (items.length === 0) {
@@ -302,6 +364,8 @@ export const KasirPosPage: React.FC = () => {
       await executeTapTransaction(scannedUid)
     },
     [
+      isOnline,
+      isSessionClosed,
       items,
       isProcessing,
       pengaturan.konfirmasiManual,
@@ -313,7 +377,15 @@ export const KasirPosPage: React.FC = () => {
   // Integrasi USB RFID Reader Hook
   useRfidScanner({
     onScan: handleProcessTap,
-    enabled: !studentModalOpen && !isProcessing && !confirmManualOpen,
+    enabled:
+      isOnline &&
+      !isSessionClosed &&
+      !studentModalOpen &&
+      !isProcessing &&
+      !confirmManualOpen &&
+      !historyModalOpen &&
+      !closeSessionModalOpen &&
+      !manualRfidOpen,
   })
 
   // Selesai transaksi (hitung mundur selesai atau tombol selesai ditekan)
@@ -322,7 +394,8 @@ export const KasirPosPage: React.FC = () => {
     setSuccessData(null)
     clearCart()
     loadKatalogData()
-  }, [clearCart, loadKatalogData])
+    loadSesiData()
+  }, [clearCart, loadKatalogData, loadSesiData])
 
   // Void transaksi darurat jika wajah tidak cocok
   const handleTransactionVoid = useCallback(
@@ -340,13 +413,14 @@ export const KasirPosPage: React.FC = () => {
         setStudentModalOpen(false)
         setSuccessData(null)
         loadKatalogData()
+        loadSesiData()
       } catch {
         toast.error('Gagal membatalkan transaksi')
       } finally {
         setIsVoiding(false)
       }
     },
-    [playVoid, loadKatalogData]
+    [playVoid, loadKatalogData, loadSesiData]
   )
 
   const hasActiveFilters = Boolean(
@@ -354,50 +428,110 @@ export const KasirPosPage: React.FC = () => {
   )
 
   return (
-    <div className='flex h-full w-full overflow-hidden bg-background'>
-      {/* Sisi Kiri: Katalog POS (Pencarian, Filter Kategori, Grid Menu) */}
-      <div className='flex flex-1 flex-col overflow-hidden'>
-        {/* Top Control Bar: Search & Status */}
-        <div className='flex flex-col gap-2.5 border-b bg-card/60 p-3 backdrop-blur-xs sm:p-4'>
-          <div className='flex items-center gap-2'>
-            {/* Input Pencarian dengan Shortcut '/' */}
-            <div className='relative flex-1'>
-              <Search className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
-              <Input
-                ref={searchInputRef}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder='Cari menu makanan atau minuman... (Tekan "/" untuk mencari)'
-                className='h-10 bg-background/80 pr-16 pl-9 text-sm shadow-2xs'
-              />
-              {searchQuery ? (
-                <Button
-                  type='button'
-                  variant='ghost'
-                  size='icon'
-                  onClick={() => setSearchQuery('')}
-                  className='absolute top-1/2 right-2 h-7 w-7 -translate-y-1/2 text-muted-foreground hover:text-foreground'
-                >
-                  <X className='h-3.5 w-3.5' />
-                </Button>
-              ) : (
-                <kbd className='pointer-events-none absolute top-1/2 right-2.5 hidden h-5 -translate-y-1/2 items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground select-none sm:flex'>
-                  /
-                </kbd>
-              )}
-            </div>
+    <div className='flex h-full w-full flex-col overflow-hidden bg-background'>
+      {/* Banner Peringatan Offline */}
+      {!isOnline && <OfflineBanner />}
 
-            {/* Tombol Input Manual UID */}
-            <Button
-              type='button'
-              variant='outline'
-              onClick={() => setManualRfidOpen(true)}
-              className='h-10 gap-1.5 px-3 text-xs font-semibold'
-              title='Input manual UID atau kartu pengujian'
-            >
-              <Keyboard className='h-4 w-4' />
-              <span className='hidden md:inline'>Manual UID</span>
-            </Button>
+      {/* Banner Sesi Kasir Ditutup */}
+      {isSessionClosed && (
+        <div className='flex items-center justify-between gap-2 border-b border-destructive/20 bg-destructive/10 px-4 py-2 text-xs font-medium text-destructive'>
+          <div className='flex items-center gap-2'>
+            <Lock className='h-4 w-4 shrink-0' />
+            <span>Sesi kasir hari ini telah ditutup. Transaksi baru dikunci dan tidak dapat diproses.</span>
+          </div>
+          <Button
+            type='button'
+            size='sm'
+            variant='outline'
+            className='h-7 border-destructive/30 text-xs hover:bg-destructive/20'
+            onClick={() => setHistoryModalOpen(true)}
+          >
+            Lihat Riwayat Sesi
+          </Button>
+        </div>
+      )}
+
+      <div className='flex flex-1 overflow-hidden'>
+        {/* Sisi Kiri: Katalog POS (Pencarian, Filter Kategori, Grid Menu) */}
+        <div className='flex flex-1 flex-col overflow-hidden'>
+          {/* Top Control Bar: Search & Status */}
+          <div className='flex flex-col gap-2.5 border-b bg-card/60 p-3 backdrop-blur-xs sm:p-4'>
+            <div className='flex items-center gap-2'>
+              {/* Input Pencarian dengan Shortcut '/' */}
+              <div className='relative flex-1'>
+                <Search className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
+                <Input
+                  ref={searchInputRef}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder='Cari menu makanan atau minuman... (Tekan "/" untuk mencari)'
+                  className='h-10 bg-background/80 pr-16 pl-9 text-sm shadow-2xs'
+                />
+                {searchQuery ? (
+                  <Button
+                    type='button'
+                    variant='ghost'
+                    size='icon'
+                    onClick={() => setSearchQuery('')}
+                    className='absolute top-1/2 right-2 h-7 w-7 -translate-y-1/2 text-muted-foreground hover:text-foreground'
+                  >
+                    <X className='h-3.5 w-3.5' />
+                  </Button>
+                ) : (
+                  <kbd className='pointer-events-none absolute top-1/2 right-2.5 hidden h-5 -translate-y-1/2 items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground select-none sm:flex'>
+                    /
+                  </kbd>
+                )}
+              </div>
+
+              {/* Tombol Input Manual UID */}
+              <Button
+                type='button'
+                variant='outline'
+                onClick={() => setManualRfidOpen(true)}
+                disabled={!isOnline || isSessionClosed}
+                className='h-10 gap-1.5 px-3 text-xs font-semibold'
+                title='Input manual UID atau kartu pengujian'
+              >
+                <Keyboard className='h-4 w-4' />
+                <span className='hidden md:inline'>Manual UID</span>
+              </Button>
+
+              {/* Tombol Riwayat Sesi */}
+              <Button
+                type='button'
+                variant='outline'
+                onClick={() => setHistoryModalOpen(true)}
+                className='h-10 gap-1.5 px-3 text-xs font-semibold'
+                title='Lihat riwayat transaksi sesi hari ini'
+              >
+                <History className='h-4 w-4' />
+                <span className='hidden sm:inline'>Riwayat Sesi</span>
+                {transactions.length > 0 && (
+                  <Badge variant='secondary' className='ml-0.5 px-1.5 py-0 text-[10px]'>
+                    {transactions.length}
+                  </Badge>
+                )}
+              </Button>
+
+              {/* Tombol Tutup Kasir */}
+              <Button
+                type='button'
+                variant={isSessionClosed ? 'secondary' : 'outline'}
+                onClick={() => setCloseSessionModalOpen(true)}
+                disabled={isSessionClosed}
+                className={`h-10 gap-1.5 px-3 text-xs font-semibold ${
+                  isSessionClosed
+                    ? 'cursor-not-allowed opacity-60'
+                    : 'border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive'
+                }`}
+                title='Tutup sesi kasir harian'
+              >
+                <Lock className='h-4 w-4' />
+                <span className='hidden md:inline'>
+                  {isSessionClosed ? 'Sesi Ditutup' : 'Tutup Kasir'}
+                </span>
+              </Button>
 
             {/* Titik Kasir Selector */}
             <div className='hidden sm:flex items-center gap-1.5'>
@@ -551,8 +685,11 @@ export const KasirPosPage: React.FC = () => {
           onCheckout={() => setManualRfidOpen(true)}
           onManualRfidOpen={() => setManualRfidOpen(true)}
           isProcessing={isProcessing}
+          isOffline={!isOnline}
+          isSessionClosed={isSessionClosed}
         />
       </div>
+    </div>
 
       {/* Mobile / Tablet Small Sheet Keranjang */}
       <Sheet open={mobileCartOpen} onOpenChange={setMobileCartOpen}>
@@ -567,6 +704,8 @@ export const KasirPosPage: React.FC = () => {
             onCheckout={() => setManualRfidOpen(true)}
             onManualRfidOpen={() => setManualRfidOpen(true)}
             isProcessing={isProcessing}
+            isOffline={!isOnline}
+            isSessionClosed={isSessionClosed}
             className='border-none'
           />
         </SheetContent>
@@ -652,6 +791,26 @@ export const KasirPosPage: React.FC = () => {
         open={errorModalOpen}
         onOpenChange={setErrorModalOpen}
         errorInfo={errorInfo}
+      />
+
+      {/* Modal Riwayat Transaksi Sesi Hari Ini */}
+      <SessionHistoryModal
+        open={historyModalOpen}
+        onOpenChange={setHistoryModalOpen}
+        transactions={transactions}
+        isLoading={isHistoryLoading}
+        isSessionClosed={isSessionClosed}
+        onRefresh={loadSesiData}
+        onTransactionVoided={loadSesiData}
+      />
+
+      {/* Modal Tutup Kasir Harian */}
+      <CloseSessionModal
+        open={closeSessionModalOpen}
+        onOpenChange={setCloseSessionModalOpen}
+        sesi={sesi}
+        rekap={rekapSesi}
+        onSuccess={loadSesiData}
       />
     </div>
   )

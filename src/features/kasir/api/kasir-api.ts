@@ -1,43 +1,19 @@
 import apiClient from '@/lib/api-client'
+import type {
+  TapTransaksiRequest,
+  TapTransaksiData,
+  SesiKasirData,
+  RekapSesiData,
+  TransaksiSesiItem,
+} from '../types'
 
-export interface TapItemPayload {
-  menuId: number
-  qty: number
-}
+export * from '../types'
 
-export interface TapTransaksiRequest {
-  rfidUid: string
-  items: TapItemPayload[]
-  idempotencyKey: string
-  titikKasirId?: number
-}
-
-export interface TapBuyerInfo {
-  tipe: 'SISWA' | 'KARTU_TAMU'
-  subjekTipe?: 'SISWA' | 'KARTU_TAMU'
-  nama: string
-  kelas?: string | null
-  nis?: string | null
-  foto_url?: string | null
-  fotoUrl?: string | null
-  sisa_saldo: number
-  saldoSisa?: number
-  nomor_kartu?: string
-  label_pemegang?: string
-}
-
-export interface TapTransaksiData {
-  transaksi_id: number
-  transaksiId?: number
-  total: number
-  waktu: string
-  pembeli: TapBuyerInfo
-}
-
-export interface ApiErrorResponse {
-  message: string
-  kekurangan?: number
+interface ApiResponse<T> {
+  responseCode?: number
   code?: number
+  message?: string
+  data: T
 }
 
 /**
@@ -55,7 +31,7 @@ export function generateIdempotencyKey(): string {
 
 export const kasirApi = {
   /**
-   * Eksekusi transaksi tap kartu RFID di kasir
+   * Eksekusi transaksi tap kartu RFID di kasir (PRD §6.2)
    */
   async prosesTap(data: TapTransaksiRequest): Promise<TapTransaksiData> {
     const payload = {
@@ -71,19 +47,75 @@ export const kasirApi = {
       titikKasirId: data.titikKasirId || 1,
     }
 
-    const res = await apiClient.post('/api/v1/kasir/transaksi', payload)
+    const res = await apiClient.post<ApiResponse<TapTransaksiData>>(
+      '/api/kasir/tap',
+      payload
+    )
     return res.data?.data
   },
 
   /**
-   * Batalkan (void) transaksi darurat jika wajah tidak cocok dengan pemilik kartu
+   * Batalkan (void) transaksi kasir dengan alasan wajib (PRD §6.3, Issue #5)
    */
   async voidTransaksi(
     transaksiId: number,
     alasan = 'Wajah pembeli tidak cocok dengan foto kartu'
   ): Promise<void> {
-    await apiClient.post(`/api/v1/kasir/transaksi/${transaksiId}/void`, {
+    await apiClient.post(`/api/kasir/transaksi/${transaksiId}/void`, {
       alasan,
     })
+  },
+
+  /**
+   * Buka sesi kasir atau ambil sesi terbuka hari ini (PRD §6.4, Issue #5)
+   */
+  async bukaSesi(titikKasirId?: number): Promise<SesiKasirData> {
+    const res = await apiClient.post<ApiResponse<SesiKasirData>>(
+      '/api/kasir/sesi/buka',
+      titikKasirId ? { titikKasirId } : {}
+    )
+    return res.data?.data
+  },
+
+  /**
+   * Ambil sesi kasir aktif saat ini (PRD §6.4)
+   */
+  async getSesiAktif(titikKasirId?: number): Promise<SesiKasirData> {
+    const res = await apiClient.get<ApiResponse<SesiKasirData>>(
+      '/api/kasir/sesi/aktif',
+      { params: { titikKasirId } }
+    )
+    return res.data?.data
+  },
+
+  /**
+   * Pratinjau rekapitulasi sesi kasir (bruto, void, bersih) (PRD §6.4, Issue #5)
+   */
+  async getRekapSesi(sesiId: number): Promise<RekapSesiData> {
+    const res = await apiClient.get<ApiResponse<RekapSesiData>>(
+      `/api/kasir/sesi/${sesiId}/rekap`
+    )
+    return res.data?.data
+  },
+
+  /**
+   * Tutup sesi kasir harian dan kunci transaksi (PRD §6.4, Issue #5)
+   */
+  async tutupSesi(sesiId: number): Promise<SesiKasirData> {
+    const res = await apiClient.post<ApiResponse<SesiKasirData>>(
+      `/api/kasir/sesi/${sesiId}/tutup`
+    )
+    return res.data?.data
+  },
+
+  /**
+   * Ambil daftar transaksi sesi kasir hari ini (Issue #5)
+   */
+  async getRiwayatTransaksiSesi(sesiId?: number): Promise<TransaksiSesiItem[]> {
+    const res = await apiClient.get<ApiResponse<TransaksiSesiItem[]>>(
+      '/api/kasir/transaksi/sesi',
+      { params: { sesiId } }
+    )
+    return res.data?.data || []
   },
 }

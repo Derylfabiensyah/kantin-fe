@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import {
-  Boxes,
   PlusCircle,
   History,
 } from 'lucide-react'
@@ -142,8 +141,7 @@ export function BarangMasukPage() {
       <Main className='space-y-6'>
         {/* Page Title */}
         <div>
-          <h1 className='flex items-center gap-2.5 text-2xl font-bold tracking-tight text-foreground'>
-            <Boxes className='h-6 w-6 text-primary' />
+          <h1 className='text-2xl font-bold tracking-tight text-foreground'>
             Pencatatan Barang Masuk (Restock)
           </h1>
           <p className='mt-1 text-xs text-muted-foreground'>

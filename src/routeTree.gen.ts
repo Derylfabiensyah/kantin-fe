@@ -47,6 +47,12 @@ import { Route as AuthenticatedStokInventarisIndexRouteImport } from './routes/_
 import { Route as AuthenticatedSaldoRefundIndexRouteImport } from './routes/_authenticated/saldo/refund/index'
 import { Route as AuthenticatedSaldoKoreksiIndexRouteImport } from './routes/_authenticated/saldo/koreksi/index'
 import { Route as AuthenticatedPengaturanTitikKasirIndexRouteImport } from './routes/_authenticated/pengaturan/titik-kasir/index'
+import { Route as AuthenticatedLaporanSaldoMengendapIndexRouteImport } from './routes/_authenticated/laporan/saldo-mengendap/index'
+import { Route as AuthenticatedLaporanRiwayatSiswaIndexRouteImport } from './routes/_authenticated/laporan/riwayat-siswa/index'
+import { Route as AuthenticatedLaporanRekonsiliasiIndexRouteImport } from './routes/_authenticated/laporan/rekonsiliasi/index'
+import { Route as AuthenticatedLaporanPenjualanIndexRouteImport } from './routes/_authenticated/laporan/penjualan/index'
+import { Route as AuthenticatedLaporanLabaKotorIndexRouteImport } from './routes/_authenticated/laporan/laba-kotor/index'
+import { Route as AuthenticatedLaporanKerugianStokIndexRouteImport } from './routes/_authenticated/laporan/kerugian-stok/index'
 
 const KasirRouteRoute = KasirRouteRouteImport.update({
   id: '/kasir',
@@ -259,6 +265,42 @@ const AuthenticatedPengaturanTitikKasirIndexRoute =
     path: '/pengaturan/titik-kasir/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedLaporanSaldoMengendapIndexRoute =
+  AuthenticatedLaporanSaldoMengendapIndexRouteImport.update({
+    id: '/laporan/saldo-mengendap/',
+    path: '/laporan/saldo-mengendap/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedLaporanRiwayatSiswaIndexRoute =
+  AuthenticatedLaporanRiwayatSiswaIndexRouteImport.update({
+    id: '/laporan/riwayat-siswa/',
+    path: '/laporan/riwayat-siswa/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedLaporanRekonsiliasiIndexRoute =
+  AuthenticatedLaporanRekonsiliasiIndexRouteImport.update({
+    id: '/laporan/rekonsiliasi/',
+    path: '/laporan/rekonsiliasi/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedLaporanPenjualanIndexRoute =
+  AuthenticatedLaporanPenjualanIndexRouteImport.update({
+    id: '/laporan/penjualan/',
+    path: '/laporan/penjualan/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedLaporanLabaKotorIndexRoute =
+  AuthenticatedLaporanLabaKotorIndexRouteImport.update({
+    id: '/laporan/laba-kotor/',
+    path: '/laporan/laba-kotor/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedLaporanKerugianStokIndexRoute =
+  AuthenticatedLaporanKerugianStokIndexRouteImport.update({
+    id: '/laporan/kerugian-stok/',
+    path: '/laporan/kerugian-stok/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -288,6 +330,12 @@ export interface FileRoutesByFullPath {
   '/pengaturan/': typeof AuthenticatedPengaturanIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
+  '/laporan/kerugian-stok/': typeof AuthenticatedLaporanKerugianStokIndexRoute
+  '/laporan/laba-kotor/': typeof AuthenticatedLaporanLabaKotorIndexRoute
+  '/laporan/penjualan/': typeof AuthenticatedLaporanPenjualanIndexRoute
+  '/laporan/rekonsiliasi/': typeof AuthenticatedLaporanRekonsiliasiIndexRoute
+  '/laporan/riwayat-siswa/': typeof AuthenticatedLaporanRiwayatSiswaIndexRoute
+  '/laporan/saldo-mengendap/': typeof AuthenticatedLaporanSaldoMengendapIndexRoute
   '/pengaturan/titik-kasir/': typeof AuthenticatedPengaturanTitikKasirIndexRoute
   '/saldo/koreksi/': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/saldo/refund/': typeof AuthenticatedSaldoRefundIndexRoute
@@ -325,6 +373,12 @@ export interface FileRoutesByTo {
   '/pengaturan': typeof AuthenticatedPengaturanIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/laporan/kerugian-stok': typeof AuthenticatedLaporanKerugianStokIndexRoute
+  '/laporan/laba-kotor': typeof AuthenticatedLaporanLabaKotorIndexRoute
+  '/laporan/penjualan': typeof AuthenticatedLaporanPenjualanIndexRoute
+  '/laporan/rekonsiliasi': typeof AuthenticatedLaporanRekonsiliasiIndexRoute
+  '/laporan/riwayat-siswa': typeof AuthenticatedLaporanRiwayatSiswaIndexRoute
+  '/laporan/saldo-mengendap': typeof AuthenticatedLaporanSaldoMengendapIndexRoute
   '/pengaturan/titik-kasir': typeof AuthenticatedPengaturanTitikKasirIndexRoute
   '/saldo/koreksi': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/saldo/refund': typeof AuthenticatedSaldoRefundIndexRoute
@@ -366,6 +420,12 @@ export interface FileRoutesById {
   '/_authenticated/pengaturan/': typeof AuthenticatedPengaturanIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/laporan/kerugian-stok/': typeof AuthenticatedLaporanKerugianStokIndexRoute
+  '/_authenticated/laporan/laba-kotor/': typeof AuthenticatedLaporanLabaKotorIndexRoute
+  '/_authenticated/laporan/penjualan/': typeof AuthenticatedLaporanPenjualanIndexRoute
+  '/_authenticated/laporan/rekonsiliasi/': typeof AuthenticatedLaporanRekonsiliasiIndexRoute
+  '/_authenticated/laporan/riwayat-siswa/': typeof AuthenticatedLaporanRiwayatSiswaIndexRoute
+  '/_authenticated/laporan/saldo-mengendap/': typeof AuthenticatedLaporanSaldoMengendapIndexRoute
   '/_authenticated/pengaturan/titik-kasir/': typeof AuthenticatedPengaturanTitikKasirIndexRoute
   '/_authenticated/saldo/koreksi/': typeof AuthenticatedSaldoKoreksiIndexRoute
   '/_authenticated/saldo/refund/': typeof AuthenticatedSaldoRefundIndexRoute
@@ -407,6 +467,12 @@ export interface FileRouteTypes {
     | '/pengaturan/'
     | '/settings/'
     | '/users/'
+    | '/laporan/kerugian-stok/'
+    | '/laporan/laba-kotor/'
+    | '/laporan/penjualan/'
+    | '/laporan/rekonsiliasi/'
+    | '/laporan/riwayat-siswa/'
+    | '/laporan/saldo-mengendap/'
     | '/pengaturan/titik-kasir/'
     | '/saldo/koreksi/'
     | '/saldo/refund/'
@@ -444,6 +510,12 @@ export interface FileRouteTypes {
     | '/pengaturan'
     | '/settings'
     | '/users'
+    | '/laporan/kerugian-stok'
+    | '/laporan/laba-kotor'
+    | '/laporan/penjualan'
+    | '/laporan/rekonsiliasi'
+    | '/laporan/riwayat-siswa'
+    | '/laporan/saldo-mengendap'
     | '/pengaturan/titik-kasir'
     | '/saldo/koreksi'
     | '/saldo/refund'
@@ -484,6 +556,12 @@ export interface FileRouteTypes {
     | '/_authenticated/pengaturan/'
     | '/_authenticated/settings/'
     | '/_authenticated/users/'
+    | '/_authenticated/laporan/kerugian-stok/'
+    | '/_authenticated/laporan/laba-kotor/'
+    | '/_authenticated/laporan/penjualan/'
+    | '/_authenticated/laporan/rekonsiliasi/'
+    | '/_authenticated/laporan/riwayat-siswa/'
+    | '/_authenticated/laporan/saldo-mengendap/'
     | '/_authenticated/pengaturan/titik-kasir/'
     | '/_authenticated/saldo/koreksi/'
     | '/_authenticated/saldo/refund/'
@@ -779,6 +857,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPengaturanTitikKasirIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/laporan/saldo-mengendap/': {
+      id: '/_authenticated/laporan/saldo-mengendap/'
+      path: '/laporan/saldo-mengendap'
+      fullPath: '/laporan/saldo-mengendap/'
+      preLoaderRoute: typeof AuthenticatedLaporanSaldoMengendapIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/laporan/riwayat-siswa/': {
+      id: '/_authenticated/laporan/riwayat-siswa/'
+      path: '/laporan/riwayat-siswa'
+      fullPath: '/laporan/riwayat-siswa/'
+      preLoaderRoute: typeof AuthenticatedLaporanRiwayatSiswaIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/laporan/rekonsiliasi/': {
+      id: '/_authenticated/laporan/rekonsiliasi/'
+      path: '/laporan/rekonsiliasi'
+      fullPath: '/laporan/rekonsiliasi/'
+      preLoaderRoute: typeof AuthenticatedLaporanRekonsiliasiIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/laporan/penjualan/': {
+      id: '/_authenticated/laporan/penjualan/'
+      path: '/laporan/penjualan'
+      fullPath: '/laporan/penjualan/'
+      preLoaderRoute: typeof AuthenticatedLaporanPenjualanIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/laporan/laba-kotor/': {
+      id: '/_authenticated/laporan/laba-kotor/'
+      path: '/laporan/laba-kotor'
+      fullPath: '/laporan/laba-kotor/'
+      preLoaderRoute: typeof AuthenticatedLaporanLabaKotorIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/laporan/kerugian-stok/': {
+      id: '/_authenticated/laporan/kerugian-stok/'
+      path: '/laporan/kerugian-stok'
+      fullPath: '/laporan/kerugian-stok/'
+      preLoaderRoute: typeof AuthenticatedLaporanKerugianStokIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -816,6 +936,12 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMenuIndexRoute: typeof AuthenticatedMenuIndexRoute
   AuthenticatedPengaturanIndexRoute: typeof AuthenticatedPengaturanIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedLaporanKerugianStokIndexRoute: typeof AuthenticatedLaporanKerugianStokIndexRoute
+  AuthenticatedLaporanLabaKotorIndexRoute: typeof AuthenticatedLaporanLabaKotorIndexRoute
+  AuthenticatedLaporanPenjualanIndexRoute: typeof AuthenticatedLaporanPenjualanIndexRoute
+  AuthenticatedLaporanRekonsiliasiIndexRoute: typeof AuthenticatedLaporanRekonsiliasiIndexRoute
+  AuthenticatedLaporanRiwayatSiswaIndexRoute: typeof AuthenticatedLaporanRiwayatSiswaIndexRoute
+  AuthenticatedLaporanSaldoMengendapIndexRoute: typeof AuthenticatedLaporanSaldoMengendapIndexRoute
   AuthenticatedPengaturanTitikKasirIndexRoute: typeof AuthenticatedPengaturanTitikKasirIndexRoute
   AuthenticatedSaldoKoreksiIndexRoute: typeof AuthenticatedSaldoKoreksiIndexRoute
   AuthenticatedSaldoRefundIndexRoute: typeof AuthenticatedSaldoRefundIndexRoute
@@ -839,6 +965,18 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMenuIndexRoute: AuthenticatedMenuIndexRoute,
   AuthenticatedPengaturanIndexRoute: AuthenticatedPengaturanIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedLaporanKerugianStokIndexRoute:
+    AuthenticatedLaporanKerugianStokIndexRoute,
+  AuthenticatedLaporanLabaKotorIndexRoute:
+    AuthenticatedLaporanLabaKotorIndexRoute,
+  AuthenticatedLaporanPenjualanIndexRoute:
+    AuthenticatedLaporanPenjualanIndexRoute,
+  AuthenticatedLaporanRekonsiliasiIndexRoute:
+    AuthenticatedLaporanRekonsiliasiIndexRoute,
+  AuthenticatedLaporanRiwayatSiswaIndexRoute:
+    AuthenticatedLaporanRiwayatSiswaIndexRoute,
+  AuthenticatedLaporanSaldoMengendapIndexRoute:
+    AuthenticatedLaporanSaldoMengendapIndexRoute,
   AuthenticatedPengaturanTitikKasirIndexRoute:
     AuthenticatedPengaturanTitikKasirIndexRoute,
   AuthenticatedSaldoKoreksiIndexRoute: AuthenticatedSaldoKoreksiIndexRoute,

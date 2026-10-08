@@ -19,6 +19,8 @@ import {
   MOCK_TRANSAKSI_SESI_TUTUP,
   MOCK_PENGATURAN_KANTIN,
   MOCK_TITIK_KASIR,
+  MOCK_KERUGIAN_STOK,
+  MOCK_RIWAYAT_SISWA,
   type MenuItemMock,
   type KartuSiswaMock,
   type KartuTamuMock,
@@ -446,7 +448,7 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       const method = (config.method || 'get').toLowerCase()
 
       // Cek apakah request harus di-handle oleh mock
-      const mockResponse = handleMockRequest(url, method, config.data)
+      const mockResponse = handleMockRequest(url, method, config.data, config.params)
       if (mockResponse) {
         // Buat custom adapter yang langsung resolve response mock
         config.adapter = async () => {
@@ -490,7 +492,8 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
   function handleMockRequest(
     url: string,
     method: string,
-    dataRaw: unknown
+    dataRaw: unknown,
+    params?: Record<string, unknown>
   ): { status: number; data: MockResponseData } | null {
     let payload: Record<string, unknown> = {}
     if (typeof dataRaw === 'string') {
@@ -2405,6 +2408,412 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
           status: 'SUCCESS',
           message: 'Laporan stok dan nilai persediaan berhasil dimuat',
           data: list,
+        },
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // LAPORAN REKONSILIASI HARIAN & INVARIANT (PRD §9.5, §5)
+    // ─────────────────────────────────────────────────────────────
+    if (url.includes('/api/laporan/rekonsiliasi') && method === 'get') {
+      const urlObj = new URL(url, 'http://localhost')
+      const simulasiSelisih =
+        params?.simulasiSelisih === true ||
+        params?.simulasiSelisih === 'true' ||
+        params?.search === 'simulasiSelisih' ||
+        urlObj.searchParams.get('simulasiSelisih') === 'true' ||
+        urlObj.searchParams.get('search') === 'simulasiSelisih'
+
+      const totalSaldoSiswa = siswaList.reduce((acc, s) => acc + (s.saldo || 0), 0)
+      const totalSaldoKartuTamu = kartuTamuList.reduce((acc, k) => acc + (k.saldo || 0), 0)
+      const saldoMengendap = totalSaldoSiswa + totalSaldoKartuTamu
+
+      const penjualanBruto = 3420000
+      const voidPenjualan = 45000
+      const penjualanBersih = penjualanBruto - voidPenjualan // 3.375.000
+
+      const refund = 150000
+      // Invariant: Topup - Refund = Saldo Mengendap + Penjualan Bersih
+      // Topup = Saldo Mengendap + Penjualan Bersih + Refund
+      const topupTarget = saldoMengendap + penjualanBersih + refund
+      const topupOnline = Math.round(topupTarget * 0.4)
+      const topupTunai = topupTarget - topupOnline
+
+      const topupBersih = topupOnline + topupTunai - refund
+      const totalPenggunaan = saldoMengendap + penjualanBersih
+
+      let selisih = topupBersih - totalPenggunaan
+      if (simulasiSelisih) {
+        selisih = 75000 // Simulasi selisih Rp 75.000 untuk pengujian banner merah
+      }
+
+      const totalKreditSemua = topupOnline + topupTunai + voidPenjualan
+      const totalDebitSemua = penjualanBruto + refund
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Laporan rekonsiliasi berhasil dimuat',
+          data: {
+            dari: '2026-10-08T00:00:00+07:00',
+            sampai: '2026-10-08T23:59:59+07:00',
+            topupOnline,
+            topupTunai,
+            penjualan: penjualanBruto,
+            voidPenjualan,
+            penjualanBersih,
+            koreksiMasuk: 15000,
+            koreksiKeluar: 0,
+            refund,
+            transfer: 0,
+            saldoMengendap,
+            saldoSiswa: totalSaldoSiswa,
+            saldoKartuTamu: totalSaldoKartuTamu,
+            totalKreditSemua,
+            totalDebitSemua,
+            selisih,
+            seimbang: selisih === 0,
+            totalTopupSemua: topupOnline + topupTunai,
+            totalRefundSemua: refund,
+            topupBersih,
+            totalPenggunaan,
+          },
+        },
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // LAPORAN PENJUALAN & LABA KOTOR (PRD §9.5)
+    // ─────────────────────────────────────────────────────────────
+    if (url.includes('/api/laporan/penjualan/item') && method === 'get') {
+      const barisItem = menuList.map((m, idx) => {
+        const qty = [42, 38, 25, 20, 18, 15, 12, 10, 8, 6][idx % 10] || 5
+        const hpp = m.hpp || Math.round(m.harga_jual * 0.7)
+        const penjualanBersih = qty * m.harga_jual
+        const totalHpp = qty * hpp
+        const labaKotor = penjualanBersih - totalHpp
+        const margin = Math.round((labaKotor / penjualanBersih) * 100)
+
+        return {
+          menuId: m.id,
+          nama: m.nama,
+          kategoriId: m.kategori_id,
+          kategoriNama: m.kategori_nama || 'Umum',
+          qty,
+          hargaJual: m.harga_jual,
+          hpp,
+          penjualanBersih,
+          totalHpp,
+          labaKotor,
+          margin,
+        }
+      })
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Penjualan per item berhasil dimuat',
+          data: barisItem,
+        },
+      }
+    }
+
+    if (url.includes('/api/laporan/penjualan/kategori') && method === 'get') {
+      const barisKategori = kategoriList.map((k) => {
+        const menusInKat = menuList.filter((m) => m.kategori_id === k.id)
+        const qty = menusInKat.length * 30 || 20
+        const totalJual = menusInKat.reduce(
+          (acc, m) => acc + m.harga_jual * 30,
+          0
+        ) || 350000
+        const totalHpp = Math.round(totalJual * 0.68)
+        const labaKotor = totalJual - totalHpp
+        const margin = Math.round((labaKotor / totalJual) * 100)
+
+        return {
+          kategoriId: k.id,
+          nama: k.nama,
+          jumlahItem: menusInKat.length,
+          qty,
+          penjualanBersih: totalJual,
+          totalHpp,
+          labaKotor,
+          margin,
+        }
+      })
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Penjualan per kategori berhasil dimuat',
+          data: barisKategori,
+        },
+      }
+    }
+
+    if (url.includes('/api/laporan/penjualan/kasir') && method === 'get') {
+      const barisKasir = titikKasirList.map((tk, idx) => {
+        const base = idx === 0 ? 2100000 : 1275000
+        return {
+          titikKasirId: tk.id,
+          namaTitikKasir: tk.nama,
+          petugas: idx === 0 ? 'Ahmad Kasir' : 'Nurul Hidayah',
+          jumlahTransaksi: idx === 0 ? 115 : 70,
+          penjualanBruto: base + (idx === 0 ? 30000 : 15000),
+          nilaiVoid: idx === 0 ? 30000 : 15000,
+          penjualanBersih: base,
+        }
+      })
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Penjualan per kasir berhasil dimuat',
+          data: barisKasir,
+        },
+      }
+    }
+
+    if (url.includes('/api/laporan/penjualan') && method === 'get') {
+      const penjualanBruto = 3420000
+      const jumlahVoid = 3
+      const nilaiVoid = 45000
+      const penjualanBersih = 3375000
+      const totalHpp = 2180000
+      const labaKotor = penjualanBersih - totalHpp
+      const marginLabaPersen = Math.round((labaKotor / penjualanBersih) * 1000) / 10
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Ringkasan penjualan berhasil dimuat',
+          data: {
+            dari: '2026-10-08T00:00:00+07:00',
+            sampai: '2026-10-08T23:59:59+07:00',
+            jumlahTransaksi: 185,
+            penjualanBruto,
+            jumlahVoid,
+            nilaiVoid,
+            penjualanBersih,
+            totalHpp,
+            labaKotor,
+            marginLabaPersen,
+          },
+        },
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // LAPORAN SALDO MENGENDAP & KEWAJIBAN SEKOLAH (PRD §9.5)
+    // ─────────────────────────────────────────────────────────────
+    if (url.includes('/api/laporan/saldo-mengendap/siswa') && method === 'get') {
+      const listSiswa = siswaList.map((s) => ({
+        siswaId: s.siswa_id,
+        nis: s.nis,
+        nama: s.nama,
+        kelas: s.kelas,
+        saldo: s.saldo,
+        belanjaHariIni: s.belanja_hari_ini,
+        limitHarian: s.limit_harian,
+        isBlocked: s.is_blocked,
+        parentName: s.parent_name || 'Orang Tua Murid',
+        parentPhone: s.parent_phone || '-',
+        terakhirTransaksi: s.updated_at || '2026-10-08T11:00:00Z',
+      }))
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Daftar saldo siswa berhasil dimuat',
+          data: listSiswa,
+        },
+      }
+    }
+
+    if (url.includes('/api/laporan/saldo-mengendap/kartu-tamu') && method === 'get') {
+      const listKartuTamu = kartuTamuList.map((k) => ({
+        id: k.id,
+        nomorKartu: k.nomor_kartu,
+        uid: k.uid,
+        labelPemegang: k.label_pemegang,
+        saldo: k.saldo,
+        status: k.status,
+        createdAt: k.created_at,
+      }))
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Daftar saldo kartu tamu berhasil dimuat',
+          data: listKartuTamu,
+        },
+      }
+    }
+
+    if (url.includes('/api/laporan/saldo-mengendap') && method === 'get') {
+      const saldoSiswa = siswaList.reduce((acc, s) => acc + (s.saldo || 0), 0)
+      const saldoKartuTamu = kartuTamuList.reduce((acc, k) => acc + (k.saldo || 0), 0)
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Ringkasan saldo mengendap berhasil dimuat',
+          data: {
+            saldoSiswa,
+            saldoKartuTamu,
+            total: saldoSiswa + saldoKartuTamu,
+            jumlahSiswa: siswaList.length,
+            jumlahKartuTamu: kartuTamuList.length,
+          },
+        },
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // LAPORAN RIWAYAT BELANJA PER SISWA (KOMPLAIN ORTU)
+    // ─────────────────────────────────────────────────────────────
+    const riwayatSiswaMatch = url.match(/\/api\/laporan\/siswa\/(\d+)\/riwayat/)
+    if (riwayatSiswaMatch && method === 'get') {
+      const sId = Number(riwayatSiswaMatch[1])
+      const targetSiswa = siswaList.find((s) => s.siswa_id === sId) || siswaList[0]
+      const riwayatList = MOCK_RIWAYAT_SISWA[sId] || [
+        {
+          id: `TRX-20261008-${sId}`,
+          waktu: '2026-10-08T10:15:00Z',
+          jenis: 'BELANJA' as const,
+          arah: 'DEBIT' as const,
+          nominal: 15000,
+          saldo_setelah: targetSiswa.saldo,
+          titik_kasir: 'Kasir 1 - Kantin Utama',
+          petugas: 'Ahmad Kasir',
+          referensi_id: `TRX-20261008-${sId}`,
+          keterangan: 'Pembelian makan istirahat',
+          items: [{ nama: 'Nasi Goreng Ayam', qty: 1, harga: 15000, subtotal: 15000 }],
+        },
+      ]
+
+      const profil = {
+        siswaId: targetSiswa.siswa_id,
+        nis: targetSiswa.nis,
+        nama: targetSiswa.nama,
+        kelas: targetSiswa.kelas,
+        fotoUrl: targetSiswa.foto_url,
+        saldo: targetSiswa.saldo,
+        belanjaHariIni: targetSiswa.belanja_hari_ini,
+        limitHarian: targetSiswa.limit_harian,
+        isBlocked: targetSiswa.is_blocked,
+        parentName: targetSiswa.parent_name || 'Orang Tua Murid',
+        parentPhone: targetSiswa.parent_phone || '-',
+        catatanKontrol: targetSiswa.catatan_kontrol,
+      }
+
+      const formattedRiwayat = riwayatList.map((r) => ({
+        id: r.id,
+        waktu: r.waktu,
+        jenis: r.jenis,
+        arah: r.arah,
+        nominal: r.nominal,
+        saldoSetelah: r.saldo_setelah,
+        titikKasir: r.titik_kasir,
+        petugas: r.petugas,
+        referensiId: r.referensi_id,
+        keterangan: r.keterangan,
+        items: r.items,
+      }))
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Riwayat transaksi siswa berhasil dimuat',
+          data: {
+            profil,
+            riwayat: formattedRiwayat,
+          },
+        },
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // LAPORAN KERUGIAN STOK (PRD §9.5)
+    // ─────────────────────────────────────────────────────────────
+    if (url.includes('/api/laporan/kerugian-stok/ringkasan') && method === 'get') {
+      const totalKerugian = MOCK_KERUGIAN_STOK.reduce((acc, k) => acc + k.total_nilai, 0)
+      const totalQtyHilang = MOCK_KERUGIAN_STOK.reduce((acc, k) => acc + k.qty, 0)
+
+      const opnameItems = MOCK_KERUGIAN_STOK.filter((k) => k.jenis === 'OPNAME_KELUAR')
+      const rusakItems = MOCK_KERUGIAN_STOK.filter((k) => k.jenis === 'BARANG_RUSAK')
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Ringkasan kerugian stok berhasil dimuat',
+          data: {
+            totalKerugian,
+            totalQtyHilang,
+            jumlahKejadian: MOCK_KERUGIAN_STOK.length,
+            kerugianOpname: opnameItems.reduce((acc, k) => acc + k.total_nilai, 0),
+            qtyOpname: opnameItems.reduce((acc, k) => acc + k.qty, 0),
+            kerugianBarangRusak: rusakItems.reduce((acc, k) => acc + k.total_nilai, 0),
+            qtyBarangRusak: rusakItems.reduce((acc, k) => acc + k.qty, 0),
+          },
+        },
+      }
+    }
+
+    if (url.includes('/api/laporan/kerugian-stok') && method === 'get') {
+      const listKerugian = MOCK_KERUGIAN_STOK.map((k) => ({
+        id: k.id,
+        waktu: k.waktu,
+        menuId: k.menu_id,
+        namaMenu: k.nama_menu,
+        kategoriNama: k.kategori_nama,
+        jenis: k.jenis,
+        qty: k.qty,
+        hppSnapshot: k.hpp_snapshot,
+        totalNilai: k.total_nilai,
+        alasan: k.alasan,
+        beritaAcaraId: k.berita_acara_id,
+        petugas: k.petugas,
+      }))
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          responseCode: 200,
+          status: 'SUCCESS',
+          message: 'Daftar kerugian stok berhasil dimuat',
+          data: listKerugian,
         },
       }
     }

@@ -137,7 +137,7 @@ export const sidebarData: SidebarData = {
         {
           title: 'Pusat Laporan Keuangan',
           icon: FileSpreadsheet,
-          roles: ['admin', 'bendahara', 'pengelola'],
+          roles: ['admin', 'bendahara', 'pengelola', 'tu'],
           items: [
             {
               title: 'Rekonsiliasi Harian',
@@ -148,8 +148,24 @@ export const sidebarData: SidebarData = {
               url: '/laporan/penjualan',
             },
             {
+              title: 'Analisis Laba Kotor',
+              url: '/laporan/laba-kotor',
+            },
+            {
+              title: 'Saldo Mengendap',
+              url: '/laporan/saldo-mengendap',
+            },
+            {
+              title: 'Riwayat Belanja Siswa',
+              url: '/laporan/riwayat-siswa',
+            },
+            {
+              title: 'Laporan Kerugian Stok',
+              url: '/laporan/kerugian-stok',
+            },
+            {
               title: 'Nilai Persediaan',
-              url: '/laporan/stok',
+              url: '/stok/inventaris',
             },
           ],
         },

@@ -1084,3 +1084,208 @@ export const MOCK_TITIK_KASIR: TitikKasirMock[] = [
   },
 ]
 
+// ==========================================
+// MOCK DATA LAPORAN & REKONSILIASI (PRD §9.5, §5)
+// ==========================================
+
+export interface KerugianStokMock {
+  id: number
+  waktu: string
+  menu_id: number
+  nama_menu: string
+  kategori_nama: string
+  jenis: 'OPNAME_KELUAR' | 'BARANG_RUSAK'
+  qty: number
+  hpp_snapshot: number
+  total_nilai: number
+  alasan: string
+  berita_acara_id: string
+  petugas: string
+}
+
+export const MOCK_KERUGIAN_STOK: KerugianStokMock[] = [
+  {
+    id: 1,
+    waktu: '2026-10-06T15:45:00Z',
+    menu_id: 1,
+    nama_menu: 'Nasi Uduk Komplit',
+    kategori_nama: 'Makanan Berat',
+    jenis: 'BARANG_RUSAK',
+    qty: 3,
+    hpp_snapshot: 9000,
+    total_nilai: 27000,
+    alasan: 'Sisa basi tidak terjual setelah tutup operasional',
+    berita_acara_id: 'BA-RSK-20261006-001',
+    petugas: 'Siti Aminah (Pengelola)',
+  },
+  {
+    id: 2,
+    waktu: '2026-10-05T16:10:00Z',
+    menu_id: 5,
+    nama_menu: 'Roti Cokelat Keju',
+    kategori_nama: 'Snack & Roti',
+    jenis: 'BARANG_RUSAK',
+    qty: 4,
+    hpp_snapshot: 3500,
+    total_nilai: 14000,
+    alasan: 'Kemasan sobek digigit tikus di gudang',
+    berita_acara_id: 'BA-RSK-20261005-002',
+    petugas: 'Bambang Sudiro',
+  },
+  {
+    id: 3,
+    waktu: '2026-10-04T17:00:00Z',
+    menu_id: 10,
+    nama_menu: 'Air Mineral 600ml',
+    kategori_nama: 'Minuman',
+    jenis: 'OPNAME_KELUAR',
+    qty: 5,
+    hpp_snapshot: 2000,
+    total_nilai: 10000,
+    alasan: 'Selisih fisik opname berkurang 5 botol saat audit mingguan',
+    berita_acara_id: 'BA-OPN-20261004-001',
+    petugas: 'Siti Aminah (Pengelola)',
+  },
+  {
+    id: 4,
+    waktu: '2026-10-02T16:30:00Z',
+    menu_id: 9,
+    nama_menu: 'Es Teh Manis',
+    kategori_nama: 'Minuman',
+    jenis: 'OPNAME_KELUAR',
+    qty: 8,
+    hpp_snapshot: 1500,
+    total_nilai: 12000,
+    alasan: 'Bahan tumpah saat penyiapan dispenser kasir',
+    berita_acara_id: 'BA-OPN-20261002-003',
+    petugas: 'Ahmad Kasir',
+  },
+  {
+    id: 5,
+    waktu: '2026-10-01T15:20:00Z',
+    menu_id: 7,
+    nama_menu: 'Pisang Goreng Crispy',
+    kategori_nama: 'Snack & Roti',
+    jenis: 'BARANG_RUSAK',
+    qty: 6,
+    hpp_snapshot: 2000,
+    total_nilai: 12000,
+    alasan: 'Gosong saat penggorengan jam istirahat pertama',
+    berita_acara_id: 'BA-RSK-20261001-001',
+    petugas: 'Nurul Hidayah',
+  },
+]
+
+export interface RiwayatSiswaDetailMock {
+  id: string
+  waktu: string
+  jenis: 'BELANJA' | 'TOPUP_TUNAI' | 'TOPUP_ONLINE' | 'VOID' | 'REFUND' | 'KOREKSI'
+  arah: 'DEBIT' | 'KREDIT'
+  nominal: number
+  saldo_setelah: number
+  titik_kasir: string
+  petugas: string
+  referensi_id: string
+  keterangan: string
+  items?: {
+    nama: string
+    qty: number
+    harga: number
+    subtotal: number
+  }[]
+}
+
+export const MOCK_RIWAYAT_SISWA: Record<number, RiwayatSiswaDetailMock[]> = {
+  101: [
+    {
+      id: 'TRX-20261008-0101',
+      waktu: '2026-10-08T09:45:00Z',
+      jenis: 'BELANJA',
+      arah: 'DEBIT',
+      nominal: 19000,
+      saldo_setelah: 45000,
+      titik_kasir: 'Kasir 1 - Kantin Utama',
+      petugas: 'Ahmad Kasir',
+      referensi_id: 'TRX-20261008-0101',
+      keterangan: 'Pembelian makan istirahat 1',
+      items: [
+        { nama: 'Nasi Goreng Ayam', qty: 1, harga: 15000, subtotal: 15000 },
+        { nama: 'Es Teh Manis', qty: 1, harga: 4000, subtotal: 4000 },
+      ],
+    },
+    {
+      id: 'TOP-20261007-0045',
+      waktu: '2026-10-07T08:15:00Z',
+      jenis: 'TOPUP_TUNAI',
+      arah: 'KREDIT',
+      nominal: 50000,
+      saldo_setelah: 64000,
+      titik_kasir: 'Loket TU Lantai 1',
+      petugas: 'Siti Rahayu (TU)',
+      referensi_id: 'TU-TOP-20261007-0045',
+      keterangan: 'Top-up tunai siswa via wali murid',
+    },
+    {
+      id: 'TRX-20261006-0089',
+      waktu: '2026-10-06T12:10:00Z',
+      jenis: 'BELANJA',
+      arah: 'DEBIT',
+      nominal: 14000,
+      saldo_setelah: 14000,
+      titik_kasir: 'Kasir 1 - Kantin Utama',
+      petugas: 'Ahmad Kasir',
+      referensi_id: 'TRX-20261006-0089',
+      keterangan: 'Pembelian makan siang',
+      items: [
+        { nama: 'Ayam Geprek Sambal Bawang', qty: 1, harga: 14000, subtotal: 14000 },
+      ],
+    },
+    {
+      id: 'TRX-20261005-9011',
+      waktu: '2026-10-05T11:30:20Z',
+      jenis: 'BELANJA',
+      arah: 'DEBIT',
+      nominal: 19000,
+      saldo_setelah: 28000,
+      titik_kasir: 'Kasir 1 - Kantin Utama',
+      petugas: 'Ahmad Kasir',
+      referensi_id: 'TRX-20261005-9011',
+      keterangan: 'Makan siang kantin utama',
+      items: [
+        { nama: 'Nasi Goreng Ayam', qty: 1, harga: 15000, subtotal: 15000 },
+        { nama: 'Es Teh Manis', qty: 1, harga: 4000, subtotal: 4000 },
+      ],
+    },
+  ],
+  102: [
+    {
+      id: 'TRX-20261005-9012',
+      waktu: '2026-10-05T12:05:10Z',
+      jenis: 'BELANJA',
+      arah: 'DEBIT',
+      nominal: 14000,
+      saldo_setelah: 5000,
+      titik_kasir: 'Kasir 1 - Kantin Utama',
+      petugas: 'Ahmad Kasir',
+      referensi_id: 'TRX-20261005-9012',
+      keterangan: 'Makan siang ayam geprek',
+      items: [
+        { nama: 'Ayam Geprek Sambal Bawang', qty: 1, harga: 14000, subtotal: 14000 },
+      ],
+    },
+    {
+      id: 'KOR-20261004-001',
+      waktu: '2026-10-04T13:30:00Z',
+      jenis: 'KOREKSI',
+      arah: 'KREDIT',
+      nominal: 15000,
+      saldo_setelah: 19000,
+      titik_kasir: 'Ruang Bendahara',
+      petugas: 'Dra. Hj. Nurul (Bendahara)',
+      referensi_id: 'BA-KOR-20261004-001',
+      keterangan: 'Pengembalian dana pembatalan kartu tersenggol ganda TRX-20261004-8901',
+    },
+  ],
+}
+
+

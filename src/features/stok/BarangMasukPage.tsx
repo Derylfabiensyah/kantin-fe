@@ -3,8 +3,6 @@ import {
   Boxes,
   PlusCircle,
   History,
-  AlertTriangle,
-  PackageOpen,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatNumber } from '@/lib/formatters'
@@ -157,57 +155,39 @@ export function BarangMasukPage() {
         {/* Ringkasan Status Header Cards */}
         <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
           <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
-            <CardContent className='flex items-center justify-between p-4'>
-              <div>
-                <p className='text-xs font-medium text-muted-foreground'>
-                  Menu Aktif di Katalog
-                </p>
-                <h3 className='mt-0.5 text-xl font-bold text-foreground'>
-                  {loadingMenus ? '...' : formatNumber(menus.length)} Menu
-                </h3>
-              </div>
-              <div className='rounded-lg bg-primary/10 p-2.5 text-primary'>
-                <PackageOpen className='h-5 w-5' />
-              </div>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>
+                Menu Aktif di Katalog
+              </p>
+              <h3 className='mt-0.5 text-xl font-bold text-foreground'>
+                {loadingMenus ? '...' : formatNumber(menus.length)} Menu
+              </h3>
             </CardContent>
           </Card>
 
           <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
-            <CardContent className='flex items-center justify-between p-4'>
-              <div>
-                <p className='text-xs font-medium text-muted-foreground'>
-                  Total Riwayat Mutasi
-                </p>
-                <h3 className='mt-0.5 text-xl font-bold text-foreground'>
-                  {formatNumber(totalRiwayat)} Transaksi
-                </h3>
-              </div>
-              <div className='rounded-lg bg-blue-500/10 p-2.5 text-blue-500'>
-                <History className='h-5 w-5' />
-              </div>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>
+                Total Riwayat Mutasi
+              </p>
+              <h3 className='mt-0.5 text-xl font-bold text-foreground'>
+                {formatNumber(totalRiwayat)} Transaksi
+              </h3>
             </CardContent>
           </Card>
 
           <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
-            <CardContent className='flex items-center justify-between p-4'>
-              <div>
-                <p className='text-xs font-medium text-muted-foreground'>
-                  Peringatan Stok Menipis
-                </p>
-                <h3 className='mt-0.5 text-xl font-bold text-amber-500'>
-                  {stokMenipis.length > 0 ? (
-                    <span className='flex items-center gap-1.5'>
-                      <AlertTriangle className='h-4 w-4' />
-                      {stokMenipis.length} Menu
-                    </span>
-                  ) : (
-                    'Semua Aman'
-                  )}
-                </h3>
-              </div>
-              <div className='rounded-lg bg-amber-500/10 p-2.5 text-amber-500'>
-                <AlertTriangle className='h-5 w-5' />
-              </div>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>
+                Peringatan Stok Menipis
+              </p>
+              <h3 className='mt-0.5 text-xl font-bold text-amber-500'>
+                {stokMenipis.length > 0 ? (
+                  <span>{stokMenipis.length} Menu</span>
+                ) : (
+                  'Semua Aman'
+                )}
+              </h3>
             </CardContent>
           </Card>
         </div>

@@ -4,7 +4,6 @@ import {
   PlusCircle,
   History,
   AlertTriangle,
-  RefreshCw,
   PackageOpen,
 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -143,33 +142,16 @@ export function BarangMasukPage() {
       </Header>
 
       <Main className='space-y-6'>
-        {/* Page Title & Badges */}
-        <div className='flex flex-col justify-between gap-4 sm:flex-row sm:items-center'>
-          <div>
-            <h1 className='flex items-center gap-2.5 text-2xl font-bold tracking-tight text-foreground'>
-              <Boxes className='h-6 w-6 text-primary' />
-              Pencatatan Barang Masuk (Restock)
-            </h1>
-            <p className='mt-1 text-xs text-muted-foreground'>
-              Catat pembelian stok dari pemasok/supplier, simulasi otomatis HPP
-              rata-rata tertimbang (PRD §7.4), dan koreksi entri pembalik.
-            </p>
-          </div>
-
-          <div className='flex items-center gap-2'>
-            <Button
-              variant='outline'
-              size='sm'
-              onClick={() => {
-                void loadMenus()
-                void loadRiwayat(currentPage, selectedJenis)
-              }}
-              className='h-8 gap-1.5 text-xs'
-            >
-              <RefreshCw className='h-3.5 w-3.5' />
-              Sinkronisasi
-            </Button>
-          </div>
+        {/* Page Title */}
+        <div>
+          <h1 className='flex items-center gap-2.5 text-2xl font-bold tracking-tight text-foreground'>
+            <Boxes className='h-6 w-6 text-primary' />
+            Pencatatan Barang Masuk (Restock)
+          </h1>
+          <p className='mt-1 text-xs text-muted-foreground'>
+            Catat pembelian stok dari pemasok/supplier, simulasi otomatis HPP
+            rata-rata tertimbang (PRD §7.4), dan koreksi entri pembalik.
+          </p>
         </div>
 
         {/* Ringkasan Status Header Cards */}

@@ -138,7 +138,7 @@ export function RiwayatStokTable({
       default:
         return (
           <Badge className='border-0 bg-muted/80 text-[11px] font-medium text-muted-foreground'>
-            {jenis.replace(/_/g, ' ')}
+            {String(jenis).replace(/_/g, ' ')}
           </Badge>
         )
     }

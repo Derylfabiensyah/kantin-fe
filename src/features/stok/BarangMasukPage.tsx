@@ -156,7 +156,7 @@ export function BarangMasukPage() {
 
         {/* Ringkasan Status Header Cards */}
         <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
-          <Card className='border bg-card/60 shadow-sm'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardContent className='flex items-center justify-between p-4'>
               <div>
                 <p className='text-xs font-medium text-muted-foreground'>
@@ -172,7 +172,7 @@ export function BarangMasukPage() {
             </CardContent>
           </Card>
 
-          <Card className='border bg-card/60 shadow-sm'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardContent className='flex items-center justify-between p-4'>
               <div>
                 <p className='text-xs font-medium text-muted-foreground'>
@@ -188,7 +188,7 @@ export function BarangMasukPage() {
             </CardContent>
           </Card>
 
-          <Card className='border bg-card/60 shadow-sm'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardContent className='flex items-center justify-between p-4'>
               <div>
                 <p className='text-xs font-medium text-muted-foreground'>

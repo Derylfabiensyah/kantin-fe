@@ -137,12 +137,12 @@ export function RiwayatStokTable({
               placeholder='Cari nama menu atau no. bukti...'
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className='h-9 pl-8 text-xs'
+              className='h-9 pl-8 text-xs bg-background'
             />
           </div>
 
           <Select value={selectedJenis} onValueChange={onJenisChange}>
-            <SelectTrigger className='h-9 w-[180px] text-xs'>
+            <SelectTrigger className='h-9 w-[180px] text-xs bg-background'>
               <SelectValue placeholder='Semua Mutasi' />
             </SelectTrigger>
             <SelectContent>
@@ -167,7 +167,7 @@ export function RiwayatStokTable({
           size='sm'
           onClick={onRefresh}
           disabled={loading}
-          className='h-9 gap-1.5 text-xs'
+          className='h-9 gap-1.5 text-xs bg-background'
         >
           <RefreshCw
             className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`}
@@ -177,11 +177,11 @@ export function RiwayatStokTable({
       </div>
 
       {/* Tabel Mutasi */}
-      <div className='overflow-hidden rounded-md border bg-card'>
+      <div className='overflow-hidden rounded-xl border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
         <div className='overflow-x-auto'>
           <Table>
             <TableHeader>
-              <TableRow className='bg-muted/40'>
+              <TableRow className='bg-muted/90'>
                 <TableHead className='w-36 text-xs'>Waktu & Tanggal</TableHead>
                 <TableHead className='w-36 text-xs'>
                   No. Bukti / Faktur
@@ -347,7 +347,7 @@ export function RiwayatStokTable({
 
         {/* Pagination Footer */}
         {totalCount > 0 && (
-          <div className='flex items-center justify-between border-t bg-muted/20 p-3 text-xs'>
+          <div className='flex items-center justify-between border-t border-border/40 bg-muted/40 p-3 text-xs'>
             <span className='text-muted-foreground'>
               Menampilkan {filteredItems.length} dari {totalCount} riwayat
             </span>
@@ -358,7 +358,7 @@ export function RiwayatStokTable({
                 size='sm'
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage <= 0 || loading}
-                className='h-8 px-2 text-xs'
+                className='h-8 px-2 text-xs bg-background'
               >
                 <ChevronLeft className='mr-1 h-3.5 w-3.5' />
                 Sebelumnya
@@ -371,7 +371,7 @@ export function RiwayatStokTable({
                 size='sm'
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage + 1 >= totalPages || loading}
-                className='h-8 px-2 text-xs'
+                className='h-8 px-2 text-xs bg-background'
               >
                 Selanjutnya
                 <ChevronRight className='ml-1 h-3.5 w-3.5' />

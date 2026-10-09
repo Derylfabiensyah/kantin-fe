@@ -122,20 +122,20 @@ export function RiwayatOpnameTable({
     <div className="space-y-4">
       {/* Toolbar */}
       <Card className="border-0 bg-muted/60 dark:bg-muted/25 shadow-sm">
-        <CardContent className="p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex flex-1 items-center gap-2 w-full sm:w-auto">
-            <div className="relative flex-1 sm:max-w-xs">
+        <CardContent className="p-4 flex items-center justify-center">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full sm:w-auto">
+            <div className="relative w-full sm:w-72">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Cari menu, no. referensi, alasan..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 h-9 text-xs bg-background"
+                className="pl-8 h-9 text-xs bg-background w-full"
               />
             </div>
 
             <Select value={filterJenis} onValueChange={setFilterJenis}>
-              <SelectTrigger className="h-9 w-[190px] text-xs bg-background">
+              <SelectTrigger className="h-9 w-full sm:w-[200px] text-xs bg-background">
                 <Filter className="h-3.5 w-3.5 mr-1 text-muted-foreground" />
                 <SelectValue placeholder="Semua Tipe Opname" />
               </SelectTrigger>

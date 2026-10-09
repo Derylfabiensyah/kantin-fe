@@ -20,7 +20,6 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -251,10 +250,6 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
             <FileText className='h-4 w-4 text-primary' />
             Informasi Pembelian & Faktur
           </CardTitle>
-          <CardDescription>
-            Masukkan nomor bukti faktur dari supplier dan rincian transaksi
-            barang masuk
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
@@ -375,10 +370,6 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
               <Calculator className='h-4 w-4 text-primary' />
               Daftar Barang Masuk (Multi-Item)
             </CardTitle>
-            <CardDescription>
-              Pilih menu, tentukan jumlah restock, dan periksa simulasi HPP
-              rata-rata tertimbang
-            </CardDescription>
           </div>
           <Button
             type='button'

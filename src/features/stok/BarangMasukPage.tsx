@@ -143,10 +143,6 @@ export function BarangMasukPage() {
           <h1 className='text-2xl font-bold tracking-tight text-foreground'>
             Pencatatan Barang Masuk (Restock)
           </h1>
-          <p className='mt-1 text-xs text-muted-foreground'>
-            Catat pembelian stok dari pemasok/supplier, simulasi otomatis HPP
-            rata-rata tertimbang (PRD §7.4), dan koreksi entri pembalik.
-          </p>
         </div>
 
         {/* Ringkasan Status Header Cards */}

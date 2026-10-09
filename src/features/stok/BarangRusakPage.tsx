@@ -60,8 +60,9 @@ export function BarangRusakPage({
         </div>
 
         <Button
+          variant="destructive"
           onClick={() => setIsModalOpen(true)}
-          className="bg-destructive hover:bg-destructive/90 text-white font-semibold text-xs shadow-md shrink-0"
+          className="text-white font-semibold text-xs shadow-md shrink-0"
         >
           <PlusCircle className="h-4 w-4 mr-1.5" />
           Catat Barang Rusak Baru

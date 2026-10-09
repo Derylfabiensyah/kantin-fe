@@ -147,8 +147,9 @@ export function StokOpnamePage() {
           <div className="flex items-center gap-2">
             <Button
               size="sm"
+              variant="destructive"
               onClick={() => setIsQuickDamageModalOpen(true)}
-              className="h-8 gap-1.5 text-xs bg-destructive hover:bg-destructive/90 text-white font-semibold shadow-sm"
+              className="h-8 gap-1.5 text-xs text-white font-semibold shadow-sm"
             >
               <PlusCircle className="h-3.5 w-3.5" />
               Catat Barang Rusak

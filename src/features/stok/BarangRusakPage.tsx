@@ -52,9 +52,6 @@ export function BarangRusakPage({
               Pencatatan Barang Rusak & Basi Harian
             </h2>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Form pencatatan cepat kerugian bahan makanan/minuman yang rusak atau kedaluwarsa di luar jadwal audit stok opname.
-          </p>
         </div>
 
         <Button

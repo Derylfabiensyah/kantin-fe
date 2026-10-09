@@ -44,12 +44,10 @@ export function BarangRusakPage({
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-5 rounded-xl border-0 bg-muted/60 dark:bg-muted/25 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-lg bg-destructive/10 text-destructive">
-              <Trash2 className="h-5 w-5" />
-            </div>
+            <Trash2 className="h-5 w-5 text-destructive" />
             <h2 className="text-xl font-bold tracking-tight text-foreground">
               Pencatatan Barang Rusak & Basi Harian
             </h2>

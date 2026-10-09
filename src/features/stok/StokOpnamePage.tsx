@@ -127,7 +127,7 @@ export function StokOpnamePage() {
     <>
       {/* Top Navigation Bar */}
       <Header fixed>
-        <Search />
+        <Search showKbd={false} />
         <div className="ml-auto flex items-center space-x-4">
           <ThemeSwitch />
           <ProfileDropdown />

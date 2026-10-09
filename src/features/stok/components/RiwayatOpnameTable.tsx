@@ -128,7 +128,7 @@ export function RiwayatOpnameTable({
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <Card className="border-border/60">
+      <Card className="border-0 bg-muted/60 dark:bg-muted/25 shadow-sm">
         <CardContent className="p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex flex-1 items-center gap-2 w-full sm:w-auto">
             <div className="relative flex-1 sm:max-w-xs">
@@ -137,12 +137,12 @@ export function RiwayatOpnameTable({
                 placeholder="Cari menu, no. referensi, alasan..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 h-9 text-xs"
+                className="pl-8 h-9 text-xs bg-background"
               />
             </div>
 
             <Select value={filterJenis} onValueChange={setFilterJenis}>
-              <SelectTrigger className="h-9 w-[190px] text-xs">
+              <SelectTrigger className="h-9 w-[190px] text-xs bg-background">
                 <Filter className="h-3.5 w-3.5 mr-1 text-muted-foreground" />
                 <SelectValue placeholder="Semua Tipe Opname" />
               </SelectTrigger>
@@ -160,7 +160,7 @@ export function RiwayatOpnameTable({
             size="sm"
             onClick={onRefresh}
             disabled={isLoading}
-            className="text-xs h-9"
+            className="text-xs h-9 bg-background"
           >
             <RefreshCw
               className={`h-3.5 w-3.5 mr-1 ${isLoading ? 'animate-spin' : ''}`}
@@ -171,11 +171,11 @@ export function RiwayatOpnameTable({
       </Card>
 
       {/* Table */}
-      <Card className="border-border/60 overflow-hidden shadow-sm">
+      <Card className="border-0 bg-muted/60 dark:bg-muted/25 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-sm">
             <thead>
-              <tr className="border-b border-border bg-muted/40 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <tr className="border-b border-border/40 bg-muted/90 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 <th className="py-3 px-4">Waktu & Bukti</th>
                 <th className="py-3 px-3">Nama Menu</th>
                 <th className="py-3 px-3">Tipe Mutasi</th>

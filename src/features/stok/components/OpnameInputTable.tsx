@@ -347,7 +347,7 @@ export function OpnameInputTable({
     <div className="space-y-4">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-card/50 backdrop-blur border-border/60">
+        <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs font-medium">
               Progress Audit Fisik
@@ -366,7 +366,7 @@ export function OpnameInputTable({
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50 backdrop-blur border-border/60">
+        <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs font-medium">
               Total Item Berselisih
@@ -403,7 +403,7 @@ export function OpnameInputTable({
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50 backdrop-blur border-border/60">
+        <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs font-medium">
               Estimasi Nilai Kerugian
@@ -422,7 +422,7 @@ export function OpnameInputTable({
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50 backdrop-blur border-border/60">
+        <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs font-medium">
               Estimasi Nilai Kelebihan
@@ -443,7 +443,7 @@ export function OpnameInputTable({
       </div>
 
       {/* Toolbar & Filters */}
-      <Card className="border-border/60">
+      <Card className="border-0 bg-muted/60 dark:bg-muted/25 shadow-sm">
         <CardContent className="p-4 space-y-3">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <div className="flex flex-1 items-center gap-2 w-full md:w-auto">
@@ -453,7 +453,7 @@ export function OpnameInputTable({
                   placeholder="Cari nama menu..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-8 h-9 text-sm"
+                  className="pl-8 h-9 text-sm bg-background"
                 />
               </div>
 
@@ -461,7 +461,7 @@ export function OpnameInputTable({
                 value={selectedKategori}
                 onValueChange={setSelectedKategori}
               >
-                <SelectTrigger className="h-9 w-[160px] text-xs">
+                <SelectTrigger className="h-9 w-[160px] text-xs bg-background">
                   <SelectValue placeholder="Semua Kategori" />
                 </SelectTrigger>
                 <SelectContent>
@@ -482,7 +482,7 @@ export function OpnameInputTable({
                   )
                 }
               >
-                <SelectTrigger className="h-9 w-[150px] text-xs">
+                <SelectTrigger className="h-9 w-[150px] text-xs bg-background">
                   <Filter className="h-3.5 w-3.5 mr-1" />
                   <SelectValue placeholder="Status Hitung" />
                 </SelectTrigger>
@@ -500,7 +500,7 @@ export function OpnameInputTable({
                 variant="outline"
                 size="sm"
                 onClick={handleIsiSemuaSesuaiSistem}
-                className="text-xs h-9"
+                className="text-xs h-9 bg-background"
               >
                 <CheckCircle2 className="h-3.5 w-3.5 mr-1 text-emerald-500" />
                 Isi Fisik = Sistem
@@ -510,7 +510,7 @@ export function OpnameInputTable({
                 variant="outline"
                 size="sm"
                 onClick={handleResetSemua}
-                className="text-xs h-9 text-muted-foreground hover:text-foreground"
+                className="text-xs h-9 text-muted-foreground hover:text-foreground bg-background"
               >
                 <RotateCcw className="h-3.5 w-3.5 mr-1" />
                 Reset
@@ -572,11 +572,11 @@ export function OpnameInputTable({
       </Card>
 
       {/* Table */}
-      <Card className="border-border/60 overflow-hidden shadow-sm">
+      <Card className="border-0 bg-muted/60 dark:bg-muted/25 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-sm">
             <thead>
-              <tr className="border-b border-border bg-muted/40 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <tr className="border-b border-border/40 bg-muted/90 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 <th className="py-3 px-4">Nama Menu & Kategori</th>
                 <th className="py-3 px-3 text-center w-24">Stok Sistem</th>
                 <th className="py-3 px-3 text-center w-32">Stok Fisik</th>
@@ -649,7 +649,7 @@ export function OpnameInputTable({
                           onChange={(e) =>
                             handleQtyFisikChange(row.menuId, e.target.value)
                           }
-                          className={`h-9 w-24 text-center font-semibold mx-auto ${
+                          className={`h-9 w-24 text-center font-semibold mx-auto bg-background ${
                             isReasonMissing
                               ? 'border-amber-500 focus-visible:ring-amber-500'
                               : ''
@@ -717,7 +717,7 @@ export function OpnameInputTable({
                             }
                           >
                             <SelectTrigger
-                              className={`h-9 text-xs ${
+                              className={`h-9 text-xs bg-background ${
                                 isReasonMissing
                                   ? 'border-amber-500 bg-amber-500/10 text-amber-500 font-medium'
                                   : ''
@@ -753,7 +753,7 @@ export function OpnameInputTable({
                             onChange={(e) =>
                               handleKeteranganChange(row.menuId, e.target.value)
                             }
-                            className="h-9 text-xs"
+                            className="h-9 text-xs bg-background"
                           />
                         ) : (
                           <span className="text-xs text-muted-foreground italic">

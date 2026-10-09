@@ -47,7 +47,7 @@ export function BarangRusakPage({
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-5 rounded-xl border border-destructive/20 bg-destructive/5 backdrop-blur">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-5 rounded-xl border-0 bg-muted/60 dark:bg-muted/25 shadow-sm">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-lg bg-destructive/10 text-destructive">
@@ -73,7 +73,7 @@ export function BarangRusakPage({
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="border-border/60">
+        <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs font-medium">
               Frekuensi Kejadian Rusak
@@ -90,7 +90,7 @@ export function BarangRusakPage({
           </CardContent>
         </Card>
 
-        <Card className="border-border/60">
+        <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs font-medium">
               Total Fisik Dibuang / Rusak
@@ -107,7 +107,7 @@ export function BarangRusakPage({
           </CardContent>
         </Card>
 
-        <Card className="border-border/60">
+        <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs font-medium">
               Total Beban Kerugian Finansial

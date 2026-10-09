@@ -139,9 +139,6 @@ export function StokOpnamePage() {
             <h1 className="text-2xl font-bold tracking-tight text-foreground">
               Stok Opname Fisik & Barang Rusak
             </h1>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Audit fisik berkala (PRD §7.3), penyesuaian selisih stok dengan alasan wajib, dan pencatatan makanan basi/rusak harian.
-            </p>
           </div>
 
           <div className="flex items-center gap-2">

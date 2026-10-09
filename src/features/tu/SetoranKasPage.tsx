@@ -1,17 +1,14 @@
 import { useState, useEffect, useMemo } from 'react'
 import { MOCK_SETORAN_KAS } from '@/mocks/mock-data'
 import {
-  Receipt,
   RefreshCw,
-  Search,
+  Search as SearchIcon,
   CheckCircle2,
   AlertTriangle,
   Calendar,
-  Wallet,
   Printer,
   FileSpreadsheet,
   Eye,
-  UserCheck,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
@@ -51,6 +48,7 @@ import {
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { KonfirmasiSetoranModal } from './KonfirmasiSetoranModal'
 import type { SetoranKasItem, TransaksiTopupDetail } from './types'
@@ -260,237 +258,221 @@ export function SetoranKasPage() {
   return (
     <>
       <Header fixed>
-        <div className='flex items-center gap-2 px-4'>
-          <Receipt className='h-5 w-5 text-primary' />
-          <h1 className='text-base font-semibold'>Setoran Kas TU Harian</h1>
-        </div>
+        <Search showKbd={false} />
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
         </div>
       </Header>
 
-      <Main>
-        <div className='space-y-6 pb-12'>
-          {/* Header Description & Refresh */}
-          <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
-            <div>
-              <h2 className='text-2xl font-bold tracking-tight'>
-                Rekapitulasi & Setoran Kas TU
-              </h2>
-              <p className='text-sm text-muted-foreground'>
-                Pencatatan penerimaan uang tunai top-up harian per petugas TU,
-                verifikasi uang fisik oleh Bendahara, dan pencatatan selisih kas
-                fisik (PRD §9.2 & §9.5).
-              </p>
-            </div>
-            <div className='flex items-center gap-2'>
-              <Button
-                variant='outline'
-                size='sm'
-                onClick={handleRefresh}
-                disabled={isLoading}
-                className='gap-1.5'
-              >
-                <RefreshCw
-                  className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
-                />
-                Muat Ulang
-              </Button>
-              <Button
-                variant='outline'
-                size='sm'
-                onClick={handleExportCSV}
-                className='gap-1.5'
-              >
-                <FileSpreadsheet className='h-4 w-4 text-emerald-600' />
-                Ekspor CSV
-              </Button>
-            </div>
+      <Main className='space-y-6'>
+        {/* Header Description & Refresh */}
+        <div className='flex flex-col gap-4 border-b border-border pb-4 sm:flex-row sm:items-center sm:justify-between'>
+          <div>
+            <h1 className='text-2xl font-bold tracking-tight text-foreground'>
+              Rekapitulasi & Setoran Kas TU
+            </h1>
+            <p className='mt-1 text-xs text-muted-foreground sm:text-sm'>
+              Pencatatan penerimaan uang tunai top-up harian per petugas TU,
+              verifikasi uang fisik oleh Bendahara, dan pencatatan selisih kas
+              fisik (PRD §9.2 & §9.5).
+            </p>
           </div>
-
-          {/* Top KPI Cards */}
-          <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-            <Card className='border-l-4 border-l-primary shadow-xs'>
-              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                <CardTitle className='text-xs font-medium text-muted-foreground uppercase'>
-                  Total Sistem (Penerimaan TU)
-                </CardTitle>
-                <Receipt className='h-4 w-4 text-primary' />
-              </CardHeader>
-              <CardContent>
-                <div className='font-mono text-2xl font-bold text-primary'>
-                  Rp {totalPenerimaanSistem.toLocaleString('id-ID')}
-                </div>
-                <p className='mt-1 text-xs text-muted-foreground'>
-                  Dari{' '}
-                  {filteredList.reduce((acc, c) => acc + c.total_transaksi, 0)}{' '}
-                  transaksi top-up tunai
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className='border-l-4 border-l-emerald-500 shadow-xs'>
-              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                <CardTitle className='text-xs font-medium text-muted-foreground uppercase'>
-                  Total Uang Fisik Disetor
-                </CardTitle>
-                <Wallet className='h-4 w-4 text-emerald-600' />
-              </CardHeader>
-              <CardContent>
-                <div className='font-mono text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
-                  Rp {totalUangFisikDisetor.toLocaleString('id-ID')}
-                </div>
-                <p className='mt-1 text-xs text-muted-foreground'>
-                  Fisik diterima & dihitung Bendahara
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card
-              className={`border-l-4 shadow-xs ${totalSelisihFisik !== 0 ? 'border-l-amber-500 bg-amber-50/20' : 'border-l-slate-300'}`}
+          <div className='flex items-center gap-2'>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={handleRefresh}
+              disabled={isLoading}
+              className='gap-1.5 text-xs'
             >
-              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                <CardTitle className='text-xs font-medium text-muted-foreground uppercase'>
-                  Akumulasi Selisih Kas Fisik
-                </CardTitle>
-                {totalSelisihFisik === 0 ? (
-                  <CheckCircle2 className='h-4 w-4 text-emerald-500' />
-                ) : (
-                  <AlertTriangle className='h-4 w-4 text-amber-500' />
-                )}
-              </CardHeader>
-              <CardContent>
-                <div
-                  className={`font-mono text-2xl font-bold ${totalSelisihFisik === 0 ? 'text-foreground' : totalSelisihFisik < 0 ? 'text-destructive' : 'text-blue-600'}`}
-                >
-                  {totalSelisihFisik > 0 ? '+' : ''}Rp{' '}
-                  {totalSelisihFisik.toLocaleString('id-ID')}
-                </div>
-                <p className='mt-1 text-xs text-muted-foreground'>
-                  {totalSelisihFisik === 0
-                    ? 'Kas fisik seimbang / pas'
-                    : totalSelisihFisik < 0
-                      ? 'Defisit kas fisik tercatat di audit'
-                      : 'Surplus kas fisik tercatat di audit'}
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className='border-l-4 border-l-sky-500 shadow-xs'>
-              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                <CardTitle className='text-xs font-medium text-muted-foreground uppercase'>
-                  Status Konfirmasi Setoran
-                </CardTitle>
-                <UserCheck className='h-4 w-4 text-sky-500' />
-              </CardHeader>
-              <CardContent>
-                <div className='text-2xl font-bold'>
-                  {totalPetugasSelesai} / {filteredList.length} Petugas
-                </div>
-                <p className='mt-1 text-xs text-muted-foreground'>
-                  {totalPetugasSelesai === filteredList.length &&
-                  filteredList.length > 0
-                    ? 'Semua setoran kas hari ini telah terverifikasi'
-                    : `${filteredList.length - totalPetugasSelesai} setoran menunggu konfirmasi`}
-                </p>
-              </CardContent>
-            </Card>
+              <RefreshCw
+                className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`}
+              />
+              Muat Ulang
+            </Button>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={handleExportCSV}
+              className='gap-1.5 text-xs'
+            >
+              <FileSpreadsheet className='h-3.5 w-3.5 text-emerald-600' />
+              Ekspor CSV
+            </Button>
           </div>
+        </div>
 
-          {/* Filter Bar */}
-          <Card className='shadow-xs'>
+        {/* Top KPI Cards */}
+        <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
             <CardContent className='p-4'>
-              <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-                <div className='flex flex-1 flex-wrap items-center gap-3'>
-                  {/* Date Picker */}
-                  <div className='flex min-w-[200px] items-center gap-2'>
-                    <Calendar className='h-4 w-4 text-muted-foreground' />
-                    <Input
-                      type='date'
-                      value={selectedDate}
-                      onChange={(e) => setSelectedDate(e.target.value)}
-                      className='h-9 text-xs font-medium'
-                    />
-                  </div>
-
-                  {/* Status Filter */}
-                  <div className='w-[200px]'>
-                    <Select
-                      value={statusFilter}
-                      onValueChange={setStatusFilter}
-                    >
-                      <SelectTrigger className='h-9 text-xs'>
-                        <SelectValue placeholder='Filter Status Setoran' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value='ALL' className='text-xs'>
-                          Semua Status
-                        </SelectItem>
-                        <SelectItem
-                          value='MENUNGGU_KONFIRMASI'
-                          className='text-xs'
-                        >
-                          Menunggu Konfirmasi
-                        </SelectItem>
-                        <SelectItem value='TERKONFIRMASI' className='text-xs'>
-                          Terkonfirmasi Bendahara
-                        </SelectItem>
-                        <SelectItem value='SELISIH' className='text-xs'>
-                          Memiliki Selisih Kas
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Search Query */}
-                  <div className='relative min-w-[220px] flex-1'>
-                    <Search className='absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground' />
-                    <Input
-                      placeholder='Cari nama petugas TU atau No. Setoran...'
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className='h-9 pl-8 text-xs'
-                    />
-                  </div>
-                </div>
-
-                <div className='flex items-center gap-2'>
-                  <Button
-                    variant='ghost'
-                    size='sm'
-                    onClick={() => {
-                      setSelectedDate(todayStr)
-                      setStatusFilter('ALL')
-                      setSearchQuery('')
-                    }}
-                    className='h-9 text-xs text-muted-foreground'
-                  >
-                    Reset Filter
-                  </Button>
-                </div>
-              </div>
+              <p className='text-xs font-medium text-muted-foreground'>
+                Total Sistem (Penerimaan TU)
+              </p>
+              <h3 className='mt-0.5 text-xl font-bold text-foreground'>
+                Rp {totalPenerimaanSistem.toLocaleString('id-ID')}
+              </h3>
+              <p className='mt-1 text-[11px] text-muted-foreground'>
+                Dari{' '}
+                {filteredList.reduce((acc, c) => acc + c.total_transaksi, 0)}{' '}
+                transaksi top-up tunai
+              </p>
             </CardContent>
           </Card>
 
-          {/* Rekapitulasi Table */}
-          <Card className='overflow-hidden shadow-xs'>
-            <CardHeader className='border-b bg-muted/20 px-6 py-4'>
-              <div className='flex items-center justify-between'>
-                <div>
-                  <CardTitle className='text-base font-semibold'>
-                    Daftar Rekapitulasi Kas TU Per Petugas ({selectedDate})
-                  </CardTitle>
-                  <CardDescription className='mt-0.5 text-xs'>
-                    Rincian setoran uang tunai dari seluruh titik loket TU
-                    kepada Bendahara Sekolah
-                  </CardDescription>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>
+                Total Uang Fisik Disetor
+              </p>
+              <h3 className='mt-0.5 text-xl font-bold text-emerald-600 dark:text-emerald-400'>
+                Rp {totalUangFisikDisetor.toLocaleString('id-ID')}
+              </h3>
+              <p className='mt-1 text-[11px] text-muted-foreground'>
+                Fisik diterima & dihitung Bendahara
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>
+                Akumulasi Selisih Kas Fisik
+              </p>
+              <h3
+                className={`mt-0.5 text-xl font-bold ${
+                  totalSelisihFisik === 0
+                    ? 'text-foreground'
+                    : totalSelisihFisik < 0
+                      ? 'text-destructive'
+                      : 'text-blue-600 dark:text-blue-400'
+                }`}
+              >
+                {totalSelisihFisik > 0 ? '+' : ''}Rp{' '}
+                {totalSelisihFisik.toLocaleString('id-ID')}
+              </h3>
+              <p className='mt-1 text-[11px] text-muted-foreground'>
+                {totalSelisihFisik === 0
+                  ? 'Kas fisik seimbang / pas'
+                  : totalSelisihFisik < 0
+                    ? 'Defisit kas fisik tercatat di audit'
+                    : 'Surplus kas fisik tercatat di audit'}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>
+                Status Konfirmasi Setoran
+              </p>
+              <h3 className='mt-0.5 text-xl font-bold text-foreground'>
+                {totalPetugasSelesai} / {filteredList.length} Petugas
+              </h3>
+              <p className='mt-1 text-[11px] text-muted-foreground'>
+                {totalPetugasSelesai === filteredList.length &&
+                filteredList.length > 0
+                  ? 'Semua setoran hari ini telah terverifikasi'
+                  : `${filteredList.length - totalPetugasSelesai} setoran menunggu konfirmasi`}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Filter Bar */}
+        <Card className='border border-border bg-card shadow-xs'>
+          <CardContent className='p-4'>
+            <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
+              <div className='flex flex-1 flex-wrap items-center gap-3'>
+                {/* Date Picker */}
+                <div className='flex min-w-[200px] items-center gap-2'>
+                  <Calendar className='h-4 w-4 text-muted-foreground' />
+                  <Input
+                    type='date'
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className='h-9 text-xs font-medium'
+                  />
                 </div>
-                <Badge variant='outline' className='font-mono text-xs'>
-                  {filteredList.length} Petugas TU Terdaftar
-                </Badge>
+
+                {/* Status Filter */}
+                <div className='w-[200px]'>
+                  <Select
+                    value={statusFilter}
+                    onValueChange={setStatusFilter}
+                  >
+                    <SelectTrigger className='h-9 text-xs'>
+                      <SelectValue placeholder='Filter Status Setoran' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value='ALL' className='text-xs'>
+                        Semua Status
+                      </SelectItem>
+                      <SelectItem
+                        value='MENUNGGU_KONFIRMASI'
+                        className='text-xs'
+                      >
+                        Menunggu Konfirmasi
+                      </SelectItem>
+                      <SelectItem value='TERKONFIRMASI' className='text-xs'>
+                        Terkonfirmasi Bendahara
+                      </SelectItem>
+                      <SelectItem value='SELISIH' className='text-xs'>
+                        Memiliki Selisih Kas
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Search Query */}
+                <div className='relative min-w-[220px] flex-1'>
+                  <SearchIcon className='absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground' />
+                  <Input
+                    placeholder='Cari nama petugas TU atau No. Setoran...'
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className='h-9 pl-8 text-xs'
+                  />
+                </div>
               </div>
-            </CardHeader>
+
+              <div className='flex items-center gap-2'>
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  onClick={() => {
+                    setSelectedDate(todayStr)
+                    setStatusFilter('ALL')
+                    setSearchQuery('')
+                  }}
+                  className='h-9 text-xs text-muted-foreground hover:text-foreground'
+                >
+                  Reset Filter
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Rekapitulasi Table */}
+        <Card className='overflow-hidden border border-border bg-card shadow-xs'>
+          <CardHeader className='border-b bg-muted/20 px-6 py-4'>
+            <div className='flex items-center justify-between'>
+              <div>
+                <CardTitle className='text-base font-semibold'>
+                  Daftar Rekapitulasi Kas TU Per Petugas ({selectedDate})
+                </CardTitle>
+                <CardDescription className='mt-0.5 text-xs'>
+                  Rincian setoran uang tunai dari seluruh titik loket TU
+                  kepada Bendahara Sekolah
+                </CardDescription>
+              </div>
+              <Badge className='border-0 bg-muted/80 font-mono text-xs text-muted-foreground'>
+                {filteredList.length} Petugas TU Terdaftar
+              </Badge>
+            </div>
+          </CardHeader>
             <CardContent className='p-0'>
               <div className='overflow-x-auto'>
                 <Table>
@@ -532,13 +514,10 @@ export function SetoranKasPage() {
                           colSpan={9}
                           className='h-32 text-center text-muted-foreground'
                         >
-                          <div className='flex flex-col items-center justify-center space-y-2'>
-                            <Receipt className='h-8 w-8 text-muted-foreground/40' />
-                            <p className='text-sm'>
-                              Tidak ada data setoran kas TU untuk tanggal dan
-                              filter ini.
-                            </p>
-                          </div>
+                          <p className='text-sm'>
+                            Tidak ada data setoran kas TU untuk tanggal dan
+                            filter ini.
+                          </p>
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -601,23 +580,20 @@ export function SetoranKasPage() {
                               </span>
                             ) : item.selisih === 0 ? (
                               <Badge
-                                variant='outline'
-                                className='border-emerald-300 bg-emerald-50 text-[11px] text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
+                                className='border-0 bg-emerald-500/15 text-[11px] font-medium text-emerald-700 dark:text-emerald-400'
                               >
                                 Pas (Rp 0)
                               </Badge>
                             ) : item.selisih < 0 ? (
                               <Badge
-                                variant='outline'
-                                className='border-red-300 bg-red-50 text-[11px] text-red-700 dark:bg-red-950/60 dark:text-red-400'
+                                className='border-0 bg-destructive/15 text-[11px] font-medium text-destructive'
                               >
                                 Kurang -Rp{' '}
                                 {Math.abs(item.selisih).toLocaleString('id-ID')}
                               </Badge>
                             ) : (
                               <Badge
-                                variant='outline'
-                                className='border-blue-300 bg-blue-50 text-[11px] text-blue-700 dark:bg-blue-950/60 dark:text-blue-400'
+                                className='border-0 bg-blue-500/15 text-[11px] font-medium text-blue-700 dark:text-blue-400'
                               >
                                 Lebih +Rp {item.selisih.toLocaleString('id-ID')}
                               </Badge>
@@ -627,16 +603,14 @@ export function SetoranKasPage() {
                           <TableCell className='text-center'>
                             {item.status === 'TERKONFIRMASI' ? (
                               <Badge
-                                variant='outline'
-                                className='gap-1 border-emerald-200 bg-emerald-100 text-[11px] font-medium text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300'
+                                className='gap-1 border-0 bg-emerald-500/15 text-[11px] font-medium text-emerald-700 dark:text-emerald-400'
                               >
                                 <CheckCircle2 className='h-3 w-3' />
                                 Terkonfirmasi
                               </Badge>
                             ) : (
                               <Badge
-                                variant='outline'
-                                className='gap-1 border-amber-200 bg-amber-100 text-[11px] font-medium text-amber-800 dark:bg-amber-950/80 dark:text-amber-300'
+                                className='gap-1 border-0 bg-amber-500/15 text-[11px] font-medium text-amber-700 dark:text-amber-400'
                               >
                                 <AlertTriangle className='h-3 w-3' />
                                 Menunggu Setor
@@ -679,13 +653,12 @@ export function SetoranKasPage() {
                               {isBendaharaOrAdmin &&
                                 item.status === 'MENUNGGU_KONFIRMASI' && (
                                   <Button
-                                    variant='default'
                                     size='sm'
                                     onClick={() => {
                                       setSelectedSetoranForConfirm(item)
                                       setIsConfirmModalOpen(true)
                                     }}
-                                    className='h-7 gap-1 bg-emerald-600 text-xs text-white hover:bg-emerald-700'
+                                    className='h-7 gap-1 bg-emerald-600 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700'
                                   >
                                     <CheckCircle2 className='h-3.5 w-3.5' />
                                     Konfirmasi
@@ -702,7 +675,7 @@ export function SetoranKasPage() {
                                       setSelectedSetoranForConfirm(item)
                                       setIsConfirmModalOpen(true)
                                     }}
-                                    className='h-7 text-xs text-muted-foreground hover:text-foreground'
+                                    className='h-7 border-0 bg-muted/60 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground'
                                     title='Koreksi / Update Konfirmasi Setoran'
                                   >
                                     Edit Kas
@@ -717,7 +690,7 @@ export function SetoranKasPage() {
                                   setSelectedSetoranForDetail(item)
                                   setIsDetailModalOpen(true)
                                 }}
-                                className='h-7 gap-1 text-xs'
+                                className='h-7 gap-1 border-border text-xs'
                                 title='Lihat Rincian Transaksi Top-up Petugas'
                               >
                                 <Eye className='h-3.5 w-3.5' />
@@ -732,7 +705,7 @@ export function SetoranKasPage() {
                                   setSelectedSetoranForPrint(item)
                                   setIsPrintModalOpen(true)
                                 }}
-                                className='h-7 p-1.5 text-xs'
+                                className='h-7 p-1.5 text-xs text-muted-foreground hover:text-foreground'
                                 title='Cetak Berita Acara Setoran Kas'
                               >
                                 <Printer className='h-3.5 w-3.5' />
@@ -747,7 +720,6 @@ export function SetoranKasPage() {
               </div>
             </CardContent>
           </Card>
-        </div>
       </Main>
 
       {/* Modal Konfirmasi Setoran Kas Bendahara */}
@@ -762,13 +734,10 @@ export function SetoranKasPage() {
       <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
         <DialogContent className='max-h-[85vh] overflow-y-auto sm:max-w-[700px]'>
           <DialogHeader>
-            <div className='flex items-center gap-2 text-primary'>
-              <Receipt className='h-5 w-5' />
-              <DialogTitle className='text-base font-semibold'>
-                Rincian Transaksi Top-up Petugas:{' '}
-                {selectedSetoranForDetail?.petugas_nama}
-              </DialogTitle>
-            </div>
+            <DialogTitle className='text-base font-semibold'>
+              Rincian Transaksi Top-up Petugas:{' '}
+              {selectedSetoranForDetail?.petugas_nama}
+            </DialogTitle>
             <DialogDescription className='text-xs'>
               Daftar seluruh top-up tunai yang dilayani pada tanggal{' '}
               {selectedSetoranForDetail?.tanggal} (Total: Rp{' '}
@@ -839,8 +808,7 @@ export function SetoranKasPage() {
       <Dialog open={isPrintModalOpen} onOpenChange={setIsPrintModalOpen}>
         <DialogContent className='sm:max-w-[550px] print:border-none print:p-0'>
           <DialogHeader>
-            <DialogTitle className='flex items-center gap-2 text-base font-semibold'>
-              <Printer className='h-4 w-4 text-primary' />
+            <DialogTitle className='text-base font-semibold'>
               Berita Acara Serah Terima Kas TU
             </DialogTitle>
             <DialogDescription className='text-xs'>

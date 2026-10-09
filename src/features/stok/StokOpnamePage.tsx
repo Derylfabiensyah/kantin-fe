@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
-  ClipboardCheck,
   Trash2,
   History,
-  RefreshCw,
   PlusCircle,
   FileSpreadsheet,
 } from 'lucide-react'
@@ -127,7 +125,7 @@ export function StokOpnamePage() {
     <>
       {/* Top Navigation Bar */}
       <Header fixed>
-        <Search />
+        <Search showKbd={false} />
         <div className="ml-auto flex items-center space-x-4">
           <ThemeSwitch />
           <ProfileDropdown />
@@ -138,31 +136,17 @@ export function StokOpnamePage() {
         {/* Page Title & Quick Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="flex items-center gap-2.5 text-2xl font-bold tracking-tight text-foreground">
-              <ClipboardCheck className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
               Stok Opname Fisik & Barang Rusak
             </h1>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Audit fisik berkala (PRD §7.3), penyesuaian selisih stok dengan alasan wajib, dan pencatatan makanan basi/rusak harian.
-            </p>
           </div>
 
           <div className="flex items-center gap-2">
             <Button
-              variant="outline"
               size="sm"
-              onClick={loadData}
-              disabled={isLoading}
-              className="h-8 gap-1.5 text-xs"
-            >
-              <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-              Sinkronkan Data
-            </Button>
-
-            <Button
-              size="sm"
+              variant="destructive"
               onClick={() => setIsQuickDamageModalOpen(true)}
-              className="h-8 gap-1.5 text-xs bg-destructive hover:bg-destructive/90 text-destructive-foreground font-semibold shadow-sm"
+              className="h-8 gap-1.5 text-xs text-white font-semibold shadow-sm"
             >
               <PlusCircle className="h-3.5 w-3.5" />
               Catat Barang Rusak

@@ -2,10 +2,7 @@ import { useState, useMemo } from 'react'
 import {
   Trash2,
   PlusCircle,
-  AlertOctagon,
-  TrendingDown,
   Calendar,
-  Layers,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -47,24 +44,20 @@ export function BarangRusakPage({
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-5 rounded-xl border border-destructive/20 bg-destructive/5 backdrop-blur">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-lg bg-destructive/10 text-destructive">
-              <Trash2 className="h-5 w-5" />
-            </div>
+            <Trash2 className="h-5 w-5 text-destructive" />
             <h2 className="text-xl font-bold tracking-tight text-foreground">
               Pencatatan Barang Rusak & Basi Harian
             </h2>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Form pencatatan cepat kerugian bahan makanan/minuman yang rusak atau kedaluwarsa di luar jadwal audit stok opname.
-          </p>
         </div>
 
         <Button
+          variant="destructive"
           onClick={() => setIsModalOpen(true)}
-          className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-semibold text-xs shadow-md shrink-0"
+          className="text-white font-semibold text-xs shadow-md shrink-0"
         >
           <PlusCircle className="h-4 w-4 mr-1.5" />
           Catat Barang Rusak Baru
@@ -73,14 +66,13 @@ export function BarangRusakPage({
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="border-border/60">
+        <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs font-medium">
               Frekuensi Kejadian Rusak
             </CardDescription>
-            <CardTitle className="text-2xl font-bold flex items-center justify-between">
-              <span>{stats.totalKejadian} kali</span>
-              <AlertOctagon className="h-5 w-5 text-destructive" />
+            <CardTitle className="text-2xl font-bold">
+              {stats.totalKejadian} kali
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -90,14 +82,13 @@ export function BarangRusakPage({
           </CardContent>
         </Card>
 
-        <Card className="border-border/60">
+        <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs font-medium">
               Total Fisik Dibuang / Rusak
             </CardDescription>
-            <CardTitle className="text-2xl font-bold flex items-center justify-between">
-              <span>{stats.totalUnit} unit</span>
-              <Layers className="h-5 w-5 text-amber-500" />
+            <CardTitle className="text-2xl font-bold">
+              {stats.totalUnit} unit
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -107,16 +98,13 @@ export function BarangRusakPage({
           </CardContent>
         </Card>
 
-        <Card className="border-border/60">
+        <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs font-medium">
               Total Beban Kerugian Finansial
             </CardDescription>
-            <CardTitle className="text-2xl font-bold flex items-center justify-between">
-              <span className="text-destructive font-mono">
-                Rp {stats.totalKerugian.toLocaleString('id-ID')}
-              </span>
-              <TrendingDown className="h-5 w-5 text-destructive" />
+            <CardTitle className="text-2xl font-bold text-destructive font-mono">
+              Rp {stats.totalKerugian.toLocaleString('id-ID')}
             </CardTitle>
           </CardHeader>
           <CardContent>

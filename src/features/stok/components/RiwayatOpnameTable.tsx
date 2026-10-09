@@ -2,12 +2,10 @@ import { useState, useMemo } from 'react'
 import {
   Search,
   Filter,
-  RefreshCw,
   AlertOctagon,
   TrendingDown,
   TrendingUp,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -23,13 +21,11 @@ import type { RiwayatStokItem, JenisMutasiStok } from '../types'
 interface RiwayatOpnameTableProps {
   riwayatList: RiwayatStokItem[]
   isLoading?: boolean
-  onRefresh: () => void
+  onRefresh?: () => void
 }
 
 export function RiwayatOpnameTable({
   riwayatList,
-  isLoading = false,
-  onRefresh,
 }: RiwayatOpnameTableProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterJenis, setFilterJenis] = useState<string>('ALL_OPNAME')
@@ -74,37 +70,34 @@ export function RiwayatOpnameTable({
       case 'BARANG_RUSAK':
         return (
           <Badge
-            variant="destructive"
-            className="text-[11px] font-semibold gap-1 py-0.5"
+            className="gap-1 border-0 bg-rose-500/15 text-[11px] font-medium text-rose-700 dark:text-rose-400 py-0.5"
           >
-            <AlertOctagon className="h-3 w-3" />
+            <AlertOctagon className="h-3 w-3 text-rose-500" />
             Barang Rusak / Basi
           </Badge>
         )
       case 'OPNAME_KELUAR':
         return (
           <Badge
-            variant="outline"
-            className="text-[11px] font-semibold text-amber-500 border-amber-500/30 bg-amber-500/10 gap-1 py-0.5"
+            className="gap-1 border-0 bg-purple-500/15 text-[11px] font-medium text-purple-700 dark:text-purple-400 py-0.5"
           >
-            <TrendingDown className="h-3 w-3 text-amber-500" />
+            <TrendingDown className="h-3 w-3 text-purple-500" />
             Opname Keluar (Kurang)
           </Badge>
         )
       case 'OPNAME_MASUK':
         return (
           <Badge
-            variant="outline"
-            className="text-[11px] font-semibold text-emerald-500 border-emerald-500/30 bg-emerald-500/10 gap-1 py-0.5"
+            className="gap-1 border-0 bg-emerald-500/15 text-[11px] font-medium text-emerald-700 dark:text-emerald-400 py-0.5"
           >
-            <TrendingUp className="h-3 w-3 text-emerald-500" />
+            <TrendingUp className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
             Opname Masuk (Lebih)
           </Badge>
         )
       default:
         return (
-          <Badge variant="secondary" className="text-[11px]">
-            {jenis}
+          <Badge className="border-0 bg-muted/80 text-[11px] font-medium text-muted-foreground py-0.5">
+            {String(jenis).replace(/_/g, ' ')}
           </Badge>
         )
     }
@@ -128,21 +121,21 @@ export function RiwayatOpnameTable({
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <Card className="border-border/60">
-        <CardContent className="p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex flex-1 items-center gap-2 w-full sm:w-auto">
-            <div className="relative flex-1 sm:max-w-xs">
+      <Card className="border-0 bg-muted/60 dark:bg-muted/25 shadow-sm">
+        <CardContent className="p-4 flex items-center justify-center">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full sm:w-auto">
+            <div className="relative w-full sm:w-72">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Cari menu, no. referensi, alasan..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 h-9 text-xs"
+                className="pl-8 h-9 text-xs bg-background w-full"
               />
             </div>
 
             <Select value={filterJenis} onValueChange={setFilterJenis}>
-              <SelectTrigger className="h-9 w-[190px] text-xs">
+              <SelectTrigger className="h-9 w-full sm:w-[200px] text-xs bg-background">
                 <Filter className="h-3.5 w-3.5 mr-1 text-muted-foreground" />
                 <SelectValue placeholder="Semua Tipe Opname" />
               </SelectTrigger>
@@ -154,28 +147,15 @@ export function RiwayatOpnameTable({
               </SelectContent>
             </Select>
           </div>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onRefresh}
-            disabled={isLoading}
-            className="text-xs h-9"
-          >
-            <RefreshCw
-              className={`h-3.5 w-3.5 mr-1 ${isLoading ? 'animate-spin' : ''}`}
-            />
-            Muat Ulang
-          </Button>
         </CardContent>
       </Card>
 
       {/* Table */}
-      <Card className="border-border/60 overflow-hidden shadow-sm">
+      <Card className="border-0 bg-muted/60 dark:bg-muted/25 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-sm">
             <thead>
-              <tr className="border-b border-border bg-muted/40 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <tr className="border-b border-border/40 bg-muted/90 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 <th className="py-3 px-4">Waktu & Bukti</th>
                 <th className="py-3 px-3">Nama Menu</th>
                 <th className="py-3 px-3">Tipe Mutasi</th>

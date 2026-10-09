@@ -6,9 +6,6 @@ import {
   CheckCircle2,
   AlertTriangle,
   Send,
-  TrendingDown,
-  TrendingUp,
-  FileSpreadsheet,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -347,16 +344,13 @@ export function OpnameInputTable({
     <div className="space-y-4">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-card/50 backdrop-blur border-border/60">
+        <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs font-medium">
               Progress Audit Fisik
             </CardDescription>
-            <CardTitle className="text-2xl font-bold flex items-center justify-between">
-              <span>
-                {summary.totalDihitung} / {summary.totalItem}
-              </span>
-              <FileSpreadsheet className="h-5 w-5 text-muted-foreground" />
+            <CardTitle className="text-2xl font-bold">
+              {summary.totalDihitung} / {summary.totalItem}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -366,28 +360,19 @@ export function OpnameInputTable({
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50 backdrop-blur border-border/60">
+        <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs font-medium">
               Total Item Berselisih
             </CardDescription>
-            <CardTitle className="text-2xl font-bold flex items-center justify-between">
-              <span
-                className={
-                  summary.totalBerselisih > 0
-                    ? 'text-amber-500'
-                    : 'text-emerald-500'
-                }
-              >
-                {summary.totalBerselisih} item
-              </span>
-              <AlertTriangle
-                className={`h-5 w-5 ${
-                  summary.totalBerselisih > 0
-                    ? 'text-amber-500'
-                    : 'text-emerald-500'
-                }`}
-              />
+            <CardTitle
+              className={`text-2xl font-bold ${
+                summary.totalBerselisih > 0
+                  ? 'text-amber-500'
+                  : 'text-emerald-500'
+              }`}
+            >
+              {summary.totalBerselisih} item
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -403,16 +388,13 @@ export function OpnameInputTable({
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50 backdrop-blur border-border/60">
+        <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs font-medium">
               Estimasi Nilai Kerugian
             </CardDescription>
-            <CardTitle className="text-2xl font-bold flex items-center justify-between">
-              <span className="text-destructive">
-                Rp {summary.totalKerugian.toLocaleString('id-ID')}
-              </span>
-              <TrendingDown className="h-5 w-5 text-destructive" />
+            <CardTitle className="text-2xl font-bold text-destructive">
+              Rp {summary.totalKerugian.toLocaleString('id-ID')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -422,16 +404,13 @@ export function OpnameInputTable({
           </CardContent>
         </Card>
 
-        <Card className="bg-card/50 backdrop-blur border-border/60">
+        <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
             <CardDescription className="text-xs font-medium">
               Estimasi Nilai Kelebihan
             </CardDescription>
-            <CardTitle className="text-2xl font-bold flex items-center justify-between">
-              <span className="text-emerald-500">
-                Rp {summary.totalKelebihan.toLocaleString('id-ID')}
-              </span>
-              <TrendingUp className="h-5 w-5 text-emerald-500" />
+            <CardTitle className="text-2xl font-bold text-emerald-500">
+              Rp {summary.totalKelebihan.toLocaleString('id-ID')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -443,7 +422,7 @@ export function OpnameInputTable({
       </div>
 
       {/* Toolbar & Filters */}
-      <Card className="border-border/60">
+      <Card className="border-0 bg-muted/60 dark:bg-muted/25 shadow-sm">
         <CardContent className="p-4 space-y-3">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <div className="flex flex-1 items-center gap-2 w-full md:w-auto">
@@ -453,7 +432,7 @@ export function OpnameInputTable({
                   placeholder="Cari nama menu..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-8 h-9 text-sm"
+                  className="pl-8 h-9 text-sm bg-background"
                 />
               </div>
 
@@ -461,7 +440,7 @@ export function OpnameInputTable({
                 value={selectedKategori}
                 onValueChange={setSelectedKategori}
               >
-                <SelectTrigger className="h-9 w-[160px] text-xs">
+                <SelectTrigger className="h-9 w-[160px] text-xs bg-background">
                   <SelectValue placeholder="Semua Kategori" />
                 </SelectTrigger>
                 <SelectContent>
@@ -482,7 +461,7 @@ export function OpnameInputTable({
                   )
                 }
               >
-                <SelectTrigger className="h-9 w-[150px] text-xs">
+                <SelectTrigger className="h-9 w-[150px] text-xs bg-background">
                   <Filter className="h-3.5 w-3.5 mr-1" />
                   <SelectValue placeholder="Status Hitung" />
                 </SelectTrigger>
@@ -497,20 +476,20 @@ export function OpnameInputTable({
 
             <div className="flex items-center gap-2 w-full md:w-auto justify-end">
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 onClick={handleIsiSemuaSesuaiSistem}
-                className="text-xs h-9"
+                className="text-xs h-9 border-0 bg-background hover:bg-muted/60"
               >
                 <CheckCircle2 className="h-3.5 w-3.5 mr-1 text-emerald-500" />
                 Isi Fisik = Sistem
               </Button>
 
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 onClick={handleResetSemua}
-                className="text-xs h-9 text-muted-foreground hover:text-foreground"
+                className="text-xs h-9 border-0 bg-background text-muted-foreground hover:text-foreground hover:bg-muted/60"
               >
                 <RotateCcw className="h-3.5 w-3.5 mr-1" />
                 Reset
@@ -572,11 +551,11 @@ export function OpnameInputTable({
       </Card>
 
       {/* Table */}
-      <Card className="border-border/60 overflow-hidden shadow-sm">
+      <Card className="border-0 bg-muted/60 dark:bg-muted/25 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-sm">
             <thead>
-              <tr className="border-b border-border bg-muted/40 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <tr className="border-b border-border/40 bg-muted/90 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 <th className="py-3 px-4">Nama Menu & Kategori</th>
                 <th className="py-3 px-3 text-center w-24">Stok Sistem</th>
                 <th className="py-3 px-3 text-center w-32">Stok Fisik</th>
@@ -649,7 +628,7 @@ export function OpnameInputTable({
                           onChange={(e) =>
                             handleQtyFisikChange(row.menuId, e.target.value)
                           }
-                          className={`h-9 w-24 text-center font-semibold mx-auto ${
+                          className={`h-9 w-24 text-center font-semibold mx-auto bg-background ${
                             isReasonMissing
                               ? 'border-amber-500 focus-visible:ring-amber-500'
                               : ''
@@ -665,22 +644,19 @@ export function OpnameInputTable({
                           </span>
                         ) : row.selisih === 0 ? (
                           <Badge
-                            variant="secondary"
-                            className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-xs px-2"
+                            className="border-0 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 text-xs px-2 py-0.5 font-medium"
                           >
                             ✓ Pas (0)
                           </Badge>
                         ) : row.selisih < 0 ? (
                           <Badge
-                            variant="destructive"
-                            className="text-xs px-2 font-mono font-bold"
+                            className="border-0 bg-rose-500/15 text-rose-700 dark:text-rose-400 text-xs px-2 py-0.5 font-mono font-bold"
                           >
                             {row.selisih} {row.satuan}
                           </Badge>
                         ) : (
                           <Badge
-                            variant="default"
-                            className="bg-emerald-600 hover:bg-emerald-700 text-xs px-2 font-mono font-bold"
+                            className="border-0 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 text-xs px-2 py-0.5 font-mono font-bold"
                           >
                             +{row.selisih} {row.satuan}
                           </Badge>
@@ -717,7 +693,7 @@ export function OpnameInputTable({
                             }
                           >
                             <SelectTrigger
-                              className={`h-9 text-xs ${
+                              className={`h-9 text-xs bg-background ${
                                 isReasonMissing
                                   ? 'border-amber-500 bg-amber-500/10 text-amber-500 font-medium'
                                   : ''
@@ -753,7 +729,7 @@ export function OpnameInputTable({
                             onChange={(e) =>
                               handleKeteranganChange(row.menuId, e.target.value)
                             }
-                            className="h-9 text-xs"
+                            className="h-9 text-xs bg-background"
                           />
                         ) : (
                           <span className="text-xs text-muted-foreground italic">

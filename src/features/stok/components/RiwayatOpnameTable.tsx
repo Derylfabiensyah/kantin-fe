@@ -153,11 +153,11 @@ export function RiwayatOpnameTable({
           </div>
 
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
             onClick={onRefresh}
             disabled={isLoading}
-            className="text-xs h-9 bg-background"
+            className="text-xs h-9 border-0 bg-background hover:bg-muted/60"
           >
             <RefreshCw
               className={`h-3.5 w-3.5 mr-1 ${isLoading ? 'animate-spin' : ''}`}

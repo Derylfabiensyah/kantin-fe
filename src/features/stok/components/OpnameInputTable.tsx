@@ -497,20 +497,20 @@ export function OpnameInputTable({
 
             <div className="flex items-center gap-2 w-full md:w-auto justify-end">
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 onClick={handleIsiSemuaSesuaiSistem}
-                className="text-xs h-9 bg-background"
+                className="text-xs h-9 border-0 bg-background hover:bg-muted/60"
               >
                 <CheckCircle2 className="h-3.5 w-3.5 mr-1 text-emerald-500" />
                 Isi Fisik = Sistem
               </Button>
 
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 onClick={handleResetSemua}
-                className="text-xs h-9 text-muted-foreground hover:text-foreground bg-background"
+                className="text-xs h-9 border-0 bg-background text-muted-foreground hover:text-foreground hover:bg-muted/60"
               >
                 <RotateCcw className="h-3.5 w-3.5 mr-1" />
                 Reset

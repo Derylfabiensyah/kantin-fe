@@ -251,10 +251,6 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
             <FileText className='h-4 w-4 text-primary' />
             Informasi Pembelian & Faktur
           </CardTitle>
-          <CardDescription>
-            Masukkan nomor bukti faktur dari supplier dan rincian transaksi
-            barang masuk
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>

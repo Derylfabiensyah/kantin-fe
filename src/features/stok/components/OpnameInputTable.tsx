@@ -665,22 +665,19 @@ export function OpnameInputTable({
                           </span>
                         ) : row.selisih === 0 ? (
                           <Badge
-                            variant="secondary"
-                            className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-xs px-2"
+                            className="border-0 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 text-xs px-2 py-0.5 font-medium"
                           >
                             ✓ Pas (0)
                           </Badge>
                         ) : row.selisih < 0 ? (
                           <Badge
-                            variant="destructive"
-                            className="text-xs px-2 font-mono font-bold"
+                            className="border-0 bg-rose-500/15 text-rose-700 dark:text-rose-400 text-xs px-2 py-0.5 font-mono font-bold"
                           >
                             {row.selisih} {row.satuan}
                           </Badge>
                         ) : (
                           <Badge
-                            variant="default"
-                            className="bg-emerald-600 hover:bg-emerald-700 text-xs px-2 font-mono font-bold"
+                            className="border-0 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 text-xs px-2 py-0.5 font-mono font-bold"
                           >
                             +{row.selisih} {row.satuan}
                           </Badge>

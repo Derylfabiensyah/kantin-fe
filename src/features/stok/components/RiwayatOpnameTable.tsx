@@ -74,37 +74,34 @@ export function RiwayatOpnameTable({
       case 'BARANG_RUSAK':
         return (
           <Badge
-            variant="destructive"
-            className="text-[11px] font-semibold gap-1 py-0.5"
+            className="gap-1 border-0 bg-rose-500/15 text-[11px] font-medium text-rose-700 dark:text-rose-400 py-0.5"
           >
-            <AlertOctagon className="h-3 w-3" />
+            <AlertOctagon className="h-3 w-3 text-rose-500" />
             Barang Rusak / Basi
           </Badge>
         )
       case 'OPNAME_KELUAR':
         return (
           <Badge
-            variant="outline"
-            className="text-[11px] font-semibold text-amber-500 border-amber-500/30 bg-amber-500/10 gap-1 py-0.5"
+            className="gap-1 border-0 bg-purple-500/15 text-[11px] font-medium text-purple-700 dark:text-purple-400 py-0.5"
           >
-            <TrendingDown className="h-3 w-3 text-amber-500" />
+            <TrendingDown className="h-3 w-3 text-purple-500" />
             Opname Keluar (Kurang)
           </Badge>
         )
       case 'OPNAME_MASUK':
         return (
           <Badge
-            variant="outline"
-            className="text-[11px] font-semibold text-emerald-500 border-emerald-500/30 bg-emerald-500/10 gap-1 py-0.5"
+            className="gap-1 border-0 bg-emerald-500/15 text-[11px] font-medium text-emerald-700 dark:text-emerald-400 py-0.5"
           >
-            <TrendingUp className="h-3 w-3 text-emerald-500" />
+            <TrendingUp className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
             Opname Masuk (Lebih)
           </Badge>
         )
       default:
         return (
-          <Badge variant="secondary" className="text-[11px]">
-            {jenis}
+          <Badge className="border-0 bg-muted/80 text-[11px] font-medium text-muted-foreground py-0.5">
+            {String(jenis).replace(/_/g, ' ')}
           </Badge>
         )
     }

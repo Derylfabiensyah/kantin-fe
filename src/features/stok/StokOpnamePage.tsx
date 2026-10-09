@@ -3,7 +3,6 @@ import {
   ClipboardCheck,
   Trash2,
   History,
-  RefreshCw,
   PlusCircle,
   FileSpreadsheet,
 } from 'lucide-react'
@@ -148,17 +147,6 @@ export function StokOpnamePage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={loadData}
-              disabled={isLoading}
-              className="h-8 gap-1.5 text-xs"
-            >
-              <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-              Sinkronkan Data
-            </Button>
-
             <Button
               size="sm"
               onClick={() => setIsQuickDamageModalOpen(true)}

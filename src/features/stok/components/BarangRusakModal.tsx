@@ -292,7 +292,7 @@ function BarangRusakFormContent({
             qty > stokSistem ||
             stokSistem <= 0
           }
-          className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-semibold"
+          className="bg-destructive hover:bg-destructive/90 text-white font-semibold"
         >
           {isSubmitting ? 'Menyimpan...' : 'Catat Barang Rusak'}
         </Button>

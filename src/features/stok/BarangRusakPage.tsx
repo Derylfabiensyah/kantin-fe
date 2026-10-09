@@ -61,7 +61,7 @@ export function BarangRusakPage({
 
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-semibold text-xs shadow-md shrink-0"
+          className="bg-destructive hover:bg-destructive/90 text-white font-semibold text-xs shadow-md shrink-0"
         >
           <PlusCircle className="h-4 w-4 mr-1.5" />
           Catat Barang Rusak Baru

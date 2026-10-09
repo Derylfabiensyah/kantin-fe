@@ -2,10 +2,7 @@ import { useState, useMemo } from 'react'
 import {
   Trash2,
   PlusCircle,
-  AlertOctagon,
-  TrendingDown,
   Calendar,
-  Layers,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -78,9 +75,8 @@ export function BarangRusakPage({
             <CardDescription className="text-xs font-medium">
               Frekuensi Kejadian Rusak
             </CardDescription>
-            <CardTitle className="text-2xl font-bold flex items-center justify-between">
-              <span>{stats.totalKejadian} kali</span>
-              <AlertOctagon className="h-5 w-5 text-destructive" />
+            <CardTitle className="text-2xl font-bold">
+              {stats.totalKejadian} kali
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -95,9 +91,8 @@ export function BarangRusakPage({
             <CardDescription className="text-xs font-medium">
               Total Fisik Dibuang / Rusak
             </CardDescription>
-            <CardTitle className="text-2xl font-bold flex items-center justify-between">
-              <span>{stats.totalUnit} unit</span>
-              <Layers className="h-5 w-5 text-amber-500" />
+            <CardTitle className="text-2xl font-bold">
+              {stats.totalUnit} unit
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -112,11 +107,8 @@ export function BarangRusakPage({
             <CardDescription className="text-xs font-medium">
               Total Beban Kerugian Finansial
             </CardDescription>
-            <CardTitle className="text-2xl font-bold flex items-center justify-between">
-              <span className="text-destructive font-mono">
-                Rp {stats.totalKerugian.toLocaleString('id-ID')}
-              </span>
-              <TrendingDown className="h-5 w-5 text-destructive" />
+            <CardTitle className="text-2xl font-bold text-destructive font-mono">
+              Rp {stats.totalKerugian.toLocaleString('id-ID')}
             </CardTitle>
           </CardHeader>
           <CardContent>

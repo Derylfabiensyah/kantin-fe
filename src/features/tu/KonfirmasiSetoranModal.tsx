@@ -6,7 +6,6 @@ import {
   Receipt,
   Calculator,
   ShieldCheck,
-  Building2,
   Info,
 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -288,23 +287,21 @@ function KonfirmasiSetoranFormContent({
       )}
 
       {/* Indikator Selisih Kas Fisik */}
-      <div className='space-y-2 rounded-lg border p-3.5'>
+      <div className='space-y-2 rounded-xl border border-border p-3.5'>
         <div className='flex items-center justify-between'>
           <span className='text-xs font-semibold text-muted-foreground'>
             Status Selisih Kas Fisik:
           </span>
           {selisih === 0 ? (
             <Badge
-              variant='outline'
-              className='gap-1 border-emerald-300 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
+              className='gap-1 border-0 bg-emerald-500/15 text-xs font-medium text-emerald-700 dark:text-emerald-400'
             >
               <CheckCircle2 className='h-3.5 w-3.5' />
               Kas Fisik Pas (Rp 0)
             </Badge>
           ) : selisih < 0 ? (
             <Badge
-              variant='outline'
-              className='gap-1 border-red-300 bg-red-50 text-red-700 dark:bg-red-950/60 dark:text-red-400'
+              className='gap-1 border-0 bg-destructive/15 text-xs font-medium text-destructive'
             >
               <AlertTriangle className='h-3.5 w-3.5' />
               Defisit Kas Fisik (-Rp {Math.abs(selisih).toLocaleString('id-ID')}
@@ -312,8 +309,7 @@ function KonfirmasiSetoranFormContent({
             </Badge>
           ) : (
             <Badge
-              variant='outline'
-              className='gap-1 border-blue-300 bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-400'
+              className='gap-1 border-0 bg-blue-500/15 text-xs font-medium text-blue-700 dark:text-blue-400'
             >
               <Info className='h-3.5 w-3.5' />
               Surplus Kas Fisik (+Rp {selisih.toLocaleString('id-ID')})
@@ -321,7 +317,7 @@ function KonfirmasiSetoranFormContent({
           )}
         </div>
 
-        <div className='flex items-center justify-between border-t pt-1 text-xs'>
+        <div className='flex items-center justify-between border-t border-border pt-1 text-xs'>
           <span className='text-muted-foreground'>
             Total Sistem: Rp {totalSistem.toLocaleString('id-ID')}
           </span>
@@ -336,7 +332,7 @@ function KonfirmasiSetoranFormContent({
       {hasSelisih ? (
         <Alert
           variant='destructive'
-          className='border-amber-400 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-300'
+          className='border-0 bg-amber-500/15 text-amber-900 dark:text-amber-300'
         >
           <AlertTriangle className='h-4 w-4 text-amber-600 dark:text-amber-400' />
           <AlertTitle className='text-xs font-semibold'>
@@ -349,7 +345,7 @@ function KonfirmasiSetoranFormContent({
           </AlertDescription>
         </Alert>
       ) : (
-        <Alert className='border-emerald-200 bg-emerald-50 py-2 text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300'>
+        <Alert className='border-0 bg-emerald-500/15 py-2 text-emerald-900 dark:text-emerald-300'>
           <ShieldCheck className='h-4 w-4 text-emerald-600 dark:text-emerald-400' />
           <AlertDescription className='text-xs'>
             Total uang fisik sesuai 100% dengan rekapitulasi sistem penerimaan
@@ -393,13 +389,14 @@ function KonfirmasiSetoranFormContent({
           variant='outline'
           onClick={onCancel}
           disabled={isSubmitting}
+          className='text-xs'
         >
           Batal
         </Button>
         <Button
           type='submit'
           disabled={isSubmitting || (hasSelisih && !catatan.trim())}
-          className='gap-1.5'
+          className='gap-1.5 bg-emerald-600 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700'
         >
           <CheckCircle2 className='h-4 w-4' />
           {isSubmitting ? 'Menyimpan...' : 'Konfirmasi & Catat Setoran'}
@@ -419,20 +416,13 @@ export function KonfirmasiSetoranModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='max-h-[90vh] overflow-y-auto sm:max-w-[580px]'>
         <DialogHeader>
-          <div className='flex items-center gap-2 text-primary'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary'>
-              <Building2 className='h-5 w-5' />
-            </div>
-            <div>
-              <DialogTitle className='text-lg font-semibold'>
-                Konfirmasi Setoran Kas TU
-              </DialogTitle>
-              <DialogDescription className='text-xs'>
-                Verifikasi uang fisik yang disetorkan petugas TU kepada
-                Bendahara Sekolah
-              </DialogDescription>
-            </div>
-          </div>
+          <DialogTitle className='text-lg font-semibold'>
+            Konfirmasi Setoran Kas TU
+          </DialogTitle>
+          <DialogDescription className='text-xs'>
+            Verifikasi uang fisik yang disetorkan petugas TU kepada
+            Bendahara Sekolah
+          </DialogDescription>
         </DialogHeader>
 
         {setoran && (

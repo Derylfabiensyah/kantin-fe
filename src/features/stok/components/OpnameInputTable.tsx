@@ -6,9 +6,6 @@ import {
   CheckCircle2,
   AlertTriangle,
   Send,
-  TrendingDown,
-  TrendingUp,
-  FileSpreadsheet,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -352,11 +349,8 @@ export function OpnameInputTable({
             <CardDescription className="text-xs font-medium">
               Progress Audit Fisik
             </CardDescription>
-            <CardTitle className="text-2xl font-bold flex items-center justify-between">
-              <span>
-                {summary.totalDihitung} / {summary.totalItem}
-              </span>
-              <FileSpreadsheet className="h-5 w-5 text-muted-foreground" />
+            <CardTitle className="text-2xl font-bold">
+              {summary.totalDihitung} / {summary.totalItem}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -371,23 +365,14 @@ export function OpnameInputTable({
             <CardDescription className="text-xs font-medium">
               Total Item Berselisih
             </CardDescription>
-            <CardTitle className="text-2xl font-bold flex items-center justify-between">
-              <span
-                className={
-                  summary.totalBerselisih > 0
-                    ? 'text-amber-500'
-                    : 'text-emerald-500'
-                }
-              >
-                {summary.totalBerselisih} item
-              </span>
-              <AlertTriangle
-                className={`h-5 w-5 ${
-                  summary.totalBerselisih > 0
-                    ? 'text-amber-500'
-                    : 'text-emerald-500'
-                }`}
-              />
+            <CardTitle
+              className={`text-2xl font-bold ${
+                summary.totalBerselisih > 0
+                  ? 'text-amber-500'
+                  : 'text-emerald-500'
+              }`}
+            >
+              {summary.totalBerselisih} item
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -408,11 +393,8 @@ export function OpnameInputTable({
             <CardDescription className="text-xs font-medium">
               Estimasi Nilai Kerugian
             </CardDescription>
-            <CardTitle className="text-2xl font-bold flex items-center justify-between">
-              <span className="text-destructive">
-                Rp {summary.totalKerugian.toLocaleString('id-ID')}
-              </span>
-              <TrendingDown className="h-5 w-5 text-destructive" />
+            <CardTitle className="text-2xl font-bold text-destructive">
+              Rp {summary.totalKerugian.toLocaleString('id-ID')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -427,11 +409,8 @@ export function OpnameInputTable({
             <CardDescription className="text-xs font-medium">
               Estimasi Nilai Kelebihan
             </CardDescription>
-            <CardTitle className="text-2xl font-bold flex items-center justify-between">
-              <span className="text-emerald-500">
-                Rp {summary.totalKelebihan.toLocaleString('id-ID')}
-              </span>
-              <TrendingUp className="h-5 w-5 text-emerald-500" />
+            <CardTitle className="text-2xl font-bold text-emerald-500">
+              Rp {summary.totalKelebihan.toLocaleString('id-ID')}
             </CardTitle>
           </CardHeader>
           <CardContent>

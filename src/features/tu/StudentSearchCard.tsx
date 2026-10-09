@@ -5,8 +5,6 @@ import {
   Radio,
   Check,
   ChevronsUpDown,
-  User,
-  CreditCard,
   AlertTriangle,
 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -68,23 +66,21 @@ export function StudentSearchCard({
   }
 
   return (
-    <Card className='border-slate-200 shadow-sm dark:border-slate-800'>
+    <Card className='border border-border bg-card shadow-xs'>
       <CardHeader className='pb-4'>
-        <div className='flex items-center justify-between'>
+        <div className='flex flex-wrap items-center justify-between gap-2'>
           <div>
-            <CardTitle className='flex items-center gap-2 text-lg font-semibold'>
-              <User className='h-5 w-5 text-primary' />
+            <CardTitle className='text-lg font-semibold'>
               Pencarian Data Siswa
             </CardTitle>
-            <CardDescription>
+            <CardDescription className='text-xs'>
               Cari berdasarkan NIS, Nama Siswa, atau Tap Kartu RFID reader TU
             </CardDescription>
           </div>
           <Badge
-            variant='outline'
-            className='flex items-center gap-1.5 border-blue-200 bg-blue-50 px-3 py-1 text-blue-700 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-300'
+            className='flex items-center gap-1.5 border-0 bg-blue-500/15 px-2.5 py-1 text-xs font-medium text-blue-700 dark:text-blue-400'
           >
-            <Radio className='h-3.5 w-3.5 animate-pulse text-blue-600 dark:text-blue-400' />
+            <Radio className='h-3 w-3 animate-pulse text-blue-600 dark:text-blue-400' />
             RFID Reader Aktif
           </Badge>
         </div>
@@ -101,18 +97,20 @@ export function StudentSearchCard({
                 variant='outline'
                 role='combobox'
                 aria-expanded={openCombobox}
-                className='h-11 w-full justify-between text-left font-normal'
+                className='h-11 w-full justify-between border-border text-left font-normal'
                 disabled={isLoading}
               >
                 {selectedStudent ? (
-                  <span className='flex items-center gap-2 truncate font-medium text-slate-900 dark:text-slate-100'>
-                    <span className='rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-400'>
+                  <span className='flex items-center gap-2 truncate text-foreground'>
+                    <span className='rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground'>
                       {selectedStudent.nis}
                     </span>
-                    {selectedStudent.nama} ({selectedStudent.kelas})
+                    <span className='font-medium text-foreground'>
+                      {selectedStudent.nama} ({selectedStudent.kelas})
+                    </span>
                   </span>
                 ) : (
-                  <span className='flex items-center gap-2 text-muted-foreground'>
+                  <span className='flex items-center gap-2 text-sm text-muted-foreground'>
                     <Search className='h-4 w-4' />
                     Ketik NIS atau Nama Siswa...
                   </span>
@@ -150,7 +148,7 @@ export function StudentSearchCard({
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className='text-sm leading-none font-medium'>
+                            <p className='text-sm leading-none font-medium text-foreground'>
                               {student.nama}
                             </p>
                             <p className='mt-0.5 text-xs text-muted-foreground'>
@@ -176,10 +174,9 @@ export function StudentSearchCard({
         </div>
 
         {/* RFID Tap Simulation Box */}
-        <div className='space-y-2 rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900/50'>
+        <div className='space-y-2 rounded-xl border border-border bg-muted/40 p-3.5 dark:bg-muted/20'>
           <div className='flex items-center justify-between'>
-            <label className='flex items-center gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-300'>
-              <CreditCard className='h-3.5 w-3.5 text-blue-600' />
+            <label className='text-xs font-medium text-foreground'>
               Simulasi Tap Kartu RFID (Reader TU)
             </label>
             <span className='text-[10px] text-muted-foreground'>
@@ -194,7 +191,7 @@ export function StudentSearchCard({
                 type='button'
                 variant='ghost'
                 size='sm'
-                className='h-7 border border-slate-200 bg-white text-xs hover:bg-blue-50 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-blue-950'
+                className='h-7 border border-border bg-background text-xs text-foreground hover:bg-muted'
                 onClick={() => handleSimulateRfid(student.uid)}
               >
                 Tap RFID {student.nama.split(' ')[0]} ({student.uid})
@@ -207,7 +204,7 @@ export function StudentSearchCard({
               placeholder='Atau ketik UID Kartu (contoh: 04A1B2C3D4)...'
               value={rfidInput}
               onChange={(e) => setRfidInput(e.target.value)}
-              className='h-9 bg-white font-mono text-xs dark:bg-slate-950'
+              className='h-9 bg-background font-mono text-xs'
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault()
@@ -235,9 +232,9 @@ export function StudentSearchCard({
 
         {/* Selected Student Detail View */}
         {selectedStudent ? (
-          <div className='space-y-4 rounded-xl border border-blue-100 bg-gradient-to-r from-blue-50/50 to-indigo-50/50 p-4 dark:border-slate-800 dark:from-slate-900 dark:to-slate-900'>
+          <div className='space-y-4 rounded-xl border border-border bg-muted/30 p-4 dark:bg-muted/10'>
             <div className='flex items-start gap-4'>
-              <Avatar className='h-16 w-16 border-2 border-white shadow-md dark:border-slate-800'>
+              <Avatar className='h-16 w-16 border-2 border-background shadow-xs'>
                 <AvatarImage
                   src={selectedStudent.foto_url}
                   alt={selectedStudent.nama}
@@ -249,49 +246,47 @@ export function StudentSearchCard({
 
               <div className='min-w-0 flex-1'>
                 <div className='flex items-center justify-between gap-2'>
-                  <h3 className='truncate text-base font-bold text-slate-900 dark:text-slate-100'>
+                  <h3 className='truncate text-base font-bold text-foreground'>
                     {selectedStudent.nama}
                   </h3>
                   {selectedStudent.is_blocked ? (
                     <Badge
-                      variant='destructive'
-                      className='flex shrink-0 items-center gap-1'
+                      className='flex shrink-0 items-center gap-1 border-0 bg-destructive/15 text-xs font-medium text-destructive'
                     >
                       <AlertTriangle className='h-3 w-3' />
                       Kartu Diblokir
                     </Badge>
                   ) : (
                     <Badge
-                      variant='default'
-                      className='shrink-0 bg-emerald-600 hover:bg-emerald-700'
+                      className='shrink-0 border-0 bg-emerald-500/15 text-xs font-medium text-emerald-700 dark:text-emerald-400'
                     >
-                      Status: Aktif
+                      Aktif Normal
                     </Badge>
                   )}
                 </div>
 
-                <div className='mt-2 grid grid-cols-2 gap-2 text-xs'>
+                <div className='mt-2.5 grid grid-cols-2 gap-2 text-xs'>
                   <div>
                     <span className='text-muted-foreground'>NIS:</span>{' '}
-                    <span className='font-mono font-semibold text-slate-700 dark:text-slate-300'>
+                    <span className='font-mono font-semibold text-foreground'>
                       {selectedStudent.nis}
                     </span>
                   </div>
                   <div>
                     <span className='text-muted-foreground'>Kelas:</span>{' '}
-                    <span className='font-medium text-slate-700 dark:text-slate-300'>
+                    <span className='font-medium text-foreground'>
                       {selectedStudent.kelas}
                     </span>
                   </div>
                   <div>
                     <span className='text-muted-foreground'>UID RFID:</span>{' '}
-                    <span className='font-mono text-slate-600 dark:text-slate-400'>
+                    <span className='font-mono text-muted-foreground'>
                       {selectedStudent.uid}
                     </span>
                   </div>
                   <div>
                     <span className='text-muted-foreground'>Limit Harian:</span>{' '}
-                    <span className='font-medium text-slate-700 dark:text-slate-300'>
+                    <span className='font-medium text-foreground'>
                       Rp {selectedStudent.limit_harian.toLocaleString('id-ID')}
                     </span>
                   </div>
@@ -299,8 +294,8 @@ export function StudentSearchCard({
               </div>
             </div>
 
-            <div className='flex items-center justify-between rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-950'>
-              <span className='text-xs font-semibold tracking-wide text-slate-600 uppercase dark:text-slate-400'>
+            <div className='flex items-center justify-between rounded-lg border border-border bg-background p-3'>
+              <span className='text-xs font-semibold tracking-wide text-muted-foreground uppercase'>
                 Saldo Saat Ini
               </span>
               <span className='font-mono text-xl font-bold text-emerald-600 dark:text-emerald-400'>
@@ -309,8 +304,7 @@ export function StudentSearchCard({
             </div>
           </div>
         ) : (
-          <div className='rounded-xl border border-dashed border-slate-200 bg-slate-50/50 p-6 text-center dark:border-slate-800 dark:bg-slate-900/30'>
-            <User className='mx-auto mb-2 h-10 w-10 text-muted-foreground opacity-40' />
+          <div className='rounded-xl border border-dashed border-border bg-muted/20 p-6 text-center'>
             <p className='text-sm font-medium text-muted-foreground'>
               Belum ada siswa terpilih
             </p>

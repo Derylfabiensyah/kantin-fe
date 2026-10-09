@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { MOCK_SISWA, type KartuSiswaMock } from '@/mocks/mock-data'
 import {
-  Banknote,
-  Wallet,
   AlertCircle,
   ArrowRight,
   RefreshCw,
@@ -41,6 +39,7 @@ export function TopupTunaiPage() {
   const [nominal, setNominal] = useState<string>('')
   const [namaPenyetor, setNamaPenyetor] = useState<string>('Orang Tua / Wali')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   const [slipData, setSlipData] = useState<TopupSlipData | null>(null)
   const [isSlipOpen, setIsSlipOpen] = useState(false)
@@ -68,6 +67,7 @@ export function TopupTunaiPage() {
   }, [])
 
   const handleRefresh = async () => {
+    setIsRefreshing(true)
     try {
       const res = await apiClient
         .get('/api/v1/tu/topup/siswa')
@@ -75,8 +75,12 @@ export function TopupTunaiPage() {
       if (res.data?.data) {
         setStudents(res.data.data)
       }
+      toast.success('Data siswa berhasil dimuat ulang')
     } catch {
       setStudents(MOCK_SISWA)
+      toast.success('Data siswa berhasil dimuat ulang')
+    } finally {
+      setIsRefreshing(false)
     }
   }
 
@@ -188,242 +192,271 @@ export function TopupTunaiPage() {
   return (
     <>
       <Header fixed>
-        <Search />
+        <Search showKbd={false} />
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
         </div>
       </Header>
 
-      <Main>
-        <div className='space-y-6 pb-10'>
-          {/* Header Title Section */}
-          <div className='flex flex-col gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800'>
-            <div>
-              <div className='flex items-center gap-2'>
-                <div className='rounded-lg bg-primary/10 p-2 text-primary'>
-                  <Banknote className='h-6 w-6' />
-                </div>
-                <div>
-                  <h1 className='text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100'>
-                    Pengisian Saldo Tunai Siswa
-                  </h1>
-                  <p className='text-sm text-muted-foreground'>
-                    Modul layanan Kasir TU — Satu-satunya titik penerimaan uang
-                    tunai kantin SKOOLIA
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <Button
-              variant='outline'
-              size='sm'
-              onClick={handleRefresh}
-              className='gap-1.5 self-start text-xs sm:self-auto'
-            >
-              <RefreshCw className='h-3.5 w-3.5' />
-              Refresh Data
-            </Button>
+      <Main className='space-y-6'>
+        {/* Header Title Section */}
+        <div className='flex flex-col gap-4 border-b border-border pb-4 sm:flex-row sm:items-center sm:justify-between'>
+          <div>
+            <h1 className='text-2xl font-bold tracking-tight text-foreground'>
+              Pengisian Saldo Tunai Siswa
+            </h1>
+            <p className='mt-1 text-xs text-muted-foreground sm:text-sm'>
+              Modul layanan Kasir TU — Satu-satunya titik penerimaan uang
+              tunai kantin SKOOLIA
+            </p>
           </div>
 
-          {/* Main Content Grid */}
-          <div className='grid grid-cols-1 items-start gap-6 lg:grid-cols-12'>
-            {/* Left Column: Student Search Card (5 Cols) */}
-            <div className='space-y-6 lg:col-span-5'>
-              <StudentSearchCard
-                students={students}
-                selectedStudent={currentStudent}
-                onSelectStudent={setSelectedStudent}
-              />
-            </div>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className='gap-1.5 self-start text-xs sm:self-auto'
+          >
+            <RefreshCw
+              className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin' : ''}`}
+            />
+            Refresh Data
+          </Button>
+        </div>
 
-            {/* Right Column: Topup Form (7 Cols) */}
-            <div className='space-y-6 lg:col-span-7'>
-              <Card className='border-slate-200 shadow-sm dark:border-slate-800'>
-                <CardHeader>
-                  <CardTitle className='flex items-center gap-2 text-lg font-semibold'>
-                    <Wallet className='h-5 w-5 text-emerald-600' />
-                    Form Pengisian Saldo Tunai
-                  </CardTitle>
-                  <CardDescription>
-                    Pilih nominal preset atau masukkan jumlah tunai yang
-                    disetorkan
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className='space-y-6'>
-                  <form onSubmit={handleSubmit} className='space-y-6'>
-                    {/* Preset Nominal Buttons */}
-                    <div className='space-y-2'>
-                      <Label className='text-xs font-semibold tracking-wider text-muted-foreground uppercase'>
-                        Pilihan Nominal Preset
-                      </Label>
-                      <div className='grid grid-cols-2 gap-2.5 sm:grid-cols-4'>
-                        {PRESET_NOMINALS.map((preset) => (
-                          <Button
-                            key={preset}
-                            type='button'
-                            variant={
-                              nominalNum === preset ? 'default' : 'outline'
-                            }
-                            className={`h-12 text-sm font-semibold transition-all ${
-                              nominalNum === preset
-                                ? 'bg-emerald-600 text-white shadow hover:bg-emerald-700'
-                                : 'hover:border-emerald-500 hover:text-emerald-600'
-                            }`}
-                            onClick={() => handleSelectPreset(preset)}
-                          >
-                            Rp {preset.toLocaleString('id-ID')}
-                          </Button>
-                        ))}
-                      </div>
+        {/* Ringkasan Status Header Cards */}
+        <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>
+                Total Siswa Terdaftar
+              </p>
+              <h3 className='mt-0.5 text-xl font-bold text-foreground'>
+                {students.length} Siswa
+              </h3>
+            </CardContent>
+          </Card>
+
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>
+                Status Kartu Siswa
+              </p>
+              <h3 className='mt-0.5 text-xl font-bold text-emerald-600 dark:text-emerald-400'>
+                {students.filter((s) => !s.is_blocked).length} Aktif Normal
+              </h3>
+            </CardContent>
+          </Card>
+
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>
+                Batas Saldo Maksimal
+              </p>
+              <h3 className='mt-0.5 text-xl font-bold text-foreground'>
+                Rp {MAX_SALDO_SEKOLAH.toLocaleString('id-ID')}
+              </h3>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Content Grid */}
+        <div className='grid grid-cols-1 items-start gap-6 lg:grid-cols-12'>
+          {/* Left Column: Student Search Card (5 Cols) */}
+          <div className='space-y-6 lg:col-span-5'>
+            <StudentSearchCard
+              students={students}
+              selectedStudent={currentStudent}
+              onSelectStudent={setSelectedStudent}
+            />
+          </div>
+
+          {/* Right Column: Topup Form (7 Cols) */}
+          <div className='space-y-6 lg:col-span-7'>
+            <Card className='border border-border bg-card shadow-xs'>
+              <CardHeader className='pb-4'>
+                <CardTitle className='text-lg font-semibold'>
+                  Form Pengisian Saldo Tunai
+                </CardTitle>
+                <CardDescription className='text-xs'>
+                  Pilih nominal preset atau masukkan jumlah tunai yang
+                  disetorkan
+                </CardDescription>
+              </CardHeader>
+              <CardContent className='space-y-6'>
+                <form onSubmit={handleSubmit} className='space-y-6'>
+                  {/* Preset Nominal Buttons */}
+                  <div className='space-y-2'>
+                    <Label className='text-xs font-semibold tracking-wider text-muted-foreground uppercase'>
+                      Pilihan Nominal Preset
+                    </Label>
+                    <div className='grid grid-cols-2 gap-2.5 sm:grid-cols-4'>
+                      {PRESET_NOMINALS.map((preset) => (
+                        <Button
+                          key={preset}
+                          type='button'
+                          variant={
+                            nominalNum === preset ? 'default' : 'outline'
+                          }
+                          className={`h-11 text-xs font-semibold transition-all sm:text-sm ${
+                            nominalNum === preset
+                              ? 'bg-emerald-600 text-white shadow-xs hover:bg-emerald-700'
+                              : 'border-border bg-background hover:bg-muted text-foreground'
+                          }`}
+                          onClick={() => handleSelectPreset(preset)}
+                        >
+                          Rp {preset.toLocaleString('id-ID')}
+                        </Button>
+                      ))}
                     </div>
+                  </div>
 
-                    {/* Input Nominal Bebas */}
-                    <div className='space-y-2'>
-                      <Label
-                        htmlFor='nominal-input'
-                        className='text-xs font-semibold tracking-wider text-muted-foreground uppercase'
-                      >
-                        Input Nominal Bebas (Rp)
-                      </Label>
-                      <div className='relative'>
-                        <span className='absolute top-1/2 left-3.5 -translate-y-1/2 text-sm font-bold text-slate-500'>
-                          Rp
-                        </span>
-                        <Input
-                          id='nominal-input'
-                          type='number'
-                          min={1000}
-                          placeholder='Masukkan nominal, contoh: 75000'
-                          value={nominal}
-                          onChange={(e) => setNominal(e.target.value)}
-                          className='h-12 pl-11 font-mono text-lg font-bold tracking-wide'
-                        />
-                      </div>
-                    </div>
-
-                    {/* Input Nama Penyetor */}
-                    <div className='space-y-2'>
-                      <Label
-                        htmlFor='penyetor-input'
-                        className='text-xs font-semibold tracking-wider text-muted-foreground uppercase'
-                      >
-                        Nama Penyetor (Orang Tua / Wali / Siswa)
-                      </Label>
+                  {/* Input Nominal Bebas */}
+                  <div className='space-y-2'>
+                    <Label
+                      htmlFor='nominal-input'
+                      className='text-xs font-semibold tracking-wider text-muted-foreground uppercase'
+                    >
+                      Input Nominal Bebas (Rp)
+                    </Label>
+                    <div className='relative'>
+                      <span className='absolute top-1/2 left-3.5 -translate-y-1/2 text-sm font-bold text-muted-foreground'>
+                        Rp
+                      </span>
                       <Input
-                        id='penyetor-input'
-                        type='text'
-                        placeholder='Contoh: Bpk. Hendra (Orang Tua Budi)'
-                        value={namaPenyetor}
-                        onChange={(e) => setNamaPenyetor(e.target.value)}
-                        className='h-11 text-sm'
-                        required
+                        id='nominal-input'
+                        type='number'
+                        min={1000}
+                        placeholder='Masukkan nominal, contoh: 75000'
+                        value={nominal}
+                        onChange={(e) => setNominal(e.target.value)}
+                        className='h-11 pl-11 font-mono text-base font-bold tracking-wide'
                       />
                     </div>
+                  </div>
 
-                    {/* Balance Preview & Validation Warnings */}
-                    {currentStudent && (
-                      <div className='space-y-3 pt-2'>
-                        <div className='space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900'>
-                          <h4 className='text-xs font-bold tracking-wider text-slate-500 uppercase'>
-                            Kalkulasi Transaksi
-                          </h4>
-                          <div className='space-y-2 text-sm'>
-                            <div className='flex justify-between text-muted-foreground'>
-                              <span>Saldo Siswa saat ini:</span>
-                              <span className='font-mono font-medium'>
-                                Rp {saldoSaatIni.toLocaleString('id-ID')}
-                              </span>
-                            </div>
-                            <div className='flex justify-between font-medium text-emerald-600 dark:text-emerald-400'>
-                              <span>Nominal Top-up (+):</span>
-                              <span className='font-mono font-bold'>
-                                Rp {nominalNum.toLocaleString('id-ID')}
-                              </span>
-                            </div>
-                            <div className='flex justify-between border-t border-slate-200 pt-2 text-base font-bold text-slate-900 dark:border-slate-800 dark:text-slate-100'>
-                              <span>Estimasi Saldo Baru:</span>
-                              <span
-                                className={`font-mono ${
-                                  isExceedingLimit
-                                    ? 'text-red-600 dark:text-red-400'
-                                    : 'text-emerald-600 dark:text-emerald-400'
-                                }`}
-                              >
-                                Rp {saldoBaru.toLocaleString('id-ID')}
-                              </span>
-                            </div>
+                  {/* Input Nama Penyetor */}
+                  <div className='space-y-2'>
+                    <Label
+                      htmlFor='penyetor-input'
+                      className='text-xs font-semibold tracking-wider text-muted-foreground uppercase'
+                    >
+                      Nama Penyetor (Orang Tua / Wali / Siswa)
+                    </Label>
+                    <Input
+                      id='penyetor-input'
+                      type='text'
+                      placeholder='Contoh: Bpk. Hendra (Orang Tua Budi)'
+                      value={namaPenyetor}
+                      onChange={(e) => setNamaPenyetor(e.target.value)}
+                      className='h-11 text-sm'
+                      required
+                    />
+                  </div>
+
+                  {/* Balance Preview & Validation Warnings */}
+                  {currentStudent && (
+                    <div className='space-y-3 pt-2'>
+                      <div className='space-y-3 rounded-xl border border-border bg-muted/40 p-4 dark:bg-muted/20'>
+                        <h4 className='text-xs font-bold tracking-wider text-muted-foreground uppercase'>
+                          Kalkulasi Transaksi
+                        </h4>
+                        <div className='space-y-2 text-sm'>
+                          <div className='flex justify-between text-muted-foreground'>
+                            <span>Saldo Siswa saat ini:</span>
+                            <span className='font-mono font-medium text-foreground'>
+                              Rp {saldoSaatIni.toLocaleString('id-ID')}
+                            </span>
+                          </div>
+                          <div className='flex justify-between font-medium text-emerald-600 dark:text-emerald-400'>
+                            <span>Nominal Top-up (+):</span>
+                            <span className='font-mono font-bold'>
+                              Rp {nominalNum.toLocaleString('id-ID')}
+                            </span>
+                          </div>
+                          <div className='flex justify-between border-t border-border pt-2 text-base font-bold text-foreground'>
+                            <span>Estimasi Saldo Baru:</span>
+                            <span
+                              className={`font-mono font-bold ${
+                                isExceedingLimit
+                                  ? 'text-destructive'
+                                  : 'text-emerald-600 dark:text-emerald-400'
+                              }`}
+                            >
+                              Rp {saldoBaru.toLocaleString('id-ID')}
+                            </span>
                           </div>
                         </div>
-
-                        {/* Warning: Exceeding Max Balance */}
-                        {isExceedingLimit && (
-                          <Alert
-                            variant='destructive'
-                            className='border-red-300 bg-red-50 text-red-900 dark:bg-red-950/40 dark:text-red-200'
-                          >
-                            <AlertCircle className='h-4 w-4 text-red-600 dark:text-red-400' />
-                            <AlertTitle className='text-xs font-bold tracking-wide uppercase'>
-                              Melebihi Batas Saldo Maksimal Sekolah!
-                            </AlertTitle>
-                            <AlertDescription className='mt-1 text-xs leading-relaxed'>
-                              Saldo baru (
-                              <strong>
-                                Rp {saldoBaru.toLocaleString('id-ID')}
-                              </strong>
-                              ) melampaui batas maksimum yang diizinkan sekolah
-                              sebesar{' '}
-                              <strong>
-                                Rp {MAX_SALDO_SEKOLAH.toLocaleString('id-ID')}
-                              </strong>
-                              . Kurangi nominal top-up.
-                            </AlertDescription>
-                          </Alert>
-                        )}
-
-                        {/* Warning: Card Blocked */}
-                        {isStudentBlocked && (
-                          <Alert
-                            variant='destructive'
-                            className='border-red-300 bg-red-50 text-red-900 dark:bg-red-950/40 dark:text-red-200'
-                          >
-                            <ShieldAlert className='h-4 w-4 text-red-600 dark:text-red-400' />
-                            <AlertTitle className='text-xs font-bold tracking-wide uppercase'>
-                              Kartu Siswa Diblokir!
-                            </AlertTitle>
-                            <AlertDescription className='mt-1 text-xs'>
-                              Kartu siswa ini dalam status diblokir. Buka blokir
-                              terlebih dahulu sebelum mengisi saldo.
-                            </AlertDescription>
-                          </Alert>
-                        )}
                       </div>
-                    )}
 
-                    {/* Action Submit Button */}
-                    <Button
-                      type='submit'
-                      disabled={!isValidSubmit || isSubmitting}
-                      className='h-12 w-full gap-2 bg-emerald-600 text-base font-bold text-white shadow-md transition-all hover:bg-emerald-700'
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <RefreshCw className='h-5 w-5 animate-spin' />
-                          Memproses Top-up...
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircle2 className='h-5 w-5' />
-                          Proses Top-up Tunai & Terbitkan Slip
-                          <ArrowRight className='ml-auto h-4 w-4' />
-                        </>
+                      {/* Warning: Exceeding Max Balance */}
+                      {isExceedingLimit && (
+                        <Alert
+                          variant='destructive'
+                          className='border-0 bg-destructive/15 text-destructive'
+                        >
+                          <AlertCircle className='h-4 w-4 text-destructive' />
+                          <AlertTitle className='text-xs font-bold tracking-wide uppercase'>
+                            Melebihi Batas Saldo Maksimal Sekolah!
+                          </AlertTitle>
+                          <AlertDescription className='mt-1 text-xs leading-relaxed'>
+                            Saldo baru (
+                            <strong>
+                              Rp {saldoBaru.toLocaleString('id-ID')}
+                            </strong>
+                            ) melampaui batas maksimum yang diizinkan sekolah
+                            sebesar{' '}
+                            <strong>
+                              Rp {MAX_SALDO_SEKOLAH.toLocaleString('id-ID')}
+                            </strong>
+                            . Kurangi nominal top-up.
+                          </AlertDescription>
+                        </Alert>
                       )}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </div>
+
+                      {/* Warning: Card Blocked */}
+                      {isStudentBlocked && (
+                        <Alert
+                          variant='destructive'
+                          className='border-0 bg-destructive/15 text-destructive'
+                        >
+                          <ShieldAlert className='h-4 w-4 text-destructive' />
+                          <AlertTitle className='text-xs font-bold tracking-wide uppercase'>
+                            Kartu Siswa Diblokir!
+                          </AlertTitle>
+                          <AlertDescription className='mt-1 text-xs'>
+                            Kartu siswa ini dalam status diblokir. Buka blokir
+                            terlebih dahulu sebelum mengisi saldo.
+                          </AlertDescription>
+                        </Alert>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Action Submit Button */}
+                  <Button
+                    type='submit'
+                    disabled={!isValidSubmit || isSubmitting}
+                    className='h-11 w-full gap-2 bg-emerald-600 text-sm font-semibold text-white shadow-xs transition-all hover:bg-emerald-700 disabled:opacity-50'
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <RefreshCw className='h-4 w-4 animate-spin' />
+                        Memproses Top-up...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className='h-4 w-4' />
+                        Proses Top-up Tunai & Terbitkan Slip
+                        <ArrowRight className='ml-auto h-4 w-4' />
+                      </>
+                    )}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </Main>

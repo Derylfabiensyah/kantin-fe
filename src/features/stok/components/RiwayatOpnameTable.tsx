@@ -2,12 +2,10 @@ import { useState, useMemo } from 'react'
 import {
   Search,
   Filter,
-  RefreshCw,
   AlertOctagon,
   TrendingDown,
   TrendingUp,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -23,13 +21,11 @@ import type { RiwayatStokItem, JenisMutasiStok } from '../types'
 interface RiwayatOpnameTableProps {
   riwayatList: RiwayatStokItem[]
   isLoading?: boolean
-  onRefresh: () => void
+  onRefresh?: () => void
 }
 
 export function RiwayatOpnameTable({
   riwayatList,
-  isLoading = false,
-  onRefresh,
 }: RiwayatOpnameTableProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterJenis, setFilterJenis] = useState<string>('ALL_OPNAME')
@@ -151,19 +147,6 @@ export function RiwayatOpnameTable({
               </SelectContent>
             </Select>
           </div>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onRefresh}
-            disabled={isLoading}
-            className="text-xs h-9 border-0 bg-background hover:bg-muted/60"
-          >
-            <RefreshCw
-              className={`h-3.5 w-3.5 mr-1 ${isLoading ? 'animate-spin' : ''}`}
-            />
-            Muat Ulang
-          </Button>
         </CardContent>
       </Card>
 

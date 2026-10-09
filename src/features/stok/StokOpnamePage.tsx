@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import {
-  ClipboardCheck,
   Trash2,
   History,
   PlusCircle,
@@ -137,8 +136,7 @@ export function StokOpnamePage() {
         {/* Page Title & Quick Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="flex items-center gap-2.5 text-2xl font-bold tracking-tight text-foreground">
-              <ClipboardCheck className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
               Stok Opname Fisik & Barang Rusak
             </h1>
             <p className="mt-1 text-xs text-muted-foreground">

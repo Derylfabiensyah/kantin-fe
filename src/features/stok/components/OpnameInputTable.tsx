@@ -750,8 +750,7 @@ export function OpnameInputTable({
       <Dialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-primary" />
+            <DialogTitle>
               Konfirmasi Berita Acara Stok Opname
             </DialogTitle>
             <DialogDescription>

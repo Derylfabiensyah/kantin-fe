@@ -316,9 +316,8 @@ export function BarangRusakModal({
           <DialogTitle className="text-destructive">
             Pencatatan Barang Rusak / Basi Harian
           </DialogTitle>
-          <DialogDescription>
-            Catat item makanan yang rusak, basi, atau kedaluwarsa. Stok akan
-            langsung dikurangi dan dicatat dalam audit kerugian.
+          <DialogDescription className="sr-only">
+            Pencatatan Barang Rusak / Basi Harian
           </DialogDescription>
         </DialogHeader>
 

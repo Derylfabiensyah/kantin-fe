@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import {
-  Wallet,
-  CreditCard,
   AlertCircle,
   ArrowRight,
   RefreshCw,
@@ -125,38 +123,28 @@ export function TopupKartuTamuModal({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='max-w-md sm:rounded-2xl border-slate-200 dark:border-slate-800'>
+      <DialogContent className='max-w-md sm:rounded-2xl'>
         <DialogHeader>
-          <div className='flex items-center gap-3 mb-1'>
-            <div className='p-2.5 bg-emerald-100 dark:bg-emerald-950/60 rounded-xl'>
-              <Wallet className='h-5 w-5 text-emerald-600 dark:text-emerald-400' />
-            </div>
-            <div>
-              <DialogTitle className='text-base font-bold'>
-                Top-up Saldo Kartu Tamu
-              </DialogTitle>
-              <DialogDescription className='text-xs mt-0.5'>
-                Pengisian saldo tunai untuk kartu pemegang
-              </DialogDescription>
-            </div>
-          </div>
+          <DialogTitle className='text-lg font-bold'>
+            Top-up Saldo Kartu Tamu
+          </DialogTitle>
+          <DialogDescription className='text-sm text-muted-foreground'>
+            Pengisian saldo tunai untuk kartu tamu pemegang
+          </DialogDescription>
         </DialogHeader>
 
         {/* Kartu Info */}
-        <div className='flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800'>
-          <div className='p-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm'>
-            <CreditCard className='h-5 w-5 text-slate-600 dark:text-slate-400' />
-          </div>
+        <div className='flex items-center justify-between p-3.5 bg-muted/60 rounded-xl'>
           <div className='flex-1 min-w-0'>
             <div className='flex items-center gap-2'>
-              <span className='font-bold font-mono text-slate-900 dark:text-slate-100'>
+              <span className='font-bold font-mono text-foreground'>
                 {kartu.nomor_kartu}
               </span>
-              <Badge className='bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-emerald-200 text-xs'>
+              <Badge variant='outline' className='border-0 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 text-xs font-medium'>
                 AKTIF
               </Badge>
             </div>
-            <p className='text-xs text-muted-foreground truncate'>
+            <p className='text-xs text-muted-foreground truncate mt-0.5'>
               {kartu.label_pemegang || '(Tanpa label pemegang)'}
             </p>
           </div>
@@ -180,11 +168,8 @@ export function TopupKartuTamuModal({
                   key={preset}
                   type='button'
                   variant={nominalNum === preset ? 'default' : 'outline'}
-                  className={`h-11 text-xs font-semibold transition-all ${
-                    nominalNum === preset
-                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow'
-                      : 'hover:border-emerald-500 hover:text-emerald-600'
-                  }`}
+                  size='sm'
+                  className='h-10 text-xs font-semibold'
                   onClick={() => setNominal(preset.toString())}
                 >
                   {(preset / 1000).toFixed(0)}rb
@@ -202,7 +187,7 @@ export function TopupKartuTamuModal({
               Nominal (Rp)
             </Label>
             <div className='relative'>
-              <span className='absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-slate-500 text-sm'>
+              <span className='absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-muted-foreground text-sm'>
                 Rp
               </span>
               <Input
@@ -238,28 +223,28 @@ export function TopupKartuTamuModal({
           {/* Kalkulasi & Validasi */}
           {nominalNum > 0 && (
             <div className='space-y-3'>
-              <div className='p-3.5 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 text-sm'>
-                <p className='text-xs font-bold text-slate-500 uppercase tracking-wide'>
+              <div className='p-3.5 bg-muted/60 rounded-xl space-y-2 text-sm'>
+                <p className='text-xs font-bold text-muted-foreground uppercase tracking-wide'>
                   Kalkulasi
                 </p>
                 <div className='flex justify-between text-muted-foreground'>
                   <span>Saldo saat ini:</span>
-                  <span className='font-mono font-medium'>
+                  <span className='font-mono font-medium text-foreground'>
                     Rp {saldoSaatIni.toLocaleString('id-ID')}
                   </span>
                 </div>
-                <div className='flex justify-between text-emerald-600 font-medium'>
+                <div className='flex justify-between text-emerald-600 dark:text-emerald-400 font-medium'>
                   <span>Nominal (+):</span>
                   <span className='font-mono font-bold'>
                     Rp {nominalNum.toLocaleString('id-ID')}
                   </span>
                 </div>
-                <div className='border-t border-slate-200 dark:border-slate-700 pt-2 flex justify-between font-bold'>
+                <div className='border-t border-border pt-2 flex justify-between font-bold'>
                   <span>Estimasi saldo baru:</span>
                   <span
                     className={`font-mono ${
                       isExceedingLimit
-                        ? 'text-red-600 dark:text-red-400'
+                        ? 'text-destructive'
                         : 'text-emerald-600 dark:text-emerald-400'
                     }`}
                   >
@@ -269,7 +254,7 @@ export function TopupKartuTamuModal({
               </div>
 
               {isExceedingLimit && (
-                <Alert variant='destructive' className='border-red-300 bg-red-50 dark:bg-red-950/40'>
+                <Alert variant='destructive'>
                   <AlertCircle className='h-4 w-4' />
                   <AlertTitle className='text-xs font-bold uppercase'>
                     Melebihi Batas Maksimum!
@@ -296,7 +281,7 @@ export function TopupKartuTamuModal({
             <Button
               type='submit'
               disabled={!isValidSubmit || isSubmitting}
-              className='flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700 text-white font-semibold gap-2'
+              className='flex-1 sm:flex-none gap-2'
             >
               {isSubmitting ? (
                 <>

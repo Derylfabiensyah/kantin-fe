@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import {
-  ArrowLeftRight,
-  CreditCard,
   RefreshCw,
   AlertTriangle,
   CheckCircle2,
@@ -115,33 +113,23 @@ export function RefundKartuModal({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='max-w-md sm:rounded-2xl border-slate-200 dark:border-slate-800'>
+      <DialogContent className='max-w-md sm:rounded-2xl'>
         <DialogHeader>
-          <div className='flex items-center gap-3 mb-1'>
-            <div className='p-2.5 bg-amber-100 dark:bg-amber-950/60 rounded-xl'>
-              <ArrowLeftRight className='h-5 w-5 text-amber-600 dark:text-amber-400' />
-            </div>
-            <div>
-              <DialogTitle className='text-base font-bold'>
-                Pengembalian Kartu & Refund Tunai
-              </DialogTitle>
-              <DialogDescription className='text-xs mt-0.5'>
-                Sisa saldo akan di-refund tunai kepada pemegang
-              </DialogDescription>
-            </div>
-          </div>
+          <DialogTitle className='text-lg font-bold'>
+            Pengembalian Kartu & Refund Tunai
+          </DialogTitle>
+          <DialogDescription className='text-sm text-muted-foreground'>
+            Sisa saldo akan di-refund tunai kepada pemegang kartu
+          </DialogDescription>
         </DialogHeader>
 
         {/* Info Kartu */}
-        <div className='flex items-center gap-3 p-3.5 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800'>
-          <div className='p-2 bg-white dark:bg-amber-950/50 rounded-lg border border-amber-200 dark:border-amber-800 shadow-sm'>
-            <CreditCard className='h-5 w-5 text-amber-600 dark:text-amber-400' />
-          </div>
+        <div className='flex items-center justify-between p-3.5 bg-muted/60 rounded-xl'>
           <div className='flex-1 min-w-0'>
-            <p className='font-bold font-mono text-slate-900 dark:text-slate-100'>
+            <p className='font-bold font-mono text-foreground'>
               {kartu.nomor_kartu}
             </p>
-            <p className='text-xs text-muted-foreground truncate'>
+            <p className='text-xs text-muted-foreground truncate mt-0.5'>
               {kartu.label_pemegang || '(Tanpa label pemegang)'}
             </p>
           </div>
@@ -154,7 +142,7 @@ export function RefundKartuModal({
         </div>
 
         {/* Warning */}
-        <Alert className='border-amber-300 bg-amber-50 dark:bg-amber-950/30 text-amber-900 dark:text-amber-200'>
+        <Alert className='border-amber-500/30 bg-amber-500/10 text-amber-900 dark:text-amber-200'>
           <AlertTriangle className='h-4 w-4 text-amber-600 dark:text-amber-400' />
           <AlertDescription className='text-xs leading-relaxed'>
             <strong>Perhatian:</strong> Setelah dikonfirmasi —
@@ -179,7 +167,7 @@ export function RefundKartuModal({
               Nama Penerima Refund
             </Label>
             <div className='relative'>
-              <User className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400' />
+              <User className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
               <Input
                 id='nama-penerima'
                 placeholder='Contoh: Pak Hartono (Guru Fisika)'
@@ -203,7 +191,7 @@ export function RefundKartuModal({
             <Button
               type='submit'
               disabled={!isValidSubmit || isSubmitting}
-              className='flex-1 sm:flex-none bg-amber-600 hover:bg-amber-700 text-white font-semibold gap-2'
+              className='flex-1 sm:flex-none gap-2'
             >
               {isSubmitting ? (
                 <>

@@ -92,7 +92,7 @@ export function KartuTamuSlipModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='max-w-md p-0 overflow-hidden sm:rounded-2xl border-slate-200 dark:border-slate-800'>
+      <DialogContent className='max-w-md p-0 overflow-hidden sm:rounded-2xl border-border'>
         <style>{`
           @media print {
             @page { margin: 0; size: 80mm auto; }
@@ -131,7 +131,7 @@ export function KartuTamuSlipModal({
         </DialogHeader>
 
         {/* Receipt Wrapper */}
-        <div className='p-5 bg-slate-100 dark:bg-slate-950 flex justify-center no-print-bg'>
+        <div className='p-5 bg-muted/40 flex justify-center no-print-bg'>
           <div className='printable-slip w-full bg-white text-slate-900 border border-slate-300 rounded-xl p-5 shadow-sm space-y-4 font-mono text-xs'>
 
             {/* Header Nota */}
@@ -260,9 +260,9 @@ export function KartuTamuSlipModal({
         </div>
 
         {/* Modal Footer */}
-        <DialogFooter className='p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex-row justify-between items-center gap-2 no-print'>
+        <DialogFooter className='p-4 bg-background border-t border-border flex-row justify-between items-center gap-2 no-print'>
           <div className='text-[11px] text-muted-foreground flex items-center gap-1 hidden sm:flex'>
-            <FileText className='h-3.5 w-3.5 text-slate-400' />
+            <FileText className='h-3.5 w-3.5 text-muted-foreground' />
             Format Struk Thermal 80mm / PDF
           </div>
           <div className='flex items-center gap-2 w-full sm:w-auto justify-end'>
@@ -277,7 +277,7 @@ export function KartuTamuSlipModal({
             <Button
               type='button'
               onClick={handlePrint}
-              className='text-xs h-9 bg-blue-600 hover:bg-blue-700 text-white gap-2 font-semibold shadow-sm'
+              className='text-xs h-9 gap-2'
             >
               <Printer className='h-4 w-4' />
               Cetak Slip

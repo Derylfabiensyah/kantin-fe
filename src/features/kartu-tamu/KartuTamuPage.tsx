@@ -8,7 +8,6 @@ import {
   ShieldAlert,
   ShieldCheck,
   PackageOpen,
-  TrendingUp,
   Eye,
   Search,
 } from 'lucide-react'
@@ -19,6 +18,7 @@ import { Search as SearchComp } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import {
   Table,
@@ -50,19 +50,19 @@ const STATUS_CONFIG = {
   ACTIVE: {
     label: 'Aktif',
     className:
-      'bg-emerald-100 text-emerald-700 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-400 dark:border-emerald-800',
+      'border-0 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/20',
     icon: ShieldCheck,
   },
   BLOCKED: {
     label: 'Diblokir',
     className:
-      'bg-red-100 text-red-700 border-red-200 hover:bg-red-100 dark:bg-red-950/60 dark:text-red-400 dark:border-red-800',
+      'border-0 bg-destructive/15 text-destructive dark:text-destructive hover:bg-destructive/20',
     icon: ShieldAlert,
   },
   AVAILABLE: {
     label: 'Tersedia',
     className:
-      'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700',
+      'border-0 bg-muted text-muted-foreground hover:bg-muted/80',
     icon: PackageOpen,
   },
 }
@@ -219,7 +219,7 @@ export function KartuTamuPage() {
   return (
     <>
       <Header fixed>
-        <SearchComp />
+        <SearchComp showKbd={false} />
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
@@ -229,35 +229,30 @@ export function KartuTamuPage() {
       <Main>
         <div className='space-y-6 pb-10'>
           {/* Page Header */}
-          <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4'>
-            <div className='flex items-center gap-3'>
-              <div className='p-2.5 bg-primary/10 text-primary rounded-xl'>
-                <CreditCard className='h-6 w-6' />
-              </div>
-              <div>
-                <h1 className='text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100'>
-                  Manajemen Kartu Tamu
-                </h1>
-                <p className='text-sm text-muted-foreground'>
-                  Registrasi, top-up, pengembalian, dan blokir Kartu Tamu RFID
-                </p>
-              </div>
+          <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
+            <div>
+              <h1 className='text-2xl font-bold tracking-tight text-foreground'>
+                Manajemen Kartu Tamu
+              </h1>
+              <p className='text-sm text-muted-foreground'>
+                Registrasi, top-up, pengembalian, dan pemblokiran kartu tamu RFID.
+              </p>
             </div>
-            <div className='flex items-center gap-2 self-start sm:self-auto'>
+            <div className='flex items-center gap-2'>
               <Button
                 variant='outline'
                 size='sm'
                 onClick={handleRefresh}
                 disabled={isLoading}
-                className='text-xs gap-1.5'
+                className='gap-1.5 text-xs'
               >
                 <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-                Refresh
+                Muat Ulang
               </Button>
               <Button
                 size='sm'
                 onClick={() => openModal('register')}
-                className='text-xs gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow'
+                className='gap-1.5 text-xs'
               >
                 <Plus className='h-4 w-4' />
                 Daftarkan Kartu Baru
@@ -266,47 +261,78 @@ export function KartuTamuPage() {
           </div>
 
           {/* Summary Cards */}
-          <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
-            <SummaryCard
-              label='Kartu Aktif'
-              value={totalAktif}
-              icon={ShieldCheck}
-              colorClass='bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400'
-              badgeClass='text-emerald-600'
-            />
-            <SummaryCard
-              label='Total Saldo Beredar'
-              value={`Rp ${totalSaldo.toLocaleString('id-ID')}`}
-              icon={TrendingUp}
-              colorClass='bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400'
-              badgeClass='text-blue-600'
-              isRupiah
-            />
-            <SummaryCard
-              label='Kartu Diblokir'
-              value={totalDiblokir}
-              icon={ShieldAlert}
-              colorClass='bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-400'
-              badgeClass='text-red-600'
-            />
-            <SummaryCard
-              label='Kartu Tersedia'
-              value={totalTersedia}
-              icon={PackageOpen}
-              colorClass='bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
-              badgeClass='text-slate-500'
-            />
+          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+            <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
+              <CardContent className='p-4'>
+                <p className='text-xs font-medium text-muted-foreground'>
+                  Kartu Aktif Beredar
+                </p>
+                <h3 className='mt-0.5 text-xl font-bold text-foreground'>
+                  {totalAktif} Kartu
+                </h3>
+                <p className='mt-1 text-[11px] text-muted-foreground'>
+                  Dapat digunakan bertransaksi di POS
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
+              <CardContent className='p-4'>
+                <p className='text-xs font-medium text-muted-foreground'>
+                  Total Saldo Mengendap
+                </p>
+                <h3 className='mt-0.5 text-xl font-bold text-foreground'>
+                  Rp {totalSaldo.toLocaleString('id-ID')}
+                </h3>
+                <p className='mt-1 text-[11px] text-muted-foreground'>
+                  Akumulasi saldo tamu aktif
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
+              <CardContent className='p-4'>
+                <p className='text-xs font-medium text-muted-foreground'>
+                  Kartu Diblokir
+                </p>
+                <h3 className='mt-0.5 text-xl font-bold text-destructive'>
+                  {totalDiblokir} Kartu
+                </h3>
+                <p className='mt-1 text-[11px] text-muted-foreground'>
+                  Hilang / dinonaktifkan di sistem
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
+              <CardContent className='p-4'>
+                <p className='text-xs font-medium text-muted-foreground'>
+                  Kartu Tersedia
+                </p>
+                <h3 className='mt-0.5 text-xl font-bold text-foreground'>
+                  {totalTersedia} Kartu
+                </h3>
+                <p className='mt-1 text-[11px] text-muted-foreground'>
+                  Siap diterbitkan & dipinjamkan
+                </p>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Table Section */}
-          <div className='bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden'>
+          <div className='bg-card rounded-xl border shadow-xs overflow-hidden'>
             {/* Table Header */}
-            <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border-b border-slate-200 dark:border-slate-800'>
-              <h2 className='text-sm font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide'>
-                Daftar Kartu Tamu ({filteredCards.length})
-              </h2>
+            <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border-b'>
+              <div>
+                <h2 className='text-base font-semibold text-foreground'>
+                  Daftar Kartu Tamu
+                </h2>
+                <p className='text-xs text-muted-foreground'>
+                  Menampilkan {filteredCards.length} kartu terdaftar
+                </p>
+              </div>
               <div className='relative max-w-xs w-full'>
-                <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400' />
+                <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
                 <Input
                   placeholder='Cari nomor, label, atau UID...'
                   value={searchQuery}
@@ -319,26 +345,26 @@ export function KartuTamuPage() {
             <div className='overflow-x-auto'>
               <Table>
                 <TableHeader>
-                  <TableRow className='bg-slate-50 dark:bg-slate-900/60'>
-                    <TableHead className='text-xs font-bold uppercase tracking-wide text-slate-500 w-[110px]'>
+                  <TableRow>
+                    <TableHead className='text-xs font-medium w-[110px]'>
                       No. Kartu
                     </TableHead>
-                    <TableHead className='text-xs font-bold uppercase tracking-wide text-slate-500'>
+                    <TableHead className='text-xs font-medium'>
                       Label Pemegang
                     </TableHead>
-                    <TableHead className='text-xs font-bold uppercase tracking-wide text-slate-500'>
+                    <TableHead className='text-xs font-medium'>
                       UID RFID
                     </TableHead>
-                    <TableHead className='text-xs font-bold uppercase tracking-wide text-slate-500 text-right'>
+                    <TableHead className='text-xs font-medium text-right'>
                       Saldo
                     </TableHead>
-                    <TableHead className='text-xs font-bold uppercase tracking-wide text-slate-500 text-center'>
+                    <TableHead className='text-xs font-medium text-center'>
                       Status
                     </TableHead>
-                    <TableHead className='text-xs font-bold uppercase tracking-wide text-slate-500 text-center'>
+                    <TableHead className='text-xs font-medium text-center'>
                       Terakhir Dipakai
                     </TableHead>
-                    <TableHead className='text-xs font-bold uppercase tracking-wide text-slate-500 text-center w-[180px]'>
+                    <TableHead className='text-xs font-medium text-center w-[180px]'>
                       Aksi
                     </TableHead>
                   </TableRow>
@@ -368,20 +394,18 @@ export function KartuTamuPage() {
                     return (
                       <TableRow
                         key={card.id}
-                        className={`transition-colors hover:bg-slate-50/70 dark:hover:bg-slate-800/30 ${
-                          isBlocked ? 'opacity-60' : ''
-                        }`}
+                        className={isBlocked ? 'opacity-60' : ''}
                       >
                         {/* Nomor Kartu */}
                         <TableCell>
-                          <span className='font-mono font-bold text-sm text-slate-900 dark:text-slate-100'>
+                          <span className='font-mono font-bold text-sm text-foreground'>
                             {card.nomor_kartu}
                           </span>
                         </TableCell>
 
                         {/* Label */}
                         <TableCell>
-                          <span className='text-sm text-slate-700 dark:text-slate-300'>
+                          <span className='text-sm text-foreground'>
                             {card.label_pemegang || (
                               <span className='text-muted-foreground italic text-xs'>
                                 (Kosong)
@@ -392,7 +416,7 @@ export function KartuTamuPage() {
 
                         {/* UID */}
                         <TableCell>
-                          <code className='text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded'>
+                          <code className='text-xs font-mono bg-muted text-muted-foreground px-2 py-0.5 rounded'>
                             {card.uid}
                           </code>
                         </TableCell>
@@ -403,7 +427,7 @@ export function KartuTamuPage() {
                             className={`font-mono font-bold text-sm ${
                               isActive
                                 ? 'text-emerald-600 dark:text-emerald-400'
-                                : 'text-slate-400'
+                                : 'text-muted-foreground'
                             }`}
                           >
                             Rp {card.saldo.toLocaleString('id-ID')}
@@ -414,7 +438,7 @@ export function KartuTamuPage() {
                         <TableCell className='text-center'>
                           <Badge
                             variant='outline'
-                            className={`text-xs gap-1 ${statusCfg.className}`}
+                            className={`text-xs gap-1 font-medium ${statusCfg.className}`}
                           >
                             <StatusIcon className='h-3 w-3' />
                             {statusCfg.label}
@@ -508,7 +532,7 @@ export function KartuTamuPage() {
                                   <Button
                                     size='icon'
                                     variant='ghost'
-                                    className='h-8 w-8 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800'
+                                    className='h-8 w-8 rounded-lg text-muted-foreground hover:bg-muted'
                                     onClick={() => {
                                       // Placeholder: riwayat transaksi per kartu
                                     }}
@@ -529,13 +553,13 @@ export function KartuTamuPage() {
             </div>
 
             {/* Legend */}
-            <div className='flex flex-wrap items-center gap-4 px-4 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30'>
+            <div className='flex flex-wrap items-center gap-4 px-4 py-3 border-t bg-muted/40'>
               <p className='text-xs text-muted-foreground font-medium'>Keterangan status:</p>
               {Object.entries(STATUS_CONFIG).map(([key, cfg]) => {
                 const Icon = cfg.icon
                 return (
                   <div key={key} className='flex items-center gap-1.5'>
-                    <Badge variant='outline' className={`text-xs gap-1 ${cfg.className}`}>
+                    <Badge variant='outline' className={`text-xs gap-1 font-medium ${cfg.className}`}>
                       <Icon className='h-3 w-3' />
                       {cfg.label}
                     </Badge>
@@ -597,38 +621,5 @@ export function KartuTamuPage() {
         slipData={slipData}
       />
     </>
-  )
-}
-
-// ─── Summary Card Sub-component ────────────────────────────────────────────
-
-interface SummaryCardProps {
-  label: string
-  value: number | string
-  icon: React.ElementType
-  colorClass: string
-  badgeClass: string
-  isRupiah?: boolean
-}
-
-function SummaryCard({
-  label,
-  value,
-  icon: Icon,
-  colorClass,
-  badgeClass,
-}: SummaryCardProps) {
-  return (
-    <div className='flex items-center gap-3 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm'>
-      <div className={`p-2.5 rounded-xl ${colorClass}`}>
-        <Icon className='h-5 w-5' />
-      </div>
-      <div className='min-w-0'>
-        <p className='text-xs text-muted-foreground font-medium truncate'>{label}</p>
-        <p className={`text-lg font-bold leading-tight ${badgeClass}`}>
-          {typeof value === 'number' ? value : value}
-        </p>
-      </div>
-    </div>
   )
 }

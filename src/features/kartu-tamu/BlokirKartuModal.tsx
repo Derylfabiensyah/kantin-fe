@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import {
   ShieldAlert,
-  CreditCard,
   RefreshCw,
   AlertTriangle,
   ArrowRight,
@@ -121,46 +120,36 @@ export function BlokirKartuModal({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='max-w-md sm:rounded-2xl border-slate-200 dark:border-slate-800'>
+      <DialogContent className='max-w-md sm:rounded-2xl'>
         <DialogHeader>
-          <div className='flex items-center gap-3 mb-1'>
-            <div className='p-2.5 bg-red-100 dark:bg-red-950/60 rounded-xl'>
-              <ShieldAlert className='h-5 w-5 text-red-600 dark:text-red-400' />
-            </div>
-            <div>
-              <DialogTitle className='text-base font-bold text-red-700 dark:text-red-400'>
-                Blokir Kartu Hilang — Instan!
-              </DialogTitle>
-              <DialogDescription className='text-xs mt-0.5'>
-                Kartu akan diblokir segera dan tidak dapat digunakan di kasir
-              </DialogDescription>
-            </div>
-          </div>
+          <DialogTitle className='text-lg font-bold text-destructive'>
+            Blokir Kartu Hilang / Rusak
+          </DialogTitle>
+          <DialogDescription className='text-sm text-muted-foreground'>
+            Kartu akan diblokir segera dan ditolak saat bertransaksi di POS kasir
+          </DialogDescription>
         </DialogHeader>
 
         {/* Info Kartu */}
-        <div className='flex items-center gap-3 p-3.5 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-200 dark:border-red-800'>
-          <div className='p-2 bg-white dark:bg-red-950/50 rounded-lg border border-red-200 dark:border-red-800 shadow-sm'>
-            <CreditCard className='h-5 w-5 text-red-600 dark:text-red-400' />
-          </div>
+        <div className='flex items-center justify-between p-3.5 bg-muted/60 rounded-xl'>
           <div className='flex-1 min-w-0'>
-            <p className='font-bold font-mono text-slate-900 dark:text-slate-100'>
+            <p className='font-bold font-mono text-foreground'>
               {kartu.nomor_kartu}
             </p>
-            <p className='text-xs text-muted-foreground truncate'>
+            <p className='text-xs text-muted-foreground truncate mt-0.5'>
               {kartu.label_pemegang || '(Tanpa label pemegang)'}
             </p>
           </div>
           <div className='text-right shrink-0'>
             <p className='text-xs text-muted-foreground'>Saldo Tersisa</p>
-            <p className='font-bold text-xl text-red-600 dark:text-red-400 font-mono'>
+            <p className='font-bold text-xl text-destructive font-mono'>
               Rp {kartu.saldo.toLocaleString('id-ID')}
             </p>
           </div>
         </div>
 
         {/* Danger Warning */}
-        <Alert variant='destructive' className='border-red-300 bg-red-50 dark:bg-red-950/40'>
+        <Alert variant='destructive'>
           <AlertTriangle className='h-4 w-4' />
           <AlertTitle className='text-xs font-bold uppercase tracking-wide'>
             Peringatan — Tindakan Permanen
@@ -176,7 +165,7 @@ export function BlokirKartuModal({
           {/* Transfer Saldo Option */}
           {kartu.saldo > 0 && (
             <div className='space-y-3'>
-              <div className='flex items-start space-x-3 p-3.5 border border-slate-200 dark:border-slate-700 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors'>
+              <div className='flex items-start space-x-3 p-3.5 border rounded-xl cursor-pointer hover:bg-muted/50 transition-colors'>
                 <Checkbox
                   id='transfer-saldo'
                   checked={transferSaldo}
@@ -189,9 +178,9 @@ export function BlokirKartuModal({
                 <div className='flex-1'>
                   <label
                     htmlFor='transfer-saldo'
-                    className='text-sm font-semibold cursor-pointer text-slate-900 dark:text-slate-100 flex items-center gap-2'
+                    className='text-sm font-semibold cursor-pointer text-foreground flex items-center gap-2'
                   >
-                    <ArrowRight className='h-4 w-4 text-blue-500' />
+                    <ArrowRight className='h-4 w-4 text-primary' />
                     Transfer sisa saldo ke Kartu Tamu lain
                   </label>
                   <p className='text-xs text-muted-foreground mt-0.5'>
@@ -210,8 +199,8 @@ export function BlokirKartuModal({
                     Pilih Kartu Tujuan Transfer
                   </Label>
                   {transferTargets.length === 0 ? (
-                    <div className='flex items-center gap-2 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg border border-dashed border-slate-300 dark:border-slate-700'>
-                      <Info className='h-4 w-4 text-slate-400' />
+                    <div className='flex items-center gap-2 p-3 bg-muted/40 rounded-lg border border-dashed'>
+                      <Info className='h-4 w-4 text-muted-foreground' />
                       <p className='text-xs text-muted-foreground'>
                         Tidak ada Kartu Tamu aktif lain yang tersedia.
                       </p>
@@ -229,7 +218,7 @@ export function BlokirKartuModal({
                               <span className='text-muted-foreground text-xs'>
                                 {c.label_pemegang || '(Tanpa label)'}
                               </span>
-                              <span className='ml-auto text-emerald-600 text-xs font-mono font-medium'>
+                              <span className='ml-auto text-emerald-600 dark:text-emerald-400 text-xs font-mono font-medium'>
                                 Rp {c.saldo.toLocaleString('id-ID')}
                               </span>
                             </div>
@@ -244,8 +233,8 @@ export function BlokirKartuModal({
           )}
 
           {kartu.saldo === 0 && (
-            <div className='flex items-center gap-2 p-3 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-700'>
-              <Info className='h-4 w-4 text-slate-400 shrink-0' />
+            <div className='flex items-center gap-2 p-3 bg-muted/40 rounded-xl border border-dashed'>
+              <Info className='h-4 w-4 text-muted-foreground shrink-0' />
               <p className='text-xs text-muted-foreground'>
                 Saldo kartu sudah Rp 0. Tidak ada saldo yang perlu ditransfer.
               </p>
@@ -264,9 +253,10 @@ export function BlokirKartuModal({
           </Button>
           <Button
             type='button'
+            variant='destructive'
             disabled={!isValidSubmit || isSubmitting}
             onClick={handleSubmit}
-            className='flex-1 sm:flex-none bg-red-600 hover:bg-red-700 text-white font-semibold gap-2'
+            className='flex-1 sm:flex-none gap-2'
           >
             {isSubmitting ? (
               <>

@@ -753,9 +753,8 @@ export function OpnameInputTable({
             <DialogTitle>
               Konfirmasi Berita Acara Stok Opname
             </DialogTitle>
-            <DialogDescription>
-              Penyesuaian stok akan diproses dalam satu transaksi database
-              atomik (all-or-nothing).
+            <DialogDescription className="sr-only">
+              Konfirmasi Berita Acara Stok Opname
             </DialogDescription>
           </DialogHeader>
 

@@ -1,5 +1,5 @@
 import { useState, useId } from 'react'
-import { AlertCircle, Trash2 } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -313,8 +313,7 @@ export function BarangRusakModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-destructive">
-            <Trash2 className="h-5 w-5" />
+          <DialogTitle className="text-destructive">
             Pencatatan Barang Rusak / Basi Harian
           </DialogTitle>
           <DialogDescription>

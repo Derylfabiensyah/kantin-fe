@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { RotateCcw, AlertTriangle, Loader2 } from 'lucide-react'
+import { RotateCcw, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatRupiah, formatNumber, formatDateTime } from '@/lib/formatters'
 import { Badge } from '@/components/ui/badge'
@@ -119,28 +119,23 @@ function PembalikFormContent({
 
   return (
     <form onSubmit={handleSubmit}>
-      <DialogHeader className='space-y-1'>
-        <div className='flex items-center gap-2 text-destructive'>
-          <RotateCcw className='h-5 w-5' />
-          <DialogTitle className='text-lg'>
-            Koreksi Barang Masuk (Pembalik)
-          </DialogTitle>
-        </div>
-        <DialogDescription className='text-xs'>
-          Mencatat mutasi pembalik baru sesuai prinsip immutability akuntansi
-          (data asli tidak dihapus). Alasan wajib disertakan untuk keperluan
-          audit.
+      <DialogHeader>
+        <DialogTitle className='text-lg text-destructive'>
+          Koreksi Barang Masuk (Pembalik)
+        </DialogTitle>
+        <DialogDescription className='sr-only'>
+          Koreksi Barang Masuk (Pembalik)
         </DialogDescription>
       </DialogHeader>
 
       <div className='space-y-4 py-4 text-xs'>
         {/* Box Ringkasan Transaksi Asal */}
-        <div className='space-y-2 rounded-lg border bg-muted/40 p-3'>
+        <div className='space-y-2 rounded-lg border-0 bg-muted/60 dark:bg-muted/25 p-3 shadow-xs'>
           <div className='flex items-center justify-between'>
             <span className='text-sm font-semibold text-foreground'>
               {mutasi.menuNama || `Menu #${mutasi.menuId}`}
             </span>
-            <Badge variant='outline' className='text-[10px]'>
+            <Badge className='border-0 bg-muted/80 text-[10px] font-normal text-muted-foreground'>
               Bukti Asal: {mutasi.referensiId}
             </Badge>
           </div>
@@ -250,9 +245,8 @@ function PembalikFormContent({
         </div>
 
         {/* Simulasi Dampak Pembalik */}
-        <div className='space-y-1 rounded-lg border border-amber-200/50 bg-amber-500/10 p-3 text-xs dark:border-amber-900/50'>
-          <p className='flex items-center gap-1.5 font-semibold text-amber-600 dark:text-amber-400'>
-            <AlertTriangle className='h-3.5 w-3.5' />
+        <div className='space-y-1 rounded-lg border-0 bg-destructive/10 p-3 text-xs'>
+          <p className='font-semibold text-destructive'>
             Simulasi Dampak terhadap Stok & HPP:
           </p>
           <div className='grid grid-cols-2 gap-2 pt-1 text-[11px]'>

@@ -174,7 +174,7 @@ export function BarangMasukPage() {
               <p className='text-xs font-medium text-muted-foreground'>
                 Peringatan Stok Menipis
               </p>
-              <h3 className='mt-0.5 text-xl font-bold text-amber-500'>
+              <h3 className='mt-0.5 text-xl font-bold text-destructive'>
                 {stokMenipis.length > 0 ? (
                   <span>{stokMenipis.length} Menu</span>
                 ) : (

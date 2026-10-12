@@ -775,7 +775,7 @@ export function OpnameInputTable({
               </p>
             </div>
 
-            <div className="rounded-lg border border-border/80 bg-muted/40 p-3 space-y-2 text-xs">
+            <div className="rounded-lg border-0 bg-muted/60 dark:bg-muted/25 p-3 space-y-2 text-xs shadow-xs">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Total Menu Diaudit:</span>
                 <span className="font-semibold">

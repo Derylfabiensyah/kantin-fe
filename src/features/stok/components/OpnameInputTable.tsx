@@ -482,7 +482,7 @@ export function OpnameInputTable({
                 className="text-xs h-9 border-0 bg-background hover:bg-muted/60"
               >
                 <CheckCircle2 className="h-3.5 w-3.5 mr-1 text-emerald-500" />
-                Isi Fisik = Sistem
+                Samakan dengan Sistem
               </Button>
 
               <Button

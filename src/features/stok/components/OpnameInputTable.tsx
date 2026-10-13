@@ -482,7 +482,7 @@ export function OpnameInputTable({
                 className="text-xs h-9 border-0 bg-background hover:bg-muted/60"
               >
                 <CheckCircle2 className="h-3.5 w-3.5 mr-1 text-emerald-500" />
-                Isi Fisik = Sistem
+                Samakan dengan Sistem
               </Button>
 
               <Button
@@ -750,13 +750,11 @@ export function OpnameInputTable({
       <Dialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-primary" />
+            <DialogTitle>
               Konfirmasi Berita Acara Stok Opname
             </DialogTitle>
-            <DialogDescription>
-              Penyesuaian stok akan diproses dalam satu transaksi database
-              atomik (all-or-nothing).
+            <DialogDescription className="sr-only">
+              Konfirmasi Berita Acara Stok Opname
             </DialogDescription>
           </DialogHeader>
 
@@ -777,7 +775,7 @@ export function OpnameInputTable({
               </p>
             </div>
 
-            <div className="rounded-lg border border-border/80 bg-muted/40 p-3 space-y-2 text-xs">
+            <div className="rounded-lg border-0 bg-muted/60 dark:bg-muted/25 p-3 space-y-2 text-xs shadow-xs">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Total Menu Diaudit:</span>
                 <span className="font-semibold">

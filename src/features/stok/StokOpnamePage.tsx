@@ -11,7 +11,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { katalogApi } from '@/features/katalog/api/katalog-api'
 import type { MenuItem, KategoriItem } from '@/features/katalog/types'
@@ -125,7 +124,6 @@ export function StokOpnamePage() {
     <>
       {/* Top Navigation Bar */}
       <Header fixed>
-        <Search showKbd={false} />
         <div className="ml-auto flex items-center space-x-4">
           <ThemeSwitch />
           <ProfileDropdown />
@@ -189,9 +187,7 @@ export function StokOpnamePage() {
           {/* Tab 2: Barang Rusak Harian */}
           <TabsContent value="rusak" className="space-y-4 focus-visible:outline-none">
             <BarangRusakPage
-              menuList={menuList}
               riwayatList={riwayatList}
-              hppMap={hppMap}
               isLoading={isLoading}
               onRefresh={loadData}
             />

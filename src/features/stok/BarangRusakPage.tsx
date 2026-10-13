@@ -1,32 +1,23 @@
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import {
   Trash2,
-  PlusCircle,
   Calendar,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { BarangRusakModal } from './components/BarangRusakModal'
 import { RiwayatOpnameTable } from './components/RiwayatOpnameTable'
 import type { RiwayatStokItem } from './types'
-import type { MenuItem } from '@/features/katalog/types'
 
 interface BarangRusakPageProps {
-  menuList: MenuItem[]
   riwayatList: RiwayatStokItem[]
-  hppMap: Record<number, number>
   isLoading?: boolean
   onRefresh: () => void
 }
 
 export function BarangRusakPage({
-  menuList,
   riwayatList,
-  hppMap,
   isLoading = false,
   onRefresh,
 }: BarangRusakPageProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
   // Metrics specifically for BARANG_RUSAK
   const stats = useMemo(() => {
@@ -44,24 +35,11 @@ export function BarangRusakPage({
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <Trash2 className="h-5 w-5 text-destructive" />
-            <h2 className="text-xl font-bold tracking-tight text-foreground">
-              Pencatatan Barang Rusak & Basi Harian
-            </h2>
-          </div>
-        </div>
-
-        <Button
-          variant="destructive"
-          onClick={() => setIsModalOpen(true)}
-          className="text-white font-semibold text-xs shadow-md shrink-0"
-        >
-          <PlusCircle className="h-4 w-4 mr-1.5" />
-          Catat Barang Rusak Baru
-        </Button>
+      <div className="flex items-center gap-2">
+        <Trash2 className="h-5 w-5 text-destructive" />
+        <h2 className="text-xl font-bold tracking-tight text-foreground">
+          Pencatatan Barang Rusak & Basi Harian
+        </h2>
       </div>
 
       {/* KPI Cards */}
@@ -130,15 +108,6 @@ export function BarangRusakPage({
           onRefresh={onRefresh}
         />
       </div>
-
-      {/* Modal */}
-      <BarangRusakModal
-        open={isModalOpen}
-        onOpenChange={setIsModalOpen}
-        menuList={menuList}
-        hppMap={hppMap}
-        onSuccess={onRefresh}
-      />
     </div>
   )
 }

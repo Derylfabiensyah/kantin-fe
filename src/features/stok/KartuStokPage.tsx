@@ -306,10 +306,6 @@ export function KartuStokPage() {
   return (
     <>
       <Header fixed>
-        <div className='flex items-center gap-2 font-semibold text-lg'>
-          <History className='h-5 w-5 text-primary' />
-          <span>Kartu Stok Inventaris</span>
-        </div>
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
@@ -321,7 +317,7 @@ export function KartuStokPage() {
         <div className='flex flex-col md:flex-row md:items-center justify-between gap-4'>
           <div>
             <h1 className='text-2xl font-bold tracking-tight'>
-              Kartu Stok per Item
+              Kartu Stok Inventaris
             </h1>
 
           </div>

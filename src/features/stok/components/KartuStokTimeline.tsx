@@ -187,7 +187,7 @@ export function KartuStokTimeline({
 
             {/* Card Content */}
             <div className='flex-1 min-w-0'>
-              <Card className='transition-all duration-200 border-border/70 hover:border-border hover:shadow-md'>
+              <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all duration-200 hover:shadow-md'>
                 <CardContent className='p-4 sm:p-5'>
                   {/* Header: [Badge] • #ID_TRANSAKSI             TANGGAL & WAKTU */}
                   <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b pb-3 mb-3'>

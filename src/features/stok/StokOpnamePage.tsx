@@ -187,9 +187,7 @@ export function StokOpnamePage() {
           {/* Tab 2: Barang Rusak Harian */}
           <TabsContent value="rusak" className="space-y-4 focus-visible:outline-none">
             <BarangRusakPage
-              menuList={menuList}
               riwayatList={riwayatList}
-              hppMap={hppMap}
               isLoading={isLoading}
               onRefresh={loadData}
             />

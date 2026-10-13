@@ -6,20 +6,15 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { RiwayatOpnameTable } from './components/RiwayatOpnameTable'
 import type { RiwayatStokItem } from './types'
-import type { MenuItem } from '@/features/katalog/types'
 
 interface BarangRusakPageProps {
-  menuList: MenuItem[]
   riwayatList: RiwayatStokItem[]
-  hppMap: Record<number, number>
   isLoading?: boolean
   onRefresh: () => void
 }
 
 export function BarangRusakPage({
-  menuList,
   riwayatList,
-  hppMap,
   isLoading = false,
   onRefresh,
 }: BarangRusakPageProps) {

@@ -40,9 +40,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
         label: 'Barang Masuk (Restock)',
         badgeVariant: 'outline',
         badgeClass:
-          'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+          'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-400 dark:border-emerald-800',
         icon: ArrowDownLeft,
-        iconClass: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30',
+        iconClass:
+          'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-400 dark:border-emerald-800',
         sign: '+',
         isMasuk: true,
       }
@@ -51,9 +52,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
         label: 'Koreksi Pembalik',
         badgeVariant: 'outline',
         badgeClass:
-          'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
+          'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-400 dark:border-amber-800',
         icon: RotateCcw,
-        iconClass: 'bg-amber-500/10 text-amber-600 border-amber-500/30',
+        iconClass:
+          'bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-950/80 dark:text-amber-400 dark:border-amber-800',
         sign: '-',
         isMasuk: false,
       }
@@ -62,9 +64,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
         label: 'Penjualan Kasir POS',
         badgeVariant: 'outline',
         badgeClass:
-          'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/30',
+          'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/50 dark:text-blue-400 dark:border-blue-800',
         icon: ShoppingCart,
-        iconClass: 'bg-blue-500/10 text-blue-600 border-blue-500/30',
+        iconClass:
+          'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/80 dark:text-blue-400 dark:border-blue-800',
         sign: '-',
         isMasuk: false,
       }
@@ -73,9 +76,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
         label: 'Pembatalan Transaksi (Void)',
         badgeVariant: 'outline',
         badgeClass:
-          'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/30',
+          'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/50 dark:text-purple-400 dark:border-purple-800',
         icon: RotateCcw,
-        iconClass: 'bg-purple-500/10 text-purple-600 border-purple-500/30',
+        iconClass:
+          'bg-purple-50 text-purple-600 border-purple-200 dark:bg-purple-950/80 dark:text-purple-400 dark:border-purple-800',
         sign: '+',
         isMasuk: true,
       }
@@ -84,9 +88,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
         label: 'Opname Fisik (Selisih Lebih)',
         badgeVariant: 'outline',
         badgeClass:
-          'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/30',
+          'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-400 dark:border-emerald-800',
         icon: PlusCircle,
-        iconClass: 'bg-teal-500/10 text-teal-600 border-teal-500/30',
+        iconClass:
+          'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-400 dark:border-emerald-800',
         sign: '+',
         isMasuk: true,
       }
@@ -95,9 +100,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
         label: 'Opname Fisik (Selisih Kurang)',
         badgeVariant: 'outline',
         badgeClass:
-          'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30',
+          'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-400 dark:border-emerald-800',
         icon: MinusCircle,
-        iconClass: 'bg-rose-500/10 text-rose-600 border-rose-500/30',
+        iconClass:
+          'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-400 dark:border-emerald-800',
         sign: '-',
         isMasuk: false,
       }
@@ -106,9 +112,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
         label: 'Barang Rusak / Basi',
         badgeVariant: 'destructive',
         badgeClass:
-          'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30',
+          'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/50 dark:text-red-400 dark:border-red-800',
         icon: Trash2,
-        iconClass: 'bg-red-500/10 text-red-600 border-red-500/30',
+        iconClass:
+          'bg-red-50 text-red-600 border-red-200 dark:bg-red-950/80 dark:text-red-400 dark:border-red-800',
         sign: '-',
         isMasuk: false,
       }
@@ -161,130 +168,135 @@ export function KartuStokTimeline({
   )
 
   return (
-    <div className='relative pl-6 sm:pl-8 before:absolute before:left-3 sm:before:left-4 before:top-2 before:bottom-2 before:w-0.5 before:bg-border/70 space-y-6'>
+    <div className='relative space-y-6'>
+      {/* Garis timeline vertikal menyatu rapi */}
+      <div className='absolute left-4 top-4 bottom-4 w-0.5 -translate-x-1/2 bg-border/80' />
+
       {sortedItems.map((item, index) => {
         const meta = getMutationMeta(item.jenis)
         const IconComponent = meta.icon
         const aktorDisplay = item.aktorNama || (item.aktorId ? `Aktor #${item.aktorId}` : 'Sistem')
 
         return (
-          <div key={item.id ?? index} className='relative group'>
+          <div key={item.id ?? index} className='relative flex items-start gap-3.5 sm:gap-4 group'>
             {/* Dot / Icon marker on vertical line */}
             <div
-              className={`absolute -left-6 sm:-left-8 top-1.5 flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full border shadow-sm transition-transform group-hover:scale-110 ${meta.iconClass}`}
+              className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border shadow-xs transition-transform group-hover:scale-105 ${meta.iconClass}`}
             >
-              <IconComponent className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
+              <IconComponent className='h-4 w-4' />
             </div>
 
             {/* Card Content */}
-            <Card className='transition-all duration-200 border-border/70 hover:border-border hover:shadow-md'>
-              <CardContent className='p-4 sm:p-5'>
-                <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b pb-3 mb-3'>
-                  <div className='flex flex-wrap items-center gap-2'>
-                    <Badge
-                      variant='outline'
-                      className={`font-medium ${meta.badgeClass}`}
-                    >
-                      {meta.label}
-                    </Badge>
-                    <span className='inline-flex items-center gap-1 text-xs text-muted-foreground'>
-                      <Hash className='h-3 w-3' />
-                      <span className='font-mono font-medium text-foreground'>
-                        {item.referensiId}
+            <div className='flex-1 min-w-0'>
+              <Card className='transition-all duration-200 border-border/70 hover:border-border hover:shadow-md'>
+                <CardContent className='p-4 sm:p-5'>
+                  <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b pb-3 mb-3'>
+                    <div className='flex flex-wrap items-center gap-2'>
+                      <Badge
+                        variant='outline'
+                        className={`font-medium ${meta.badgeClass}`}
+                      >
+                        {meta.label}
+                      </Badge>
+                      <span className='inline-flex items-center gap-1 text-xs text-muted-foreground'>
+                        <Hash className='h-3 w-3' />
+                        <span className='font-mono font-medium text-foreground'>
+                          {item.referensiId}
+                        </span>
                       </span>
-                    </span>
+                    </div>
+
+                    <div className='flex items-center gap-2 text-xs text-muted-foreground'>
+                      <Calendar className='h-3.5 w-3.5' />
+                      <span>{formatDateTime(item.waktu)}</span>
+                    </div>
                   </div>
 
-                  <div className='flex items-center gap-2 text-xs text-muted-foreground'>
-                    <Calendar className='h-3.5 w-3.5' />
-                    <span>{formatDateTime(item.waktu)}</span>
-                  </div>
-                </div>
+                  <div className='grid grid-cols-2 sm:grid-cols-4 gap-y-3 sm:gap-y-0 py-1'>
+                    {/* Perubahan Qty */}
+                    <div className='sm:pr-4 sm:border-r border-border/60'>
+                      <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
+                        Perubahan Qty
+                      </span>
+                      <span
+                        className={`text-base font-bold font-mono block ${
+                          meta.isMasuk
+                            ? 'text-emerald-600 dark:text-emerald-400'
+                            : 'text-rose-600 dark:text-rose-400'
+                        }`}
+                      >
+                        {meta.sign}
+                        {formatNumber(item.qty)} unit
+                      </span>
+                    </div>
 
-                <div className='grid grid-cols-2 sm:grid-cols-4 gap-y-3 sm:gap-y-0 py-1'>
-                  {/* Perubahan Qty */}
-                  <div className='sm:pr-4 sm:border-r border-border/60'>
-                    <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
-                      Perubahan Qty
-                    </span>
-                    <span
-                      className={`text-base font-bold font-mono block ${
-                        meta.isMasuk
-                          ? 'text-emerald-600 dark:text-emerald-400'
-                          : 'text-rose-600 dark:text-rose-400'
-                      }`}
-                    >
-                      {meta.sign}
-                      {formatNumber(item.qty)} unit
-                    </span>
+                    {/* Saldo Akhir */}
+                    <div className='sm:px-4 sm:border-r border-border/60'>
+                      <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
+                        Saldo Akhir
+                      </span>
+                      <span className='text-base font-bold font-mono text-foreground block'>
+                        {formatNumber(item.stokSetelah)} unit
+                      </span>
+                    </div>
+
+                    {/* Snapshot HPP */}
+                    <div className='sm:px-4 sm:border-r border-border/60'>
+                      <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
+                        Snapshot HPP
+                      </span>
+                      <span className='text-base font-bold font-mono text-foreground block'>
+                        {formatRupiah(item.hppSnapshot)}
+                      </span>
+                    </div>
+
+                    {/* Dicatat Oleh */}
+                    <div className='sm:pl-4'>
+                      <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
+                        Dicatat Oleh
+                      </span>
+                      <span className='text-sm font-semibold text-foreground flex items-center gap-1.5 truncate pt-0.5'>
+                        <User className='h-3.5 w-3.5 text-muted-foreground shrink-0' />
+                        <span className='truncate'>{aktorDisplay}</span>
+                      </span>
+                    </div>
                   </div>
 
-                  {/* Saldo Akhir */}
-                  <div className='sm:px-4 sm:border-r border-border/60'>
-                    <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
-                      Saldo Akhir
-                    </span>
-                    <span className='text-base font-bold font-mono text-foreground block'>
-                      {formatNumber(item.stokSetelah)} unit
-                    </span>
-                  </div>
-
-                  {/* Snapshot HPP */}
-                  <div className='sm:px-4 sm:border-r border-border/60'>
-                    <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
-                      Snapshot HPP
-                    </span>
-                    <span className='text-base font-bold font-mono text-foreground block'>
-                      {formatRupiah(item.hppSnapshot)}
-                    </span>
-                  </div>
-
-                  {/* Dicatat Oleh */}
-                  <div className='sm:pl-4'>
-                    <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
-                      Dicatat Oleh
-                    </span>
-                    <span className='text-sm font-semibold text-foreground flex items-center gap-1.5 truncate pt-0.5'>
-                      <User className='h-3.5 w-3.5 text-muted-foreground shrink-0' />
-                      <span className='truncate'>{aktorDisplay}</span>
-                    </span>
-                  </div>
-                </div>
-
-                {/* Harga Beli & Nilai Mutasi jika Barang Masuk */}
-                {item.jenis === 'BARANG_MASUK' && item.hargaBeliSatuan && (
-                  <div className='mt-3 pt-3 border-t flex flex-wrap items-center gap-4 text-xs text-muted-foreground'>
-                    <span className='inline-flex items-center gap-1'>
-                      <Coins className='h-3.5 w-3.5 text-emerald-500' />
-                      Harga Beli Satuan:{' '}
-                      <strong className='text-foreground font-mono'>
-                        {formatRupiah(item.hargaBeliSatuan)}
-                      </strong>
-                    </span>
-                    {item.totalNilai && (
-                      <span>
-                        Total Faktur:{' '}
+                  {/* Harga Beli & Nilai Mutasi jika Barang Masuk */}
+                  {item.jenis === 'BARANG_MASUK' && item.hargaBeliSatuan && (
+                    <div className='mt-3 pt-3 border-t flex flex-wrap items-center gap-4 text-xs text-muted-foreground'>
+                      <span className='inline-flex items-center gap-1'>
+                        <Coins className='h-3.5 w-3.5 text-emerald-500' />
+                        Harga Beli Satuan:{' '}
                         <strong className='text-foreground font-mono'>
-                          {formatRupiah(item.totalNilai)}
+                          {formatRupiah(item.hargaBeliSatuan)}
                         </strong>
                       </span>
-                    )}
-                  </div>
-                )}
+                      {item.totalNilai && (
+                        <span>
+                          Total Faktur:{' '}
+                          <strong className='text-foreground font-mono'>
+                            {formatRupiah(item.totalNilai)}
+                          </strong>
+                        </span>
+                      )}
+                    </div>
+                  )}
 
-                {/* Alasan / Catatan jika ada */}
-                {item.alasan && (
-                  <div className='mt-3 pt-2.5 border-t text-xs'>
-                    <span className='text-muted-foreground font-medium'>
-                      Catatan / Alasan:{' '}
-                    </span>
-                    <span className='text-foreground italic'>
-                      &ldquo;{item.alasan}&rdquo;
-                    </span>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                  {/* Alasan / Catatan jika ada */}
+                  {item.alasan && (
+                    <div className='mt-3 pt-2.5 border-t text-xs'>
+                      <span className='text-muted-foreground font-medium'>
+                        Catatan / Alasan:{' '}
+                      </span>
+                      <span className='text-foreground italic'>
+                        &ldquo;{item.alasan}&rdquo;
+                      </span>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </div>
         )
       })}

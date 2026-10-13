@@ -578,12 +578,12 @@ export function KartuStokPage() {
           </Card>
 
           {/* 5. Valuasi Nilai Persediaan */}
-          <Card className='col-span-2 md:col-span-1 bg-primary/5 border-primary/20'>
+          <Card className='col-span-2 md:col-span-1'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-semibold text-primary'>
+              <CardDescription className='text-xs font-medium'>
                 Total Nilai Stok Item
               </CardDescription>
-              <CardTitle className='text-xl font-bold font-mono text-primary'>
+              <CardTitle className='text-xl font-bold font-mono text-foreground'>
                 {formatRupiah(kpiData.totalNilaiPersediaan)}
               </CardTitle>
             </CardHeader>

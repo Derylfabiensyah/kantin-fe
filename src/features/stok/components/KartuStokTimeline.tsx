@@ -9,7 +9,6 @@ import {
   Trash2,
   Calendar,
   User,
-  Hash,
   Coins,
   Inbox,
 } from 'lucide-react'
@@ -61,7 +60,7 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       }
     case 'PENJUALAN':
       return {
-        label: 'Penjualan POS',
+        label: 'Penjualan Kasir POS',
         badgeVariant: 'outline',
         badgeClass:
           'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-0',
@@ -85,7 +84,7 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       }
     case 'OPNAME_MASUK':
       return {
-        label: 'Opname (Lebih)',
+        label: 'Opname Fisik (Lebih)',
         badgeVariant: 'outline',
         badgeClass:
           'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-0',
@@ -97,7 +96,7 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       }
     case 'OPNAME_KELUAR':
       return {
-        label: 'Opname (Kurang)',
+        label: 'Opname Fisik (Kurang)',
         badgeVariant: 'outline',
         badgeClass:
           'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-0',
@@ -190,36 +189,33 @@ export function KartuStokTimeline({
             <div className='flex-1 min-w-0'>
               <Card className='transition-all duration-200 border-border/70 hover:border-border hover:shadow-md'>
                 <CardContent className='p-4 sm:p-5'>
+                  {/* Header: [Badge] • #ID_TRANSAKSI             TANGGAL & WAKTU */}
                   <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b pb-3 mb-3'>
-                    {/* Kiri: Badge tipe transaksi ringkas & subtle */}
-                    <div>
+                    <div className='flex flex-wrap items-center gap-2'>
                       <Badge
                         variant='outline'
                         className={`font-medium px-2 py-0.5 text-xs rounded-md border-0 ${meta.badgeClass}`}
                       >
                         {meta.label}
                       </Badge>
+                      <span className='text-muted-foreground/40 text-xs'>•</span>
+                      <span className='font-mono text-xs font-medium text-muted-foreground'>
+                        #{item.referensiId}
+                      </span>
                     </div>
 
-                    {/* Kanan: ID Transaksi & Tanggal Waktu berjejer rapi */}
-                    <div className='flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-muted-foreground'>
-                      <span className='inline-flex items-center gap-1 font-mono font-medium text-foreground/85'>
-                        <Hash className='h-3 w-3 text-muted-foreground' />
-                        <span>{item.referensiId}</span>
-                      </span>
-                      <span className='hidden sm:inline text-muted-foreground/40'>•</span>
-                      <div className='flex items-center gap-1.5'>
-                        <Calendar className='h-3.5 w-3.5 text-muted-foreground' />
-                        <span>{formatDateTime(item.waktu)}</span>
-                      </div>
+                    <div className='flex items-center gap-1.5 text-xs text-muted-foreground'>
+                      <Calendar className='h-3.5 w-3.5 text-muted-foreground/70' />
+                      <span>{formatDateTime(item.waktu)}</span>
                     </div>
                   </div>
 
+                  {/* Body: 4 Flat Stat Columns */}
                   <div className='grid grid-cols-2 sm:grid-cols-4 gap-y-3 sm:gap-y-0 py-1'>
-                    {/* Perubahan Qty */}
+                    {/* PERUBAHAN QTY */}
                     <div className='sm:pr-4 sm:border-r border-border/60'>
                       <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
-                        Perubahan Qty
+                        PERUBAHAN QTY
                       </span>
                       <span
                         className={`text-base font-bold font-mono block ${
@@ -233,30 +229,30 @@ export function KartuStokTimeline({
                       </span>
                     </div>
 
-                    {/* Saldo Akhir */}
+                    {/* SALDO AKHIR */}
                     <div className='sm:px-4 sm:border-r border-border/60'>
                       <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
-                        Saldo Akhir
+                        SALDO AKHIR
                       </span>
                       <span className='text-base font-bold font-mono text-foreground block'>
                         {formatNumber(item.stokSetelah)} unit
                       </span>
                     </div>
 
-                    {/* Snapshot HPP */}
+                    {/* SNAPSHOT HPP */}
                     <div className='sm:px-4 sm:border-r border-border/60'>
                       <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
-                        Snapshot HPP
+                        SNAPSHOT HPP
                       </span>
                       <span className='text-base font-bold font-mono text-foreground block'>
                         {formatRupiah(item.hppSnapshot)}
                       </span>
                     </div>
 
-                    {/* Dicatat Oleh */}
+                    {/* DICATAT OLEH */}
                     <div className='sm:pl-4'>
                       <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
-                        Dicatat Oleh
+                        DICATAT OLEH
                       </span>
                       <span className='text-sm font-semibold text-foreground flex items-center gap-1.5 truncate pt-0.5'>
                         <User className='h-3.5 w-3.5 text-muted-foreground shrink-0' />

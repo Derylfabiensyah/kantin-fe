@@ -2,10 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import {
   FileSpreadsheet,
   Download,
-  PackagePlus,
   History,
-  CheckCircle2,
-  AlertTriangle,
   Calendar,
 } from 'lucide-react'
 import { Link, useSearch } from '@tanstack/react-router'
@@ -604,35 +601,44 @@ export function KartuStokPage() {
         </div>
 
         {/* Saldo Consistency Audit Banner */}
-        <div className='flex items-center justify-between p-3.5 rounded-lg border bg-muted/40 text-xs text-muted-foreground'>
+        <div
+          className={`flex items-center justify-between p-3.5 rounded-lg border text-xs ${
+            isBalanceConsistent
+              ? 'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-300'
+              : 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400'
+          }`}
+        >
           <div className='flex items-center gap-2'>
             {isBalanceConsistent ? (
-              <>
-                <CheckCircle2 className='h-4 w-4 text-emerald-500 shrink-0' />
-                <span>
-                  <strong className='text-foreground'>
-                    Integritas Saldo Terverifikasi:
-                  </strong>{' '}
-                  Saldo berjalan konsisten dari transaksi awal hingga transaksi
-                  terkini.
-                </span>
-              </>
+              <span>
+                <strong className='font-semibold text-emerald-800 dark:text-emerald-300'>
+                  Integritas Saldo Terverifikasi:
+                </strong>{' '}
+                Saldo berjalan konsisten dari transaksi awal hingga transaksi
+                terkini.
+              </span>
             ) : (
-              <>
-                <AlertTriangle className='h-4 w-4 text-amber-500 shrink-0' />
-                <span>
-                  <strong className='text-amber-600'>
-                    Pemberitahuan Audit:
-                  </strong>{' '}
-                  Ditemukan lompatan saldo di luar kalkulasi linear (kemungkinan
-                  ada penyesuaian manual).
-                </span>
-              </>
+              <span>
+                <strong className='font-semibold text-red-700 dark:text-red-300'>
+                  Pemberitahuan Audit:
+                </strong>{' '}
+                Ditemukan lompatan saldo di luar kalkulasi linear (kemungkinan
+                ada penyesuaian manual).
+              </span>
             )}
           </div>
-          <Button size='sm' variant='ghost' asChild className='h-7 text-xs gap-1'>
+          <Button
+            size='sm'
+            variant='ghost'
+            asChild
+            className={`h-7 text-xs ${
+              isBalanceConsistent
+                ? 'text-emerald-700 hover:text-emerald-800 hover:bg-emerald-100 dark:text-emerald-300 dark:hover:bg-emerald-900/40'
+                : 'text-red-700 hover:text-red-800 hover:bg-red-100 dark:text-red-300 dark:hover:bg-red-900/40'
+            }`}
+          >
             <Link to='/stok/masuk'>
-              <PackagePlus className='h-3.5 w-3.5' /> Restock Menu Ini
+              Restock Menu Ini
             </Link>
           </Button>
         </div>

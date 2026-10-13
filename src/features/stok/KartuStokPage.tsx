@@ -2,8 +2,6 @@ import { useState, useEffect, useMemo } from 'react'
 import {
   FileSpreadsheet,
   Download,
-  TrendingDown,
-  TrendingUp,
   PackagePlus,
   History,
   CheckCircle2,
@@ -547,8 +545,8 @@ export function KartuStokPage() {
           {/* 2. Total Masuk Periode */}
           <Card>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-medium flex items-center gap-1 text-emerald-600 dark:text-emerald-400'>
-                <TrendingUp className='h-3.5 w-3.5' /> Total Masuk
+              <CardDescription className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>
+                Total Masuk
               </CardDescription>
               <CardTitle className='text-2xl font-bold text-emerald-600 dark:text-emerald-400'>
                 +{formatNumber(kpiData.totalMasuk)}
@@ -562,8 +560,8 @@ export function KartuStokPage() {
           {/* 3. Total Keluar Periode */}
           <Card>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-medium flex items-center gap-1 text-rose-600 dark:text-rose-400'>
-                <TrendingDown className='h-3.5 w-3.5' /> Total Keluar
+              <CardDescription className='text-xs font-medium text-rose-600 dark:text-rose-400'>
+                Total Keluar
               </CardDescription>
               <CardTitle className='text-2xl font-bold text-rose-600 dark:text-rose-400'>
                 -{formatNumber(kpiData.totalKeluar)}

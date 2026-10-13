@@ -147,51 +147,36 @@ export function RiwayatStokTable({
   return (
     <div className='space-y-4'>
       {/* Filter & Toolbar */}
-      <div className='flex flex-col items-center justify-between gap-3 sm:flex-row'>
-        <div className='flex w-full flex-1 items-center gap-2'>
-          <div className='relative max-w-sm flex-1'>
-            <Search className='absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground' />
-            <Input
-              placeholder='Cari nama menu atau no. bukti...'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className='h-9 pl-8 text-xs bg-background'
-            />
-          </div>
-
-          <Select value={selectedJenis} onValueChange={onJenisChange}>
-            <SelectTrigger className='h-9 w-[180px] text-xs bg-background'>
-              <SelectValue placeholder='Semua Mutasi' />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='all' className='text-xs'>
-                Semua Mutasi
-              </SelectItem>
-              <SelectItem value='BARANG_MASUK' className='text-xs'>
-                Hanya Barang Masuk
-              </SelectItem>
-              <SelectItem value='BARANG_MASUK_PEMBALIK' className='text-xs'>
-                Hanya Pembalik Masuk
-              </SelectItem>
-              <SelectItem value='PENJUALAN' className='text-xs'>
-                Penjualan Kasir
-              </SelectItem>
-            </SelectContent>
-          </Select>
+      <div className='flex flex-wrap items-center gap-2'>
+        <div className='relative max-w-sm flex-1'>
+          <Search className='absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground' />
+          <Input
+            placeholder='Cari nama menu atau no. bukti...'
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className='h-9 pl-8 text-xs bg-background'
+          />
         </div>
 
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={onRefresh}
-          disabled={loading}
-          className='h-9 gap-1.5 text-xs bg-background'
-        >
-          <RefreshCw
-            className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`}
-          />
-          Muat Ulang
-        </Button>
+        <Select value={selectedJenis} onValueChange={onJenisChange}>
+          <SelectTrigger className='h-9 w-[180px] text-xs bg-background'>
+            <SelectValue placeholder='Semua Mutasi' />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value='all' className='text-xs'>
+              Semua Mutasi
+            </SelectItem>
+            <SelectItem value='BARANG_MASUK' className='text-xs'>
+              Hanya Barang Masuk
+            </SelectItem>
+            <SelectItem value='BARANG_MASUK_PEMBALIK' className='text-xs'>
+              Hanya Pembalik Masuk
+            </SelectItem>
+            <SelectItem value='PENJUALAN' className='text-xs'>
+              Penjualan Kasir
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Tabel Mutasi */}

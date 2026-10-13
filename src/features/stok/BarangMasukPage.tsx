@@ -10,7 +10,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { katalogApi } from '@/features/katalog/api/katalog-api'
 import type { MenuItem } from '@/features/katalog/types'
@@ -130,7 +129,6 @@ export function BarangMasukPage() {
     <>
       {/* Top Header */}
       <Header fixed>
-        <Search showKbd={false} />
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
@@ -174,7 +172,7 @@ export function BarangMasukPage() {
               <p className='text-xs font-medium text-muted-foreground'>
                 Peringatan Stok Menipis
               </p>
-              <h3 className='mt-0.5 text-xl font-bold text-amber-500'>
+              <h3 className='mt-0.5 text-xl font-bold text-destructive'>
                 {stokMenipis.length > 0 ? (
                   <span>{stokMenipis.length} Menu</span>
                 ) : (

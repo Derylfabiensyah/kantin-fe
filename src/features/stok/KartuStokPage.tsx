@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from 'react'
 import {
   FileSpreadsheet,
   Download,
-  RefreshCw,
   TrendingDown,
   TrendingUp,
   PackagePlus,
@@ -91,41 +90,6 @@ export function KartuStokPage() {
     }
   }, [initialMenuId])
 
-  // Fetch Riwayat & Stok detail when selectedMenuId changes or date filter applied
-  const fetchMutasi = async () => {
-    if (!selectedMenuId) return
-    try {
-      setIsLoadingRiwayat(true)
-
-      let dariIso: string | undefined
-      let sampaiIso: string | undefined
-
-      if (tanggalDari) {
-        dariIso = new Date(`${tanggalDari}T00:00:00`).toISOString()
-      }
-      if (tanggalSampai) {
-        sampaiIso = new Date(`${tanggalSampai}T23:59:59.999`).toISOString()
-      }
-
-      const [riwayatRes, detailRes] = await Promise.all([
-        stokApi.getRiwayatStok({
-          menuId: selectedMenuId,
-          dari: dariIso,
-          sampai: sampaiIso,
-          ukuran: 200,
-        }),
-        stokApi.getStokMenu(selectedMenuId).catch(() => null),
-      ])
-
-      setRiwayat(riwayatRes.items || [])
-      setStokDetail(detailRes)
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Gagal memuat kartu stok'
-      toast.error('Gagal Memuat Mutasi', { description: msg })
-    } finally {
-      setIsLoadingRiwayat(false)
-    }
-  }
 
   useEffect(() => {
     if (!selectedMenuId) return
@@ -370,18 +334,6 @@ export function KartuStokPage() {
             </p>
           </div>
           <div className='flex flex-wrap items-center gap-2.5'>
-            <Button
-              variant='outline'
-              size='sm'
-              onClick={fetchMutasi}
-              disabled={isLoadingRiwayat}
-              className='gap-1.5'
-            >
-              <RefreshCw
-                className={`h-4 w-4 ${isLoadingRiwayat ? 'animate-spin' : ''}`}
-              />
-              <span>Segarkan</span>
-            </Button>
 
             <Button
               variant='outline'

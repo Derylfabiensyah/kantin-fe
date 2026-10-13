@@ -323,10 +323,7 @@ export function KartuStokPage() {
             <h1 className='text-2xl font-bold tracking-tight'>
               Kartu Stok per Item
             </h1>
-            <p className='text-muted-foreground text-sm mt-0.5'>
-              Pantau riwayat audit pergerakan mutasi keluar-masuk barang, saldo
-              berjalan, dan snapshot HPP rata-rata tertimbang.
-            </p>
+
           </div>
           <div className='flex flex-wrap items-center gap-2.5'>
 

@@ -2,13 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import {
   FileSpreadsheet,
   Download,
-  RefreshCw,
-  TrendingDown,
-  TrendingUp,
-  PackagePlus,
   History,
-  CheckCircle2,
-  AlertTriangle,
   Calendar,
 } from 'lucide-react'
 import { Link, useSearch } from '@tanstack/react-router'
@@ -91,41 +85,6 @@ export function KartuStokPage() {
     }
   }, [initialMenuId])
 
-  // Fetch Riwayat & Stok detail when selectedMenuId changes or date filter applied
-  const fetchMutasi = async () => {
-    if (!selectedMenuId) return
-    try {
-      setIsLoadingRiwayat(true)
-
-      let dariIso: string | undefined
-      let sampaiIso: string | undefined
-
-      if (tanggalDari) {
-        dariIso = new Date(`${tanggalDari}T00:00:00`).toISOString()
-      }
-      if (tanggalSampai) {
-        sampaiIso = new Date(`${tanggalSampai}T23:59:59.999`).toISOString()
-      }
-
-      const [riwayatRes, detailRes] = await Promise.all([
-        stokApi.getRiwayatStok({
-          menuId: selectedMenuId,
-          dari: dariIso,
-          sampai: sampaiIso,
-          ukuran: 200,
-        }),
-        stokApi.getStokMenu(selectedMenuId).catch(() => null),
-      ])
-
-      setRiwayat(riwayatRes.items || [])
-      setStokDetail(detailRes)
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Gagal memuat kartu stok'
-      toast.error('Gagal Memuat Mutasi', { description: msg })
-    } finally {
-      setIsLoadingRiwayat(false)
-    }
-  }
 
   useEffect(() => {
     if (!selectedMenuId) return
@@ -347,10 +306,6 @@ export function KartuStokPage() {
   return (
     <>
       <Header fixed>
-        <div className='flex items-center gap-2 font-semibold text-lg'>
-          <History className='h-5 w-5 text-primary' />
-          <span>Kartu Stok Inventaris</span>
-        </div>
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
@@ -359,29 +314,14 @@ export function KartuStokPage() {
 
       <Main className='space-y-6'>
         {/* Top Header & Navigation Actions */}
-        <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-4'>
+        <div className='flex flex-col md:flex-row md:items-center justify-between gap-4'>
           <div>
             <h1 className='text-2xl font-bold tracking-tight'>
-              Kartu Stok per Item
+              Kartu Stok Inventaris
             </h1>
-            <p className='text-muted-foreground text-sm mt-0.5'>
-              Pantau riwayat audit pergerakan mutasi keluar-masuk barang, saldo
-              berjalan, dan snapshot HPP rata-rata tertimbang.
-            </p>
+
           </div>
           <div className='flex flex-wrap items-center gap-2.5'>
-            <Button
-              variant='outline'
-              size='sm'
-              onClick={fetchMutasi}
-              disabled={isLoadingRiwayat}
-              className='gap-1.5'
-            >
-              <RefreshCw
-                className={`h-4 w-4 ${isLoadingRiwayat ? 'animate-spin' : ''}`}
-              />
-              <span>Segarkan</span>
-            </Button>
 
             <Button
               variant='outline'
@@ -404,7 +344,7 @@ export function KartuStokPage() {
         </div>
 
         {/* Filter & Selector Bar */}
-        <Card>
+        <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
           <CardContent className='p-4 sm:p-5 space-y-4'>
             <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
               {/* Menu Item Selector */}
@@ -552,7 +492,7 @@ export function KartuStokPage() {
         {/* Selected Menu KPI Card Grid */}
         <div className='grid grid-cols-2 md:grid-cols-5 gap-3.5'>
           {/* 1. Saldo Berjalan Saat Ini */}
-          <Card className='relative overflow-hidden'>
+          <Card className='relative overflow-hidden border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
               <CardDescription className='text-xs font-medium'>
                 Stok Berjalan Saat Ini
@@ -593,10 +533,10 @@ export function KartuStokPage() {
           </Card>
 
           {/* 2. Total Masuk Periode */}
-          <Card>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-medium flex items-center gap-1 text-emerald-600 dark:text-emerald-400'>
-                <TrendingUp className='h-3.5 w-3.5' /> Total Masuk
+              <CardDescription className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>
+                Total Masuk
               </CardDescription>
               <CardTitle className='text-2xl font-bold text-emerald-600 dark:text-emerald-400'>
                 +{formatNumber(kpiData.totalMasuk)}
@@ -608,10 +548,10 @@ export function KartuStokPage() {
           </Card>
 
           {/* 3. Total Keluar Periode */}
-          <Card>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-medium flex items-center gap-1 text-rose-600 dark:text-rose-400'>
-                <TrendingDown className='h-3.5 w-3.5' /> Total Keluar
+              <CardDescription className='text-xs font-medium text-rose-600 dark:text-rose-400'>
+                Total Keluar
               </CardDescription>
               <CardTitle className='text-2xl font-bold text-rose-600 dark:text-rose-400'>
                 -{formatNumber(kpiData.totalKeluar)}
@@ -623,7 +563,7 @@ export function KartuStokPage() {
           </Card>
 
           {/* 4. Snapshot HPP */}
-          <Card>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
               <CardDescription className='text-xs font-medium'>
                 Snapshot HPP Terkini
@@ -638,12 +578,12 @@ export function KartuStokPage() {
           </Card>
 
           {/* 5. Valuasi Nilai Persediaan */}
-          <Card className='col-span-2 md:col-span-1 bg-primary/5 border-primary/20'>
+          <Card className='col-span-2 md:col-span-1 border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-semibold text-primary'>
+              <CardDescription className='text-xs font-medium'>
                 Total Nilai Stok Item
               </CardDescription>
-              <CardTitle className='text-xl font-bold font-mono text-primary'>
+              <CardTitle className='text-xl font-bold font-mono text-foreground'>
                 {formatRupiah(kpiData.totalNilaiPersediaan)}
               </CardTitle>
             </CardHeader>
@@ -654,35 +594,44 @@ export function KartuStokPage() {
         </div>
 
         {/* Saldo Consistency Audit Banner */}
-        <div className='flex items-center justify-between p-3.5 rounded-lg border bg-muted/40 text-xs text-muted-foreground'>
+        <div
+          className={`flex items-center justify-between p-3.5 rounded-lg border text-xs ${
+            isBalanceConsistent
+              ? 'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-300'
+              : 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400'
+          }`}
+        >
           <div className='flex items-center gap-2'>
             {isBalanceConsistent ? (
-              <>
-                <CheckCircle2 className='h-4 w-4 text-emerald-500 shrink-0' />
-                <span>
-                  <strong className='text-foreground'>
-                    Integritas Saldo Terverifikasi:
-                  </strong>{' '}
-                  Saldo berjalan konsisten dari transaksi awal hingga transaksi
-                  terkini.
-                </span>
-              </>
+              <span>
+                <strong className='font-semibold text-emerald-800 dark:text-emerald-300'>
+                  Integritas Saldo Terverifikasi:
+                </strong>{' '}
+                Saldo berjalan konsisten dari transaksi awal hingga transaksi
+                terkini.
+              </span>
             ) : (
-              <>
-                <AlertTriangle className='h-4 w-4 text-amber-500 shrink-0' />
-                <span>
-                  <strong className='text-amber-600'>
-                    Pemberitahuan Audit:
-                  </strong>{' '}
-                  Ditemukan lompatan saldo di luar kalkulasi linear (kemungkinan
-                  ada penyesuaian manual).
-                </span>
-              </>
+              <span>
+                <strong className='font-semibold text-red-700 dark:text-red-300'>
+                  Pemberitahuan Audit:
+                </strong>{' '}
+                Ditemukan lompatan saldo di luar kalkulasi linear (kemungkinan
+                ada penyesuaian manual).
+              </span>
             )}
           </div>
-          <Button size='sm' variant='ghost' asChild className='h-7 text-xs gap-1'>
+          <Button
+            size='sm'
+            variant='ghost'
+            asChild
+            className={`h-7 text-xs ${
+              isBalanceConsistent
+                ? 'text-emerald-700 hover:text-emerald-800 hover:bg-emerald-100 dark:text-emerald-300 dark:hover:bg-emerald-900/40'
+                : 'text-red-700 hover:text-red-800 hover:bg-red-100 dark:text-red-300 dark:hover:bg-red-900/40'
+            }`}
+          >
             <Link to='/stok/masuk'>
-              <PackagePlus className='h-3.5 w-3.5' /> Restock Menu Ini
+              Restock Menu Ini
             </Link>
           </Button>
         </div>
@@ -712,9 +661,9 @@ export function KartuStokPage() {
 
           {/* TAB 1: Tabel Mutasi */}
           <TabsContent value='table' className='space-y-4 m-0'>
-            <Card>
+            <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm'>
               <CardContent className='p-0'>
-                <div className='rounded-md border overflow-x-auto'>
+                <div className='overflow-x-auto'>
                   <Table>
                     <TableHeader className='bg-muted/50'>
                       <TableRow>
@@ -813,14 +762,12 @@ export function KartuStokPage() {
 
           {/* TAB 2: Timeline View */}
           <TabsContent value='timeline' className='m-0'>
-            <Card>
-              <CardContent className='p-6'>
-                <KartuStokTimeline
-                  items={filteredRiwayat}
-                  isLoading={isLoadingRiwayat}
-                />
-              </CardContent>
-            </Card>
+            <div className='py-1'>
+              <KartuStokTimeline
+                items={filteredRiwayat}
+                isLoading={isLoadingRiwayat}
+              />
+            </div>
           </TabsContent>
         </Tabs>
       </Main>

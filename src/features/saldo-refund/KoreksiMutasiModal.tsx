@@ -225,7 +225,7 @@ function KoreksiMutasiFormContent({
   return (
     <form onSubmit={handleSubmit} className='space-y-4 py-2'>
       {/* Header Audit Notice */}
-      <Alert className='border-amber-300 bg-amber-50/70 py-2.5 text-xs text-amber-900 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-300'>
+      <Alert className='border-amber-500/30 bg-amber-500/10 py-2.5 text-xs text-amber-900 dark:text-amber-200'>
         <Lock className='h-4 w-4 text-amber-600 dark:text-amber-400' />
         <AlertTitle className='text-xs font-semibold'>
           Otoritas Koreksi Bendahara
@@ -386,11 +386,11 @@ function KoreksiMutasiFormContent({
               onClick={() => setArah('DEBIT')}
               className={`flex cursor-pointer items-start gap-2.5 rounded-lg border p-3 transition-all ${
                 arah === 'DEBIT'
-                  ? 'border-red-500 bg-red-50/40 text-red-900 ring-2 ring-red-500/20 dark:border-red-800 dark:bg-red-950/30 dark:text-red-300'
+                  ? 'border-destructive bg-destructive/10 text-destructive ring-1 ring-destructive/30'
                   : 'hover:bg-muted/40'
               }`}
             >
-              <ArrowDownRight className='mt-0.5 h-4 w-4 text-red-600' />
+              <ArrowDownRight className='mt-0.5 h-4 w-4 text-destructive' />
               <div>
                 <span className='block text-xs font-bold'>
                   DEBIT (Kurangi Saldo)
@@ -406,11 +406,11 @@ function KoreksiMutasiFormContent({
               onClick={() => setArah('KREDIT')}
               className={`flex cursor-pointer items-start gap-2.5 rounded-lg border p-3 transition-all ${
                 arah === 'KREDIT'
-                  ? 'border-emerald-500 bg-emerald-50/40 text-emerald-900 ring-2 ring-emerald-500/20 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300'
+                  ? 'border-emerald-500 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500/30'
                   : 'hover:bg-muted/40'
               }`}
             >
-              <ArrowUpRight className='mt-0.5 h-4 w-4 text-emerald-600' />
+              <ArrowUpRight className='mt-0.5 h-4 w-4 text-emerald-600 dark:text-emerald-400' />
               <div>
                 <span className='block text-xs font-bold'>
                   KREDIT (Tambah Saldo)
@@ -486,8 +486,8 @@ function KoreksiMutasiFormContent({
               variant='outline'
               className={
                 arah === 'DEBIT'
-                  ? 'border-red-300 bg-red-50 text-[11px] text-red-700'
-                  : 'border-emerald-300 bg-emerald-50 text-[11px] text-emerald-700'
+                  ? 'border-0 bg-destructive/15 text-[11px] text-destructive'
+                  : 'border-0 bg-emerald-500/15 text-[11px] text-emerald-600 dark:text-emerald-400'
               }
             >
               {arah === 'DEBIT' ? '-' : '+'}Rp{' '}
@@ -569,7 +569,7 @@ function KoreksiMutasiFormContent({
         <Button
           type='submit'
           disabled={!isValidSubmit || isSubmitting}
-          className='gap-1.5 bg-amber-600 text-white hover:bg-amber-700'
+          className='gap-1.5'
         >
           <FileCheck2 className='h-4 w-4' />
           {isSubmitting ? 'Memproses Audit...' : 'Eksekusi Koreksi Saldo'}
@@ -595,20 +595,13 @@ export function KoreksiMutasiModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='max-h-[90vh] overflow-y-auto sm:max-w-[620px]'>
         <DialogHeader>
-          <div className='flex items-center gap-2 text-primary'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400'>
-              <ShieldAlert className='h-5 w-5' />
-            </div>
-            <div>
-              <DialogTitle className='text-lg font-semibold'>
-                Mutasi Koreksi Bendahara
-              </DialogTitle>
-              <DialogDescription className='text-xs'>
-                Koreksi salah input top-up tunai atau transaksi pada sesi kasir
-                yang sudah ditutup (PRD §9.2 & §11.7)
-              </DialogDescription>
-            </div>
-          </div>
+          <DialogTitle className='text-lg font-bold text-foreground'>
+            Mutasi Koreksi Bendahara
+          </DialogTitle>
+          <DialogDescription className='text-sm text-muted-foreground'>
+            Koreksi salah input top-up tunai atau transaksi pada sesi kasir
+            yang sudah ditutup (PRD §9.2 & §11.7)
+          </DialogDescription>
         </DialogHeader>
 
         {open && (

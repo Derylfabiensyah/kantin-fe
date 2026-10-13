@@ -318,7 +318,7 @@ export function KartuStokPage() {
 
       <Main className='space-y-6'>
         {/* Top Header & Navigation Actions */}
-        <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-4'>
+        <div className='flex flex-col md:flex-row md:items-center justify-between gap-4'>
           <div>
             <h1 className='text-2xl font-bold tracking-tight'>
               Kartu Stok per Item

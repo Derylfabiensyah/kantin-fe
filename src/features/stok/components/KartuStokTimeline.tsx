@@ -201,14 +201,14 @@ export function KartuStokTimeline({
                   </div>
                 </div>
 
-                <div className='grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm'>
+                <div className='grid grid-cols-2 sm:grid-cols-4 gap-y-3 sm:gap-y-0 py-1'>
                   {/* Perubahan Qty */}
-                  <div className='bg-muted/40 p-2.5 rounded-lg border'>
-                    <span className='text-xs text-muted-foreground block mb-0.5'>
+                  <div className='sm:pr-4 sm:border-r border-border/60'>
+                    <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
                       Perubahan Qty
                     </span>
                     <span
-                      className={`text-base font-bold font-mono ${
+                      className={`text-base font-bold font-mono block ${
                         meta.isMasuk
                           ? 'text-emerald-600 dark:text-emerald-400'
                           : 'text-rose-600 dark:text-rose-400'
@@ -219,33 +219,33 @@ export function KartuStokTimeline({
                     </span>
                   </div>
 
-                  {/* Saldo Berjalan */}
-                  <div className='bg-muted/40 p-2.5 rounded-lg border'>
-                    <span className='text-xs text-muted-foreground block mb-0.5'>
+                  {/* Saldo Akhir */}
+                  <div className='sm:px-4 sm:border-r border-border/60'>
+                    <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
                       Saldo Akhir
                     </span>
-                    <span className='text-base font-bold font-mono text-foreground'>
+                    <span className='text-base font-bold font-mono text-foreground block'>
                       {formatNumber(item.stokSetelah)} unit
                     </span>
                   </div>
 
                   {/* Snapshot HPP */}
-                  <div className='bg-muted/40 p-2.5 rounded-lg border'>
-                    <span className='text-xs text-muted-foreground block mb-0.5'>
+                  <div className='sm:px-4 sm:border-r border-border/60'>
+                    <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
                       Snapshot HPP
                     </span>
-                    <span className='text-sm font-semibold font-mono text-foreground'>
+                    <span className='text-base font-bold font-mono text-foreground block'>
                       {formatRupiah(item.hppSnapshot)}
                     </span>
                   </div>
 
-                  {/* Aktor */}
-                  <div className='bg-muted/40 p-2.5 rounded-lg border'>
-                    <span className='text-xs text-muted-foreground block mb-0.5'>
+                  {/* Dicatat Oleh */}
+                  <div className='sm:pl-4'>
+                    <span className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground block mb-1'>
                       Dicatat Oleh
                     </span>
-                    <span className='text-xs font-medium text-foreground flex items-center gap-1 truncate'>
-                      <User className='h-3 w-3 text-muted-foreground shrink-0' />
+                    <span className='text-sm font-semibold text-foreground flex items-center gap-1.5 truncate pt-0.5'>
+                      <User className='h-3.5 w-3.5 text-muted-foreground shrink-0' />
                       <span className='truncate'>{aktorDisplay}</span>
                     </span>
                   </div>

@@ -37,10 +37,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
   switch (jenis) {
     case 'BARANG_MASUK':
       return {
-        label: 'Barang Masuk (Restock)',
+        label: 'Barang Masuk',
         badgeVariant: 'outline',
         badgeClass:
-          'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-400 dark:border-emerald-800',
+          'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-0',
         icon: ArrowDownLeft,
         iconClass:
           'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-400 dark:border-emerald-800',
@@ -52,7 +52,7 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
         label: 'Koreksi Pembalik',
         badgeVariant: 'outline',
         badgeClass:
-          'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-400 dark:border-amber-800',
+          'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border-0',
         icon: RotateCcw,
         iconClass:
           'bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-950/80 dark:text-amber-400 dark:border-amber-800',
@@ -61,10 +61,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       }
     case 'PENJUALAN':
       return {
-        label: 'Penjualan Kasir POS',
+        label: 'Penjualan POS',
         badgeVariant: 'outline',
         badgeClass:
-          'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/50 dark:text-blue-400 dark:border-blue-800',
+          'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-0',
         icon: ShoppingCart,
         iconClass:
           'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/80 dark:text-blue-400 dark:border-blue-800',
@@ -73,10 +73,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       }
     case 'PENJUALAN_VOID':
       return {
-        label: 'Pembatalan Transaksi (Void)',
+        label: 'Void Penjualan',
         badgeVariant: 'outline',
         badgeClass:
-          'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/50 dark:text-purple-400 dark:border-purple-800',
+          'bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border-0',
         icon: RotateCcw,
         iconClass:
           'bg-purple-50 text-purple-600 border-purple-200 dark:bg-purple-950/80 dark:text-purple-400 dark:border-purple-800',
@@ -85,10 +85,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       }
     case 'OPNAME_MASUK':
       return {
-        label: 'Opname Fisik (Selisih Lebih)',
+        label: 'Opname (Lebih)',
         badgeVariant: 'outline',
         badgeClass:
-          'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-400 dark:border-emerald-800',
+          'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-0',
         icon: PlusCircle,
         iconClass:
           'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-400 dark:border-emerald-800',
@@ -97,10 +97,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       }
     case 'OPNAME_KELUAR':
       return {
-        label: 'Opname Fisik (Selisih Kurang)',
+        label: 'Opname (Kurang)',
         badgeVariant: 'outline',
         badgeClass:
-          'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-400 dark:border-emerald-800',
+          'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-0',
         icon: MinusCircle,
         iconClass:
           'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-400 dark:border-emerald-800',
@@ -109,10 +109,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       }
     case 'BARANG_RUSAK':
       return {
-        label: 'Barang Rusak / Basi',
+        label: 'Barang Rusak',
         badgeVariant: 'destructive',
         badgeClass:
-          'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/50 dark:text-red-400 dark:border-red-800',
+          'bg-red-50 text-red-700 dark:bg-red-950/60 dark:text-red-300 border-0',
         icon: Trash2,
         iconClass:
           'bg-red-50 text-red-600 border-red-200 dark:bg-red-950/80 dark:text-red-400 dark:border-red-800',
@@ -123,7 +123,7 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       return {
         label: jenis,
         badgeVariant: 'secondary',
-        badgeClass: 'bg-muted text-muted-foreground',
+        badgeClass: 'bg-muted text-muted-foreground border-0',
         icon: ArrowUpRight,
         iconClass: 'bg-muted text-muted-foreground border-border',
         sign: '-',
@@ -191,24 +191,27 @@ export function KartuStokTimeline({
               <Card className='transition-all duration-200 border-border/70 hover:border-border hover:shadow-md'>
                 <CardContent className='p-4 sm:p-5'>
                   <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b pb-3 mb-3'>
-                    <div className='flex flex-wrap items-center gap-2'>
+                    {/* Kiri: Badge tipe transaksi ringkas & subtle */}
+                    <div>
                       <Badge
                         variant='outline'
-                        className={`font-medium ${meta.badgeClass}`}
+                        className={`font-medium px-2 py-0.5 text-xs rounded-md border-0 ${meta.badgeClass}`}
                       >
                         {meta.label}
                       </Badge>
-                      <span className='inline-flex items-center gap-1 text-xs text-muted-foreground'>
-                        <Hash className='h-3 w-3' />
-                        <span className='font-mono font-medium text-foreground'>
-                          {item.referensiId}
-                        </span>
-                      </span>
                     </div>
 
-                    <div className='flex items-center gap-2 text-xs text-muted-foreground'>
-                      <Calendar className='h-3.5 w-3.5' />
-                      <span>{formatDateTime(item.waktu)}</span>
+                    {/* Kanan: ID Transaksi & Tanggal Waktu berjejer rapi */}
+                    <div className='flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-muted-foreground'>
+                      <span className='inline-flex items-center gap-1 font-mono font-medium text-foreground/85'>
+                        <Hash className='h-3 w-3 text-muted-foreground' />
+                        <span>{item.referensiId}</span>
+                      </span>
+                      <span className='hidden sm:inline text-muted-foreground/40'>•</span>
+                      <div className='flex items-center gap-1.5'>
+                        <Calendar className='h-3.5 w-3.5 text-muted-foreground' />
+                        <span>{formatDateTime(item.waktu)}</span>
+                      </div>
                     </div>
                   </div>
 

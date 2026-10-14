@@ -305,10 +305,10 @@ export function InventarisPage() {
           {/* 1. Total Nilai Persediaan (Aset) */}
           <Card className='col-span-2 md:col-span-1 border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-semibold text-primary flex items-center gap-1.5'>
-                <Coins className='h-4 w-4' /> Total Nilai Aset
+              <CardDescription className='text-xs font-medium flex items-center gap-1.5'>
+                <Coins className='h-4 w-4 text-muted-foreground' /> Total Nilai Aset
               </CardDescription>
-              <CardTitle className='text-2xl font-bold font-mono text-primary'>
+              <CardTitle className='text-2xl font-bold font-mono text-foreground'>
                 {formatRupiah(kpiData.totalNilai)}
               </CardTitle>
             </CardHeader>

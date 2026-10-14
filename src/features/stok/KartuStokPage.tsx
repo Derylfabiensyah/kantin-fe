@@ -432,7 +432,7 @@ export function KartuStokPage() {
             </div>
 
             {/* Quick Presets & Date Filters */}
-            <div className='flex flex-wrap items-center justify-between gap-3 pt-3 border-t text-sm'>
+            <div className='flex flex-wrap items-center justify-between gap-3 pt-1 text-sm'>
               <div className='flex flex-wrap items-center gap-1.5'>
                 <span className='text-xs text-muted-foreground mr-1 flex items-center gap-1'>
                   <Calendar className='h-3.5 w-3.5' /> Periode:
@@ -440,8 +440,8 @@ export function KartuStokPage() {
                 <Button
                   type='button'
                   size='sm'
-                  variant={periodePreset === 'ALL' ? 'default' : 'outline'}
-                  className='h-7 text-xs px-2.5'
+                  variant={periodePreset === 'ALL' ? 'default' : 'secondary'}
+                  className='h-7 text-xs px-2.5 border-0 shadow-none'
                   onClick={() => handlePresetChange('ALL')}
                 >
                   Semua
@@ -449,8 +449,8 @@ export function KartuStokPage() {
                 <Button
                   type='button'
                   size='sm'
-                  variant={periodePreset === 'TODAY' ? 'default' : 'outline'}
-                  className='h-7 text-xs px-2.5'
+                  variant={periodePreset === 'TODAY' ? 'default' : 'secondary'}
+                  className='h-7 text-xs px-2.5 border-0 shadow-none'
                   onClick={() => handlePresetChange('TODAY')}
                 >
                   Hari Ini
@@ -458,8 +458,8 @@ export function KartuStokPage() {
                 <Button
                   type='button'
                   size='sm'
-                  variant={periodePreset === '7D' ? 'default' : 'outline'}
-                  className='h-7 text-xs px-2.5'
+                  variant={periodePreset === '7D' ? 'default' : 'secondary'}
+                  className='h-7 text-xs px-2.5 border-0 shadow-none'
                   onClick={() => handlePresetChange('7D')}
                 >
                   7 Hari Terakhir
@@ -467,8 +467,8 @@ export function KartuStokPage() {
                 <Button
                   type='button'
                   size='sm'
-                  variant={periodePreset === '30D' ? 'default' : 'outline'}
-                  className='h-7 text-xs px-2.5'
+                  variant={periodePreset === '30D' ? 'default' : 'secondary'}
+                  className='h-7 text-xs px-2.5 border-0 shadow-none'
                   onClick={() => handlePresetChange('30D')}
                 >
                   30 Hari
@@ -476,8 +476,8 @@ export function KartuStokPage() {
                 <Button
                   type='button'
                   size='sm'
-                  variant={periodePreset === 'MONTH' ? 'default' : 'outline'}
-                  className='h-7 text-xs px-2.5'
+                  variant={periodePreset === 'MONTH' ? 'default' : 'secondary'}
+                  className='h-7 text-xs px-2.5 border-0 shadow-none'
                   onClick={() => handlePresetChange('MONTH')}
                 >
                   Bulan Ini
@@ -494,7 +494,7 @@ export function KartuStokPage() {
                     setTanggalDari(e.target.value)
                     setPeriodePreset('ALL')
                   }}
-                  className='h-7 w-36 text-xs'
+                  className='h-7 w-36 text-xs border-0 bg-background/80 dark:bg-background/40 shadow-none'
                 />
                 <span className='text-muted-foreground'>s/d</span>
                 <Input
@@ -504,7 +504,7 @@ export function KartuStokPage() {
                     setTanggalSampai(e.target.value)
                     setPeriodePreset('ALL')
                   }}
-                  className='h-7 w-36 text-xs'
+                  className='h-7 w-36 text-xs border-0 bg-background/80 dark:bg-background/40 shadow-none'
                 />
               </div>
             </div>

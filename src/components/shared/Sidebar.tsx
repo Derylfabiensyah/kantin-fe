@@ -39,7 +39,7 @@ export function Sidebar({ className }: SidebarProps) {
 
   const teams = [
     {
-      name: canteenName || 'Kantin Skoolia',
+      name: canteenName || 'Kantin SKOOLIA',
       logo: sidebarData.teams[0].logo,
       plan: schoolName || 'Cashless Sekolah',
     },

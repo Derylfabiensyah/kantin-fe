@@ -3,8 +3,6 @@ import {
   Search,
   RefreshCw,
   RotateCcw,
-  ArrowDownLeft,
-  ArrowUpRight,
   ChevronLeft,
   ChevronRight,
   Layers,
@@ -88,50 +86,43 @@ export function RiwayatStokTable({
     switch (jenis) {
       case 'BARANG_MASUK':
         return (
-          <Badge className='gap-1 border-0 bg-emerald-500/15 text-[11px] font-medium text-emerald-700 dark:text-emerald-400'>
-            <ArrowDownLeft className='h-3 w-3 text-emerald-600 dark:text-emerald-400' />
+          <Badge className='border-0 bg-emerald-500/15 text-[11px] font-medium text-emerald-700 dark:text-emerald-400'>
             Barang Masuk
           </Badge>
         )
       case 'BARANG_MASUK_PEMBALIK':
         return (
-          <Badge className='gap-1 border-0 bg-destructive/15 text-[11px] font-medium text-destructive'>
-            <RotateCcw className='h-3 w-3 text-destructive' />
+          <Badge className='border-0 bg-destructive/15 text-[11px] font-medium text-destructive'>
             Pembalik Masuk
           </Badge>
         )
       case 'PENJUALAN':
         return (
-          <Badge className='gap-1 border-0 bg-blue-500/15 text-[11px] font-medium text-blue-700 dark:text-blue-400'>
-            <ArrowUpRight className='h-3 w-3 text-blue-500' />
+          <Badge className='border-0 bg-blue-500/15 text-[11px] font-medium text-blue-700 dark:text-blue-400'>
             Penjualan
           </Badge>
         )
       case 'PENJUALAN_VOID':
         return (
-          <Badge className='gap-1 border-0 bg-amber-500/15 text-[11px] font-medium text-amber-700 dark:text-amber-400'>
-            <RotateCcw className='h-3 w-3 text-amber-500' />
+          <Badge className='border-0 bg-amber-500/15 text-[11px] font-medium text-amber-700 dark:text-amber-400'>
             Penjualan Void
           </Badge>
         )
       case 'OPNAME_MASUK':
         return (
-          <Badge className='gap-1 border-0 bg-emerald-500/15 text-[11px] font-medium text-emerald-700 dark:text-emerald-400'>
-            <ArrowDownLeft className='h-3 w-3 text-emerald-600 dark:text-emerald-400' />
+          <Badge className='border-0 bg-emerald-500/15 text-[11px] font-medium text-emerald-700 dark:text-emerald-400'>
             Opname Masuk
           </Badge>
         )
       case 'OPNAME_KELUAR':
         return (
-          <Badge className='gap-1 border-0 bg-purple-500/15 text-[11px] font-medium text-purple-700 dark:text-purple-400'>
-            <ArrowUpRight className='h-3 w-3 text-purple-500' />
+          <Badge className='border-0 bg-purple-500/15 text-[11px] font-medium text-purple-700 dark:text-purple-400'>
             Opname Keluar
           </Badge>
         )
       case 'BARANG_RUSAK':
         return (
-          <Badge className='gap-1 border-0 bg-rose-500/15 text-[11px] font-medium text-rose-700 dark:text-rose-400'>
-            <RotateCcw className='h-3 w-3 text-rose-500' />
+          <Badge className='border-0 bg-rose-500/15 text-[11px] font-medium text-rose-700 dark:text-rose-400'>
             Barang Rusak
           </Badge>
         )

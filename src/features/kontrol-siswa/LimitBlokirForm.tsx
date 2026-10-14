@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import {
-  ShieldAlert,
   Check,
   DollarSign,
   Tag,
@@ -154,23 +153,16 @@ function LimitBlokirFormContent({
   return (
     <>
         <DialogHeader>
-          <div className='flex items-center gap-2.5'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary'>
-              <ShieldAlert className='h-5 w-5' />
-            </div>
-            <div>
-              <DialogTitle className='text-lg font-bold'>
-                Atur Limit & Blokir Menu Siswa
-              </DialogTitle>
-              <DialogDescription className='text-xs'>
-                Perwalian Admin Sekolah atas nama orang tua yang belum memakai aplikasi mobile
-              </DialogDescription>
-            </div>
-          </div>
+          <DialogTitle className='text-lg font-bold text-foreground'>
+            Atur Limit & Blokir Menu Siswa
+          </DialogTitle>
+          <DialogDescription className='text-sm text-muted-foreground'>
+            Perwalian Admin Sekolah atas nama orang tua yang belum memakai aplikasi mobile
+          </DialogDescription>
         </DialogHeader>
 
         {/* Profil Siswa Header Card */}
-        <div className='rounded-xl border bg-slate-50 dark:bg-slate-900/50 p-3.5 space-y-2'>
+        <div className='rounded-xl border bg-muted/60 p-3.5 space-y-2'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-3'>
               <img
@@ -179,17 +171,17 @@ function LimitBlokirFormContent({
                 className='h-12 w-12 rounded-full object-cover border'
               />
               <div>
-                <p className='font-bold text-sm text-slate-900 dark:text-slate-100'>{student.nama}</p>
+                <p className='font-bold text-sm text-foreground'>{student.nama}</p>
                 <p className='text-xs text-muted-foreground font-mono'>
                   NIS: {student.nis} • Kelas: {student.kelas}
                 </p>
                 <div className='flex items-center gap-2 mt-1'>
                   {student.parent_app_registered ? (
-                    <Badge variant='outline' className='text-[10px] py-0 border-emerald-300 text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 gap-1'>
+                    <Badge variant='outline' className='border-0 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 text-[10px] py-0 gap-1 font-medium'>
                       <Smartphone className='h-3 w-3' /> Terhubung Aplikasi Mobile
                     </Badge>
                   ) : (
-                    <Badge variant='outline' className='text-[10px] py-0 border-amber-300 text-amber-700 bg-amber-50 dark:bg-amber-950/40 gap-1'>
+                    <Badge variant='outline' className='border-0 bg-amber-500/15 text-amber-700 dark:text-amber-400 text-[10px] py-0 gap-1 font-medium'>
                       <PhoneOff className='h-3 w-3' /> Ortu Belum Pakai App (Perwalian Admin)
                     </Badge>
                   )}
@@ -275,8 +267,8 @@ function LimitBlokirFormContent({
                   )}
                 </div>
 
-                <div className='rounded-lg bg-blue-50/70 dark:bg-blue-950/30 p-2.5 border border-blue-200 dark:border-blue-900 text-xs text-blue-900 dark:text-blue-300 flex items-start gap-2'>
-                  <Info className='h-4 w-4 text-blue-600 shrink-0 mt-0.5' />
+                <div className='rounded-lg bg-blue-500/10 p-2.5 border border-blue-500/20 text-xs text-blue-900 dark:text-blue-200 flex items-start gap-2'>
+                  <Info className='h-4 w-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5' />
                   <span>
                     Jika belanja hari ini melebihi{' '}
                     <strong>{formatRupiah(nominalLimitNum)}</strong>, kasir akan otomatis menolak
@@ -316,8 +308,8 @@ function LimitBlokirFormContent({
                     onClick={() => handleToggleCategory(kat.id)}
                     className={`flex items-center justify-between p-2.5 rounded-lg border cursor-pointer transition-all ${
                       isBlocked
-                        ? 'border-red-400 bg-red-50/70 dark:bg-red-950/30 ring-1 ring-red-400'
-                        : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900'
+                        ? 'border-destructive bg-destructive/10 ring-1 ring-destructive/30'
+                        : 'border-border hover:bg-muted/50'
                     }`}
                   >
                     <div className='flex items-center gap-2.5'>
@@ -328,15 +320,19 @@ function LimitBlokirFormContent({
                       />
                       <Label
                         htmlFor={`cat-${kat.id}`}
-                        className='text-xs font-semibold cursor-pointer text-slate-800 dark:text-slate-200'
+                        className='text-xs font-semibold cursor-pointer text-foreground'
                       >
                         {kat.nama}
                       </Label>
                     </div>
 
                     <Badge
-                      variant={isBlocked ? 'destructive' : 'outline'}
-                      className='text-[10px] py-0 px-1.5'
+                      variant='outline'
+                      className={
+                        isBlocked
+                          ? 'border-0 bg-destructive/15 text-destructive text-[10px] py-0 px-1.5 font-medium'
+                          : 'border-0 bg-muted text-muted-foreground text-[10px] py-0 px-1.5 font-medium'
+                      }
                     >
                       {isBlocked ? 'DIBLOKIR' : 'Diizinkan'}
                     </Badge>
@@ -360,7 +356,7 @@ function LimitBlokirFormContent({
               </div>
 
               {blockedItemIds.length > 0 && (
-                <Badge variant='destructive' className='text-xs'>
+                <Badge variant='outline' className='border-0 bg-destructive/15 text-destructive text-xs font-medium'>
                   {blockedItemIds.length} Item Diblokir
                 </Badge>
               )}
@@ -404,7 +400,7 @@ function LimitBlokirFormContent({
             </div>
 
             {/* List Menu Item Grid */}
-            <div className='max-h-56 overflow-y-auto rounded-lg border divide-y bg-slate-50/50 dark:bg-slate-900/30'>
+            <div className='max-h-56 overflow-y-auto rounded-lg border divide-y bg-muted/20'>
               {filteredMenuItems.length === 0 ? (
                 <p className='p-4 text-center text-xs text-muted-foreground'>
                   Tidak ada menu yang sesuai pencarian.
@@ -420,10 +416,10 @@ function LimitBlokirFormContent({
                       onClick={() => !isCatBlocked && handleToggleItem(item.id)}
                       className={`p-2.5 flex items-center justify-between text-xs transition-colors ${
                         isCatBlocked
-                          ? 'bg-amber-50/60 dark:bg-amber-950/20 opacity-80 cursor-not-allowed'
+                          ? 'bg-amber-500/10 dark:bg-amber-950/20 opacity-80 cursor-not-allowed'
                           : isItemBlocked
-                          ? 'bg-red-50/60 dark:bg-red-950/30 cursor-pointer'
-                          : 'hover:bg-white dark:hover:bg-slate-800 cursor-pointer'
+                          ? 'bg-destructive/10 cursor-pointer'
+                          : 'hover:bg-muted/50 cursor-pointer'
                       }`}
                     >
                       <div className='flex items-center gap-3'>
@@ -441,12 +437,12 @@ function LimitBlokirFormContent({
                           />
                         )}
                         <div>
-                          <p className='font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2'>
+                          <p className='font-semibold text-foreground flex items-center gap-2'>
                             {item.nama}
                             {isCatBlocked && (
                               <Badge
                                 variant='outline'
-                                className='text-[9px] py-0 border-amber-300 text-amber-700 bg-amber-50 dark:bg-amber-950/40'
+                                className='border-0 bg-amber-500/15 text-amber-700 dark:text-amber-400 text-[9px] py-0 font-medium'
                               >
                                 Terblokir Kategori ({item.kategori_nama})
                               </Badge>
@@ -460,11 +456,11 @@ function LimitBlokirFormContent({
 
                       <div>
                         {isCatBlocked ? (
-                          <Badge variant='outline' className='text-[10px] text-amber-600 border-amber-300'>
+                          <Badge variant='outline' className='border-0 bg-amber-500/15 text-amber-700 dark:text-amber-400 text-[10px] font-medium'>
                             Kategori Blokir
                           </Badge>
                         ) : isItemBlocked ? (
-                          <Badge variant='destructive' className='text-[10px] py-0 px-2'>
+                          <Badge variant='outline' className='border-0 bg-destructive/15 text-destructive text-[10px] py-0 px-2 font-medium'>
                             DIBLOKIR
                           </Badge>
                         ) : (

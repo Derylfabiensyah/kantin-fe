@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
-  ShieldCheck,
   Search,
   RefreshCw,
   PhoneOff,
@@ -181,7 +180,7 @@ export function KontrolSiswaPage() {
   return (
     <>
       <Header>
-        <SearchComp />
+        <SearchComp showKbd={false} />
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
@@ -192,14 +191,9 @@ export function KontrolSiswaPage() {
         {/* Title Header */}
         <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
           <div>
-            <div className='flex items-center gap-2'>
-              <div className='flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary'>
-                <ShieldCheck className='h-5 w-5' />
-              </div>
-              <h1 className='text-2xl font-bold tracking-tight'>
-                Kontrol Siswa atas Nama Orang Tua
-              </h1>
-            </div>
+            <h1 className='text-2xl font-bold tracking-tight text-foreground'>
+              Kontrol Siswa atas Nama Orang Tua
+            </h1>
             <p className='text-sm text-muted-foreground mt-1'>
               Modul Admin Sekolah: Pengaturan Batas Limit Belanja & Larangan Menu Siswa (PRD §9.6)
             </p>
@@ -220,7 +214,7 @@ export function KontrolSiswaPage() {
         </div>
 
         {/* Banner Penjelasan Perwalian Admin */}
-        <Alert className='bg-primary/5 border-primary/20 text-slate-900 dark:text-slate-100'>
+        <Alert className='border-primary/20 bg-primary/5 text-foreground'>
           <Info className='h-4 w-4 text-primary' />
           <AlertTitle className='font-semibold text-xs tracking-wide'>
             Perwalian Admin Sekolah untuk Orang Tua Non-Aplikasi (PRD §9.6)
@@ -236,12 +230,12 @@ export function KontrolSiswaPage() {
 
         {/* KPI Cards Ringkasan */}
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-          <Card className='shadow-sm'>
+          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
             <CardHeader className='pb-2'>
               <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Total Siswa Terdaftar
               </CardDescription>
-              <CardTitle className='text-2xl font-bold text-slate-900 dark:text-slate-100'>
+              <CardTitle className='text-2xl font-bold text-foreground'>
                 {students.length} Siswa
               </CardTitle>
             </CardHeader>
@@ -250,13 +244,13 @@ export function KontrolSiswaPage() {
             </CardContent>
           </Card>
 
-          <Card className='shadow-sm border-amber-300/70 dark:border-amber-900/40 bg-gradient-to-br from-amber-50/50 to-transparent dark:from-amber-950/20'>
+          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
             <CardHeader className='pb-2'>
-              <CardDescription className='text-xs font-semibold text-amber-800 dark:text-amber-400 uppercase tracking-wider'>
+              <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Ortu Belum Pakai App
               </CardDescription>
-              <CardTitle className='text-2xl font-bold font-mono text-amber-700 dark:text-amber-300 flex items-center gap-2'>
-                <PhoneOff className='h-5 w-5 text-amber-600' />
+              <CardTitle className='text-2xl font-bold font-mono text-amber-600 dark:text-amber-400 flex items-center gap-2'>
+                <PhoneOff className='h-5 w-5 text-amber-600 dark:text-amber-400' />
                 <span>{nonAppCount} Siswa</span>
               </CardTitle>
             </CardHeader>
@@ -265,7 +259,7 @@ export function KontrolSiswaPage() {
             </CardContent>
           </Card>
 
-          <Card className='shadow-sm'>
+          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
             <CardHeader className='pb-2'>
               <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Limit Belanja Aktif
@@ -280,13 +274,13 @@ export function KontrolSiswaPage() {
             </CardContent>
           </Card>
 
-          <Card className='shadow-sm'>
+          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
             <CardHeader className='pb-2'>
               <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Larangan Menu Aktif
               </CardDescription>
-              <CardTitle className='text-2xl font-bold text-red-600 dark:text-red-400 flex items-center gap-2'>
-                <UtensilsCrossed className='h-5 w-5 text-red-500' />
+              <CardTitle className='text-2xl font-bold text-destructive flex items-center gap-2'>
+                <UtensilsCrossed className='h-5 w-5 text-destructive' />
                 <span>{menuBlockCount} Siswa</span>
               </CardTitle>
             </CardHeader>
@@ -297,7 +291,7 @@ export function KontrolSiswaPage() {
         </div>
 
         {/* Toolbar Pencarian & Filter */}
-        <Card className='shadow-sm'>
+        <Card className='shadow-xs'>
           <CardContent className='p-4'>
             <div className='flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3'>
               <div className='relative flex-1'>
@@ -353,12 +347,12 @@ export function KontrolSiswaPage() {
         </Card>
 
         {/* Tabel Siswa */}
-        <Card className='shadow-sm'>
+        <Card className='shadow-xs'>
           <CardContent className='p-0'>
             <div className='overflow-x-auto'>
               <Table>
                 <TableHeader>
-                  <TableRow className='bg-slate-50/70 dark:bg-slate-900/40 text-xs'>
+                  <TableRow className='bg-muted/50 text-xs'>
                     <TableHead className='w-[240px]'>Data Siswa</TableHead>
                     <TableHead>Status Aplikasi Ortu</TableHead>
                     <TableHead>Batas Limit Harian</TableHead>
@@ -393,10 +387,10 @@ export function KontrolSiswaPage() {
                                 className='h-10 w-10 rounded-full object-cover border'
                               />
                               <div>
-                                <p className='font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5'>
+                                <p className='font-bold text-foreground flex items-center gap-1.5'>
                                   {siswa.nama}
                                   {siswa.is_blocked && (
-                                    <Badge variant='destructive' className='text-[9px] py-0'>
+                                    <Badge variant='outline' className='border-0 bg-destructive/15 text-destructive text-[9px] py-0 font-medium'>
                                       KARTU DIBLOKIR
                                     </Badge>
                                   )}
@@ -416,7 +410,7 @@ export function KontrolSiswaPage() {
                             {siswa.parent_app_registered ? (
                               <Badge
                                 variant='outline'
-                                className='text-[10px] py-0.5 border-emerald-300 text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 gap-1'
+                                className='border-0 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 text-[10px] py-0.5 gap-1 font-medium'
                               >
                                 <Smartphone className='h-3 w-3' />
                                 <span>Terhubung App</span>
@@ -425,7 +419,7 @@ export function KontrolSiswaPage() {
                               <div className='space-y-0.5'>
                                 <Badge
                                   variant='outline'
-                                  className='text-[10px] py-0.5 border-amber-300 text-amber-700 bg-amber-50 dark:bg-amber-950/40 gap-1'
+                                  className='border-0 bg-amber-500/15 text-amber-700 dark:text-amber-400 text-[10px] py-0.5 gap-1 font-medium'
                                 >
                                   <PhoneOff className='h-3 w-3' />
                                   <span>Belum Pakai App</span>
@@ -443,7 +437,7 @@ export function KontrolSiswaPage() {
                               <div className='space-y-1'>
                                 <Badge
                                   variant='outline'
-                                  className='text-[11px] py-0 font-mono font-semibold bg-primary/5 text-primary border-primary/20'
+                                  className='border-0 bg-primary/15 text-primary text-[11px] py-0.5 font-mono font-medium'
                                 >
                                   {formatRupiah(siswa.limit_harian)} / hari
                                 </Badge>
@@ -452,8 +446,8 @@ export function KontrolSiswaPage() {
                                 </div>
                               </div>
                             ) : (
-                              <span className='inline-flex items-center gap-1 text-[11px] text-slate-500 font-medium'>
-                                <CheckCircle2 className='h-3.5 w-3.5 text-emerald-500' />
+                              <span className='inline-flex items-center gap-1 text-[11px] text-muted-foreground font-medium'>
+                                <CheckCircle2 className='h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400' />
                                 Tanpa Limit
                               </span>
                             )}
@@ -467,15 +461,15 @@ export function KontrolSiswaPage() {
                                   {blockedCatsCount > 0 && (
                                     <Badge
                                       variant='outline'
-                                      className='text-[10px] py-0 border-amber-300 text-amber-700 bg-amber-50 dark:bg-amber-950/40'
+                                      className='border-0 bg-amber-500/15 text-amber-700 dark:text-amber-400 text-[10px] py-0 font-medium'
                                     >
                                       {blockedCatsCount} Kategori Diblokir
                                     </Badge>
                                   )}
                                   {blockedItemsCount > 0 && (
                                     <Badge
-                                      variant='destructive'
-                                      className='text-[10px] py-0 px-1.5'
+                                      variant='outline'
+                                      className='border-0 bg-destructive/15 text-destructive text-[10px] py-0 px-1.5 font-medium'
                                     >
                                       {blockedItemsCount} Item Spesifik
                                     </Badge>
@@ -496,7 +490,7 @@ export function KontrolSiswaPage() {
 
                           {/* Saldo Digital */}
                           <TableCell>
-                            <span className='font-mono font-bold text-slate-900 dark:text-slate-100 text-xs'>
+                            <span className='font-mono font-bold text-foreground text-xs'>
                               {formatRupiah(siswa.saldo)}
                             </span>
                           </TableCell>
@@ -522,7 +516,7 @@ export function KontrolSiswaPage() {
                                   setSelectedStudent(siswa)
                                   setIsFormOpen(true)
                                 }}
-                                className='h-8 text-xs gap-1.5 border-primary/30 hover:bg-primary/5 hover:text-primary'
+                                className='h-8 text-xs gap-1.5'
                               >
                                 <Sliders className='h-3.5 w-3.5' />
                                 <span>Atur Limit & Blokir</span>

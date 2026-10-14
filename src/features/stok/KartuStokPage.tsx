@@ -509,16 +509,16 @@ export function KartuStokPage() {
                 <Badge
                   variant={
                     kpiData.status === 'AMAN'
-                      ? 'outline'
+                      ? 'secondary'
                       : kpiData.status === 'MENIPIS'
                       ? 'secondary'
                       : 'destructive'
                   }
-                  className={`text-[10px] font-semibold ${
+                  className={`text-[10px] font-semibold border-0 ${
                     kpiData.status === 'AMAN'
-                      ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
                       : kpiData.status === 'MENIPIS'
-                      ? 'bg-amber-500/10 text-amber-600 border-amber-500/20'
+                      ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
                       : ''
                   }`}
                 >
@@ -725,8 +725,8 @@ export function KartuStokPage() {
                               </TableCell>
                               <TableCell>
                                 <Badge
-                                  variant='outline'
-                                  className='text-[11px] font-medium'
+                                  variant='secondary'
+                                  className='text-[11px] font-medium border-0'
                                 >
                                   {item.jenis.replace(/_/g, ' ')}
                                 </Badge>

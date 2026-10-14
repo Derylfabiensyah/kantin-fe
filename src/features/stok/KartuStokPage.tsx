@@ -303,6 +303,28 @@ export function KartuStokPage() {
     toast.success('Kartu stok berhasil diunduh dalam format CSV')
   }
 
+  const getJenisBadgeClass = (jenis: string, arah: string) => {
+    switch (jenis) {
+      case 'BARANG_MASUK':
+      case 'OPNAME_MASUK':
+        return 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400'
+      case 'PENJUALAN':
+        return 'bg-blue-500/15 text-blue-700 dark:text-blue-400'
+      case 'BARANG_RUSAK':
+        return 'bg-rose-500/15 text-rose-700 dark:text-rose-400'
+      case 'PENJUALAN_VOID':
+        return 'bg-amber-500/15 text-amber-700 dark:text-amber-400'
+      case 'OPNAME_KELUAR':
+        return 'bg-purple-500/15 text-purple-700 dark:text-purple-400'
+      case 'BARANG_MASUK_PEMBALIK':
+        return 'bg-destructive/15 text-destructive'
+      default:
+        return arah === 'MASUK'
+          ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400'
+          : 'bg-muted/80 text-muted-foreground'
+    }
+  }
+
   return (
     <>
       <Header fixed>
@@ -725,8 +747,10 @@ export function KartuStokPage() {
                               </TableCell>
                               <TableCell>
                                 <Badge
-                                  variant='secondary'
-                                  className='text-[11px] font-medium border-0'
+                                  className={`text-[11px] font-medium border-0 shadow-none ${getJenisBadgeClass(
+                                    item.jenis,
+                                    item.arah
+                                  )}`}
                                 >
                                   {item.jenis.replace(/_/g, ' ')}
                                 </Badge>

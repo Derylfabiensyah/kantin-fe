@@ -262,10 +262,6 @@ export function InventarisPage() {
   return (
     <>
       <Header fixed>
-        <div className='flex items-center gap-2 font-semibold text-lg'>
-          <Boxes className='h-5 w-5 text-primary' />
-          <span>Laporan Inventaris Nilai Persediaan</span>
-        </div>
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />

@@ -246,7 +246,7 @@ export function RefundSiswaKeluarPage() {
   return (
     <>
       <Header>
-        <SearchComp />
+        <SearchComp showKbd={false} />
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
@@ -257,14 +257,9 @@ export function RefundSiswaKeluarPage() {
         {/* Title Header */}
         <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
           <div>
-            <div className='flex items-center gap-2'>
-              <div className='flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary'>
-                <ArrowLeftRight className='h-5 w-5' />
-              </div>
-              <h1 className='text-2xl font-bold tracking-tight'>
-                Refund Saldo Siswa Keluar / Lulus
-              </h1>
-            </div>
+            <h1 className='text-2xl font-bold tracking-tight text-foreground'>
+              Refund Saldo Siswa Keluar / Lulus
+            </h1>
             <p className='text-sm text-muted-foreground mt-1'>
               Pilar Kasir TU, Kartu Tamu, Saldo & Laporan — PRD §9.3 Pengembalian Dana Titipan Siswa
             </p>
@@ -285,7 +280,7 @@ export function RefundSiswaKeluarPage() {
         </div>
 
         {/* Banner Penjelasan Sistem */}
-        <Alert className='bg-blue-50/80 border-blue-200 text-blue-900 dark:bg-blue-950/40 dark:border-blue-900 dark:text-blue-200'>
+        <Alert className='border-blue-500/30 bg-blue-500/10 text-blue-950 dark:text-blue-200'>
           <Building className='h-4 w-4 text-blue-600 dark:text-blue-400' />
           <AlertTitle className='font-semibold text-xs tracking-wide'>
             Kewajiban Pengembalian Dana Titipan Siswa Nonaktif (PRD §9.3 & §9.5)
@@ -301,12 +296,12 @@ export function RefundSiswaKeluarPage() {
 
         {/* KPI Cards Ringkasan */}
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-          <Card className='shadow-sm border-amber-200/60 dark:border-amber-900/40 bg-gradient-to-br from-amber-50/50 to-transparent dark:from-amber-950/20'>
+          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
             <CardHeader className='pb-2'>
-              <CardDescription className='text-xs font-semibold text-amber-800 dark:text-amber-400 uppercase tracking-wider'>
+              <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Dana Titipan Mengendap
               </CardDescription>
-              <CardTitle className='text-2xl font-bold font-mono text-amber-700 dark:text-amber-300'>
+              <CardTitle className='text-2xl font-bold font-mono text-amber-600 dark:text-amber-400'>
                 {formatRupiah(totalDanaMengendap)}
               </CardTitle>
             </CardHeader>
@@ -315,12 +310,12 @@ export function RefundSiswaKeluarPage() {
             </CardContent>
           </Card>
 
-          <Card className='shadow-sm'>
+          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
             <CardHeader className='pb-2'>
               <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Menunggu Refund / Pindah
               </CardDescription>
-              <CardTitle className='text-2xl font-bold text-slate-900 dark:text-slate-100'>
+              <CardTitle className='text-2xl font-bold text-foreground'>
                 {pendingRefundCount} Siswa
               </CardTitle>
             </CardHeader>
@@ -329,7 +324,7 @@ export function RefundSiswaKeluarPage() {
             </CardContent>
           </Card>
 
-          <Card className='shadow-sm'>
+          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
             <CardHeader className='pb-2'>
               <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Selesai Diproses
@@ -343,13 +338,13 @@ export function RefundSiswaKeluarPage() {
             </CardContent>
           </Card>
 
-          <Card className='shadow-sm'>
+          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
             <CardHeader className='pb-2'>
               <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Kartu RFID Diamankan
               </CardDescription>
-              <CardTitle className='text-2xl font-bold flex items-center gap-2'>
-                <Lock className='h-5 w-5 text-red-500' />
+              <CardTitle className='text-2xl font-bold flex items-center gap-2 text-foreground'>
+                <Lock className='h-5 w-5 text-destructive' />
                 <span>{completedRefundCount} Kartu</span>
               </CardTitle>
             </CardHeader>
@@ -414,12 +409,12 @@ export function RefundSiswaKeluarPage() {
 
           {/* TAB 1: DAFTAR SISWA MENUNGGU REFUND (SALDO > 0) */}
           <TabsContent value='pending' className='space-y-4 m-0'>
-            <Card className='shadow-sm'>
+            <Card className='shadow-xs'>
               <CardContent className='p-0'>
                 <div className='overflow-x-auto'>
                   <Table>
                     <TableHeader>
-                      <TableRow className='bg-slate-50/70 dark:bg-slate-900/40 text-xs'>
+                      <TableRow className='bg-muted/50 text-xs'>
                         <TableHead className='w-[240px]'>Data Siswa Nonaktif</TableHead>
                         <TableHead>Status Akademik</TableHead>
                         <TableHead>Orang Tua / Kontak</TableHead>
@@ -454,7 +449,7 @@ export function RefundSiswaKeluarPage() {
                                     className='h-10 w-10 rounded-full object-cover border'
                                   />
                                   <div>
-                                    <p className='font-bold text-slate-900 dark:text-slate-100'>
+                                    <p className='font-bold text-foreground'>
                                       {siswa.nama}
                                     </p>
                                     <p className='text-muted-foreground font-mono text-[11px]'>
@@ -473,10 +468,10 @@ export function RefundSiswaKeluarPage() {
                                   variant='outline'
                                   className={
                                     siswa.status_siswa === 'LULUS'
-                                      ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300'
+                                      ? 'border-0 bg-blue-500/15 text-blue-700 dark:text-blue-400 text-[11px] font-medium'
                                       : siswa.status_siswa === 'PINDAH'
-                                      ? 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300'
-                                      : 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-300'
+                                      ? 'border-0 bg-amber-500/15 text-amber-700 dark:text-amber-400 text-[11px] font-medium'
+                                      : 'border-0 bg-destructive/15 text-destructive text-[11px] font-medium'
                                   }
                                 >
                                   {siswa.status_siswa}
@@ -488,14 +483,14 @@ export function RefundSiswaKeluarPage() {
 
                               {/* Orang Tua / Kontak */}
                               <TableCell>
-                                <p className='font-medium text-slate-900 dark:text-slate-100'>
+                                <p className='font-medium text-foreground'>
                                   {siswa.nama_ortu}
                                 </p>
                                 <p className='text-muted-foreground font-mono text-[11px]'>
                                   {siswa.kontak_ortu}
                                 </p>
                                 {siswa.bank_ortu && (
-                                  <p className='text-[10px] text-slate-500 font-mono'>
+                                  <p className='text-[10px] text-muted-foreground font-mono'>
                                     {siswa.bank_ortu}: {siswa.no_rekening_ortu}
                                   </p>
                                 )}
@@ -505,13 +500,13 @@ export function RefundSiswaKeluarPage() {
                               <TableCell>
                                 <div className='space-y-1 font-mono text-[11px]'>
                                   <div className='flex items-center gap-1.5'>
-                                    <code className='bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded'>
+                                    <code className='bg-muted px-1.5 py-0.5 rounded font-mono text-[11px]'>
                                       {siswa.rfid_uid}
                                     </code>
                                   </div>
                                   <Badge
                                     variant='outline'
-                                    className='text-[9px] py-0 border-amber-300 text-amber-700 dark:text-amber-400'
+                                    className='border-0 bg-amber-500/15 text-amber-700 dark:text-amber-400 text-[10px] font-medium py-0'
                                   >
                                     Siap Diblokir
                                   </Badge>
@@ -529,7 +524,7 @@ export function RefundSiswaKeluarPage() {
                                     <p className='text-[10px] text-muted-foreground font-mono'>
                                       NIS: {firstSibling.nis} ({firstSibling.kelas})
                                     </p>
-                                    <span className='inline-block text-[9px] bg-blue-50 text-blue-700 px-1.5 py-0.2 rounded border border-blue-200 dark:bg-blue-950/40 dark:text-blue-300'>
+                                    <span className='inline-block text-[9px] bg-blue-500/15 text-blue-700 dark:text-blue-400 px-1.5 py-0.5 rounded font-medium'>
                                       Saldo: {formatRupiah(firstSibling.saldo)}
                                     </span>
                                   </div>
@@ -553,12 +548,11 @@ export function RefundSiswaKeluarPage() {
                                   {/* Opsi A: Refund ke Ortu */}
                                   <Button
                                     size='sm'
-                                    variant='default'
                                     onClick={() => {
                                       setSelectedStudentRefund(siswa)
                                       setIsRefundModalOpen(true)
                                     }}
-                                    className='h-8 text-xs gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white'
+                                    className='h-8 text-xs gap-1.5'
                                   >
                                     <Banknote className='h-3.5 w-3.5' />
                                     <span>Refund Ortu</span>
@@ -572,7 +566,7 @@ export function RefundSiswaKeluarPage() {
                                       setSelectedStudentTransfer(siswa)
                                       setIsTransferModalOpen(true)
                                     }}
-                                    className='h-8 text-xs gap-1.5 border-blue-300 text-blue-700 hover:bg-blue-50 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-950/40'
+                                    className='h-8 text-xs gap-1.5'
                                   >
                                     <ArrowLeftRight className='h-3.5 w-3.5' />
                                     <span>Pindah Saudara</span>
@@ -592,12 +586,12 @@ export function RefundSiswaKeluarPage() {
 
           {/* TAB 2: RIWAYAT PEMROSESAN SELESAI */}
           <TabsContent value='completed' className='space-y-4 m-0'>
-            <Card className='shadow-sm'>
+            <Card className='shadow-xs'>
               <CardContent className='p-0'>
                 <div className='overflow-x-auto'>
                   <Table>
                     <TableHeader>
-                      <TableRow className='bg-slate-50/70 dark:bg-slate-900/40 text-xs'>
+                      <TableRow className='bg-muted/50 text-xs'>
                         <TableHead>Siswa Nonaktif</TableHead>
                         <TableHead>Jenis Penyelesaian</TableHead>
                         <TableHead>Nominal Diselesaikan</TableHead>
@@ -628,7 +622,7 @@ export function RefundSiswaKeluarPage() {
                                     className='h-9 w-9 rounded-full object-cover border'
                                   />
                                   <div>
-                                    <p className='font-semibold text-slate-900 dark:text-slate-100'>
+                                    <p className='font-semibold text-foreground'>
                                       {siswa.nama}
                                     </p>
                                     <p className='text-muted-foreground font-mono text-[11px]'>
@@ -643,8 +637,8 @@ export function RefundSiswaKeluarPage() {
                                   variant='outline'
                                   className={
                                     isTrf
-                                      ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300'
-                                      : 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300'
+                                      ? 'border-0 bg-blue-500/15 text-blue-700 dark:text-blue-400 text-[11px] font-medium'
+                                      : 'border-0 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 text-[11px] font-medium'
                                   }
                                 >
                                   {isTrf ? 'Pindah ke Saudara' : `Refund (${info?.metode || 'Tunai'})`}
@@ -655,7 +649,7 @@ export function RefundSiswaKeluarPage() {
                               </TableCell>
 
                               <TableCell>
-                                <div className='font-mono font-bold text-slate-900 dark:text-slate-100'>
+                                <div className='font-mono font-bold text-foreground'>
                                   {formatRupiah(info?.nominal || 0)}
                                 </div>
                                 <span className='text-[10px] text-muted-foreground'>
@@ -664,7 +658,10 @@ export function RefundSiswaKeluarPage() {
                               </TableCell>
 
                               <TableCell>
-                                <Badge variant='destructive' className='text-[10px] py-0 px-2 gap-1'>
+                                <Badge
+                                  variant='outline'
+                                  className='border-0 bg-destructive/15 text-destructive text-[10px] font-medium py-0 px-2 gap-1'
+                                >
                                   <Lock className='h-2.5 w-2.5' /> DIBLOKIR PERMANEN
                                 </Badge>
                                 <p className='text-[10px] font-mono text-muted-foreground mt-0.5'>
@@ -673,7 +670,7 @@ export function RefundSiswaKeluarPage() {
                               </TableCell>
 
                               <TableCell>
-                                <p className='text-[11px] text-slate-700 dark:text-slate-300'>
+                                <p className='text-[11px] text-foreground'>
                                   {isTrf
                                     ? `Diterima adik: ${info?.saudara_tujuan_nama || 'Saudara Aktif'}`
                                     : `Penerima: ${siswa.nama_ortu}`}

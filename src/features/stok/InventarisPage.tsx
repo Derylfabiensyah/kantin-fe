@@ -1,10 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
-  Boxes,
-  Coins,
-  CheckCircle2,
-  AlertTriangle,
-  XCircle,
   Search,
   Download,
   History,
@@ -305,8 +300,8 @@ export function InventarisPage() {
           {/* 1. Total Nilai Persediaan (Aset) */}
           <Card className='col-span-2 md:col-span-1 border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-medium flex items-center gap-1.5'>
-                <Coins className='h-4 w-4 text-muted-foreground' /> Total Nilai Aset
+              <CardDescription className='text-xs font-medium'>
+                Total Nilai Aset
               </CardDescription>
               <CardTitle className='text-2xl font-bold font-mono text-foreground'>
                 {formatRupiah(kpiData.totalNilai)}
@@ -320,8 +315,8 @@ export function InventarisPage() {
           {/* 2. Total SKU & Unit */}
           <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-medium flex items-center gap-1.5'>
-                <Boxes className='h-4 w-4 text-muted-foreground' /> Total SKU Terdaftar
+              <CardDescription className='text-xs font-medium'>
+                Total SKU Terdaftar
               </CardDescription>
               <CardTitle className='text-2xl font-bold'>
                 {formatNumber(kpiData.totalSku)}{' '}
@@ -338,8 +333,8 @@ export function InventarisPage() {
           {/* 3. Stok Aman */}
           <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-medium flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400'>
-                <CheckCircle2 className='h-4 w-4' /> Stok Aman
+              <CardDescription className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>
+                Stok Aman
               </CardDescription>
               <CardTitle className='text-2xl font-bold text-emerald-600 dark:text-emerald-400'>
                 {formatNumber(kpiData.countAman)}{' '}
@@ -356,8 +351,8 @@ export function InventarisPage() {
           {/* 4. Stok Menipis */}
           <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-medium flex items-center gap-1.5 text-amber-600 dark:text-amber-400'>
-                <AlertTriangle className='h-4 w-4' /> Stok Menipis
+              <CardDescription className='text-xs font-medium text-amber-600 dark:text-amber-400'>
+                Stok Menipis
               </CardDescription>
               <CardTitle className='text-2xl font-bold text-amber-600 dark:text-amber-400'>
                 {formatNumber(kpiData.countMenipis)}{' '}
@@ -374,8 +369,8 @@ export function InventarisPage() {
           {/* 5. Stok Habis */}
           <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-medium flex items-center gap-1.5 text-rose-600 dark:text-rose-400'>
-                <XCircle className='h-4 w-4' /> Stok Habis
+              <CardDescription className='text-xs font-medium text-rose-600 dark:text-rose-400'>
+                Stok Habis
               </CardDescription>
               <CardTitle className='text-2xl font-bold text-rose-600 dark:text-rose-400'>
                 {formatNumber(kpiData.countHabis)}{' '}

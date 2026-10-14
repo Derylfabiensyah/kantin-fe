@@ -27,7 +27,7 @@ export const sidebarData: SidebarData = {
   teams: [
     {
       name: 'SKOOLIA Kantin',
-      logo: Store,
+      logo: '/images/logo.png',
       plan: 'Cashless Sekolah',
     },
   ],

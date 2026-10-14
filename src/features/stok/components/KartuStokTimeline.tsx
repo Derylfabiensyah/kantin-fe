@@ -42,7 +42,7 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
           'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-0',
         icon: ArrowDownLeft,
         iconClass:
-          'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-400 dark:border-emerald-800',
+          'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/80 dark:text-emerald-400',
         sign: '+',
         isMasuk: true,
       }
@@ -54,7 +54,7 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
           'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border-0',
         icon: RotateCcw,
         iconClass:
-          'bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-950/80 dark:text-amber-400 dark:border-amber-800',
+          'bg-amber-50 text-amber-600 dark:bg-amber-950/80 dark:text-amber-400',
         sign: '-',
         isMasuk: false,
       }
@@ -66,7 +66,7 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
           'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-0',
         icon: ShoppingCart,
         iconClass:
-          'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/80 dark:text-blue-400 dark:border-blue-800',
+          'bg-blue-50 text-blue-600 dark:bg-blue-950/80 dark:text-blue-400',
         sign: '-',
         isMasuk: false,
       }
@@ -78,7 +78,7 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
           'bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border-0',
         icon: RotateCcw,
         iconClass:
-          'bg-purple-50 text-purple-600 border-purple-200 dark:bg-purple-950/80 dark:text-purple-400 dark:border-purple-800',
+          'bg-purple-50 text-purple-600 dark:bg-purple-950/80 dark:text-purple-400',
         sign: '+',
         isMasuk: true,
       }
@@ -90,7 +90,7 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
           'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-0',
         icon: PlusCircle,
         iconClass:
-          'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-400 dark:border-emerald-800',
+          'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/80 dark:text-emerald-400',
         sign: '+',
         isMasuk: true,
       }
@@ -102,7 +102,7 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
           'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-0',
         icon: MinusCircle,
         iconClass:
-          'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-400 dark:border-emerald-800',
+          'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/80 dark:text-emerald-400',
         sign: '-',
         isMasuk: false,
       }
@@ -114,7 +114,7 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
           'bg-red-50 text-red-700 dark:bg-red-950/60 dark:text-red-300 border-0',
         icon: Trash2,
         iconClass:
-          'bg-red-50 text-red-600 border-red-200 dark:bg-red-950/80 dark:text-red-400 dark:border-red-800',
+          'bg-red-50 text-red-600 dark:bg-red-950/80 dark:text-red-400',
         sign: '-',
         isMasuk: false,
       }
@@ -124,7 +124,7 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
         badgeVariant: 'secondary',
         badgeClass: 'bg-muted text-muted-foreground border-0',
         icon: ArrowUpRight,
-        iconClass: 'bg-muted text-muted-foreground border-border',
+        iconClass: 'bg-muted text-muted-foreground',
         sign: '-',
         isMasuk: false,
       }
@@ -180,7 +180,7 @@ export function KartuStokTimeline({
           <div key={item.id ?? index} className='relative flex items-start gap-3.5 sm:gap-4 group'>
             {/* Dot / Icon marker on vertical line */}
             <div
-              className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border shadow-xs transition-transform group-hover:scale-105 ${meta.iconClass}`}
+              className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-0 transition-transform group-hover:scale-105 ${meta.iconClass}`}
             >
               <IconComponent className='h-4 w-4' />
             </div>

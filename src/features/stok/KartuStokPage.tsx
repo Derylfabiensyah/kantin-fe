@@ -595,10 +595,10 @@ export function KartuStokPage() {
 
         {/* Saldo Consistency Audit Banner */}
         <div
-          className={`flex items-center justify-between p-3.5 rounded-lg border text-xs ${
+          className={`flex items-center justify-between p-3.5 rounded-lg border-0 text-xs ${
             isBalanceConsistent
-              ? 'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-300'
-              : 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400'
+              ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300'
+              : 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400'
           }`}
         >
           <div className='flex items-center gap-2'>

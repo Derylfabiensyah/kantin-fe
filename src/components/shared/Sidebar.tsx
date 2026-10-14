@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import {
   Sidebar as ShadcnSidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar'
@@ -10,7 +9,6 @@ import { useLayout } from '@/context/layout-provider'
 import { useRoleStore } from '@/stores/useRoleStore'
 import { sidebarData } from '@/components/layout/data/sidebar-data'
 import { NavGroup } from '@/components/layout/nav-group'
-import { NavUser } from '@/components/layout/nav-user'
 import { TeamSwitcher } from '@/components/layout/team-switcher'
 
 export interface SidebarProps {
@@ -19,7 +17,7 @@ export interface SidebarProps {
 
 export function Sidebar({ className }: SidebarProps) {
   const { collapsible, variant } = useLayout()
-  const { currentRole, userName, userEmail, schoolName, canteenName } = useRoleStore()
+  const { currentRole, schoolName, canteenName } = useRoleStore()
 
   // Filter navigasi sidebar dinamis sesuai role yang sedang aktif
   const filteredNavGroups = useMemo(() => {
@@ -38,12 +36,6 @@ export function Sidebar({ className }: SidebarProps) {
         }),
       }))
   }, [currentRole])
-
-  const user = {
-    name: userName || sidebarData.user.name,
-    email: userEmail || sidebarData.user.email,
-    avatar: sidebarData.user.avatar,
-  }
 
   const teams = [
     {
@@ -64,10 +56,6 @@ export function Sidebar({ className }: SidebarProps) {
           <NavGroup key={props.title} {...props} />
         ))}
       </SidebarContent>
-
-      <SidebarFooter className='border-t border-sidebar-border/50 pt-2'>
-        <NavUser user={user} />
-      </SidebarFooter>
 
       <SidebarRail />
     </ShadcnSidebar>

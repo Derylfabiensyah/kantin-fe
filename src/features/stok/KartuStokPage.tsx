@@ -367,7 +367,7 @@ export function KartuStokPage() {
 
         {/* Filter & Selector Bar */}
         <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
-          <CardContent className='p-4 sm:p-5 space-y-4'>
+          <CardContent className='p-4 sm:p-5 flex flex-col gap-4 sm:gap-5'>
             <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
               {/* Menu Item Selector */}
               <div className='space-y-1.5 md:col-span-1'>
@@ -432,7 +432,7 @@ export function KartuStokPage() {
             </div>
 
             {/* Quick Presets & Date Filters */}
-            <div className='flex flex-wrap items-center justify-between gap-3 pt-1 text-sm'>
+            <div className='flex flex-wrap items-center justify-between gap-3 text-sm'>
               <div className='flex flex-wrap items-center gap-1.5'>
                 <span className='text-xs text-muted-foreground mr-1 flex items-center gap-1'>
                   <Calendar className='h-3.5 w-3.5' /> Periode:

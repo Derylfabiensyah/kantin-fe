@@ -7,7 +7,6 @@ import {
   XCircle,
   Search,
   Download,
-  RefreshCw,
   History,
   PackagePlus,
 } from 'lucide-react'
@@ -281,19 +280,6 @@ export function InventarisPage() {
             </p>
           </div>
           <div className='flex flex-wrap items-center gap-2.5'>
-            <Button
-              variant='outline'
-              size='sm'
-              onClick={loadData}
-              disabled={isLoading}
-              className='gap-1.5'
-            >
-              <RefreshCw
-                className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
-              />
-              <span>Segarkan</span>
-            </Button>
-
             <Button
               variant='outline'
               size='sm'

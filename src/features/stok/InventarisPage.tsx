@@ -545,16 +545,16 @@ export function InventarisPage() {
                             <Badge
                               variant={
                                 status === 'AMAN'
-                                  ? 'outline'
+                                  ? 'secondary'
                                   : status === 'MENIPIS'
                                   ? 'secondary'
                                   : 'destructive'
                               }
-                              className={`text-[11px] font-semibold ${
+                              className={`text-[11px] font-semibold border-0 ${
                                 status === 'AMAN'
-                                  ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+                                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
                                   : status === 'MENIPIS'
-                                  ? 'bg-amber-500/10 text-amber-600 border-amber-500/20'
+                                  ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
                                   : ''
                               }`}
                             >

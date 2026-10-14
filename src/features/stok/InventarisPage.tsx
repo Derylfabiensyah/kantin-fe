@@ -303,7 +303,7 @@ export function InventarisPage() {
         {/* KPI Summary Cards */}
         <div className='grid grid-cols-2 md:grid-cols-5 gap-3.5'>
           {/* 1. Total Nilai Persediaan (Aset) */}
-          <Card className='col-span-2 md:col-span-1 bg-primary/5 border-primary/20'>
+          <Card className='col-span-2 md:col-span-1 border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
               <CardDescription className='text-xs font-semibold text-primary flex items-center gap-1.5'>
                 <Coins className='h-4 w-4' /> Total Nilai Aset
@@ -318,7 +318,7 @@ export function InventarisPage() {
           </Card>
 
           {/* 2. Total SKU & Unit */}
-          <Card>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
               <CardDescription className='text-xs font-medium flex items-center gap-1.5'>
                 <Boxes className='h-4 w-4 text-muted-foreground' /> Total SKU Terdaftar
@@ -336,7 +336,7 @@ export function InventarisPage() {
           </Card>
 
           {/* 3. Stok Aman */}
-          <Card>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
               <CardDescription className='text-xs font-medium flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400'>
                 <CheckCircle2 className='h-4 w-4' /> Stok Aman
@@ -354,7 +354,7 @@ export function InventarisPage() {
           </Card>
 
           {/* 4. Stok Menipis */}
-          <Card>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
               <CardDescription className='text-xs font-medium flex items-center gap-1.5 text-amber-600 dark:text-amber-400'>
                 <AlertTriangle className='h-4 w-4' /> Stok Menipis
@@ -372,7 +372,7 @@ export function InventarisPage() {
           </Card>
 
           {/* 5. Stok Habis */}
-          <Card>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
               <CardDescription className='text-xs font-medium flex items-center gap-1.5 text-rose-600 dark:text-rose-400'>
                 <XCircle className='h-4 w-4' /> Stok Habis
@@ -391,7 +391,7 @@ export function InventarisPage() {
         </div>
 
         {/* Filters & Search Toolbar */}
-        <Card>
+        <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
           <CardContent className='p-4 sm:p-5'>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5'>
               {/* Search Bar */}
@@ -472,9 +472,9 @@ export function InventarisPage() {
         </Card>
 
         {/* Data Table */}
-        <Card>
+        <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm'>
           <CardContent className='p-0'>
-            <div className='rounded-md border overflow-x-auto'>
+            <div className='overflow-x-auto'>
               <Table>
                 <TableHeader className='bg-muted/50'>
                   <TableRow>

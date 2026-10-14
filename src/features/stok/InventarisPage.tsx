@@ -269,10 +269,6 @@ export function InventarisPage() {
             <h1 className='text-2xl font-bold tracking-tight'>
               Laporan Inventaris & Valuasi Persediaan
             </h1>
-            <p className='text-muted-foreground text-sm mt-0.5'>
-              Rekapitulasi seluruh aset barang kantin, status batas kritis, HPP
-              terkini, dan kalkulasi total nilai buku persediaan.
-            </p>
           </div>
           <div className='flex flex-wrap items-center gap-2.5'>
             <Button

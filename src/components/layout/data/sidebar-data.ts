@@ -22,13 +22,13 @@ export const sidebarData: SidebarData = {
     email: 'derylfabiensyah@skoolia.id',
     avatar: '/avatars/shadcn.jpg',
     role: 'Pengelola Kantin',
-    schoolName: 'SMA Negeri 1 SKOOLIA',
+    schoolName: 'PAUD SKOOLIA',
   },
   teams: [
     {
       name: 'Kantin SKOOLIA',
       logo: '/images/logo.png',
-      plan: 'Cashless Sekolah',
+      plan: 'PAUD SKOOLIA',
     },
   ],
   navGroups: [

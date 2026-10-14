@@ -107,7 +107,7 @@ export function UserAuthForm({
         nama: resData.user.nama,
         email: resData.user.email,
         sekolahId: resData.user.sekolah?.id || Number(data.sekolahId) || 10,
-        sekolahNama: resData.user.sekolah?.nama || 'SMA Negeri 1 SKOOLIA',
+        sekolahNama: resData.user.sekolah?.nama || 'PAUD SKOOLIA',
         roles: resData.user.roles || ['ROLE_ADMIN'],
         currentRole: rawRole,
       }

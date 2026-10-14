@@ -56,7 +56,7 @@ interface RoleStoreState {
 
 export const useRoleStore = create<RoleStoreState>((set) => ({
   currentRole: 'admin', // Default admin untuk akses luas
-  schoolName: 'SMA Negeri 1 SKOOLIA',
+  schoolName: 'PAUD SKOOLIA',
   canteenName: 'Kantin SKOOLIA',
   moduleStatus: 'ONLINE',
   userName: 'Deryl Fabiensyah',

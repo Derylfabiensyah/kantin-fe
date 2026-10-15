@@ -12,7 +12,6 @@ import {
   ShieldCheck,
   FileSpreadsheet,
   Settings,
-  Store,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -22,13 +21,13 @@ export const sidebarData: SidebarData = {
     email: 'derylfabiensyah@skoolia.id',
     avatar: '/avatars/shadcn.jpg',
     role: 'Pengelola Kantin',
-    schoolName: 'SMA Negeri 1 SKOOLIA',
+    schoolName: 'PAUD SKOOLIA',
   },
   teams: [
     {
-      name: 'SKOOLIA Kantin',
-      logo: Store,
-      plan: 'Cashless Sekolah',
+      name: 'Kantin SKOOLIA',
+      logo: '/images/logo.png',
+      plan: 'PAUD SKOOLIA',
     },
   ],
   navGroups: [

@@ -462,8 +462,8 @@ export const TitikKasirPage: React.FC = () => {
 
                             <TableCell>
                               <Badge
-                                variant='outline'
-                                className='font-mono text-xs font-semibold'
+                                variant='secondary'
+                                className='border-0 bg-muted/80 font-mono text-xs font-semibold text-foreground'
                               >
                                 {item.kode}
                               </Badge>
@@ -493,7 +493,7 @@ export const TitikKasirPage: React.FC = () => {
                               {isCurrentActivePos ? (
                                 <Badge
                                   variant='default'
-                                  className='gap-1 border-primary/20 bg-primary/10 text-primary hover:bg-primary/10 text-[11px]'
+                                  className='gap-1 border-0 bg-primary/10 text-primary hover:bg-primary/10 text-[11px]'
                                 >
                                   <MonitorCheck className='h-3 w-3 text-primary' />
                                   <span>Sedang Dipakai</span>

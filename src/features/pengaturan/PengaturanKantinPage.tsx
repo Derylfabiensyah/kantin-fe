@@ -338,7 +338,7 @@ export const PengaturanKantinPage: React.FC = () => {
 
                 <CardContent className='space-y-4 pt-1'>
                   {/* Toggle Konfirmasi Manual */}
-                  <div className='flex flex-row items-center justify-between rounded-lg border bg-muted/20 p-3.5'>
+                  <div className='flex flex-row items-center justify-between py-1'>
                     <div className='space-y-0.5 pr-3'>
                       <div className='flex items-center gap-2'>
                         <Label
@@ -374,7 +374,7 @@ export const PengaturanKantinPage: React.FC = () => {
                   </div>
 
                   {/* Durasi Tampil Foto Siswa */}
-                  <div className='space-y-2 rounded-lg border bg-muted/20 p-3.5'>
+                  <div className='space-y-2 py-1'>
                     <div className='flex items-center justify-between'>
                       <Label
                         htmlFor='durasiFotoDetik'

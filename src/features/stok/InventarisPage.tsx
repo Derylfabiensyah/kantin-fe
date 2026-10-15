@@ -1,13 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
-  Boxes,
-  Coins,
-  CheckCircle2,
-  AlertTriangle,
-  XCircle,
   Search,
   Download,
-  RefreshCw,
   History,
   PackagePlus,
 } from 'lucide-react'
@@ -53,24 +47,6 @@ export function InventarisPage() {
   const [selectedStatus, setSelectedStatus] = useState<'ALL' | 'AMAN' | 'MENIPIS' | 'HABIS'>('ALL')
   const [sortBy, setSortBy] = useState<'NILAI_DESC' | 'NILAI_ASC' | 'STOK_ASC' | 'STOK_DESC' | 'NAMA_ASC'>('NILAI_DESC')
 
-  const loadData = async () => {
-    try {
-      setIsLoading(true)
-      const [invData, kategoris] = await Promise.all([
-        stokApi.getInventaris(false),
-        katalogApi.getKategoriList().catch(() => []),
-      ])
-
-      setInventarisList(invData)
-      setKategoriList(kategoris)
-    } catch (err: unknown) {
-      const msg =
-        err instanceof Error ? err.message : 'Gagal memuat laporan inventaris'
-      toast.error('Gagal Memuat Inventaris', { description: msg })
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   useEffect(() => {
     let isMounted = true
@@ -262,10 +238,6 @@ export function InventarisPage() {
   return (
     <>
       <Header fixed>
-        <div className='flex items-center gap-2 font-semibold text-lg'>
-          <Boxes className='h-5 w-5 text-primary' />
-          <span>Laporan Inventaris Nilai Persediaan</span>
-        </div>
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
@@ -274,30 +246,13 @@ export function InventarisPage() {
 
       <Main className='space-y-6'>
         {/* Header Title & Top Navigation */}
-        <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-4'>
+        <div className='flex flex-col md:flex-row md:items-center justify-between gap-4'>
           <div>
             <h1 className='text-2xl font-bold tracking-tight'>
               Laporan Inventaris & Valuasi Persediaan
             </h1>
-            <p className='text-muted-foreground text-sm mt-0.5'>
-              Rekapitulasi seluruh aset barang kantin, status batas kritis, HPP
-              terkini, dan kalkulasi total nilai buku persediaan.
-            </p>
           </div>
           <div className='flex flex-wrap items-center gap-2.5'>
-            <Button
-              variant='outline'
-              size='sm'
-              onClick={loadData}
-              disabled={isLoading}
-              className='gap-1.5'
-            >
-              <RefreshCw
-                className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
-              />
-              <span>Segarkan</span>
-            </Button>
-
             <Button
               variant='outline'
               size='sm'
@@ -321,12 +276,12 @@ export function InventarisPage() {
         {/* KPI Summary Cards */}
         <div className='grid grid-cols-2 md:grid-cols-5 gap-3.5'>
           {/* 1. Total Nilai Persediaan (Aset) */}
-          <Card className='col-span-2 md:col-span-1 bg-primary/5 border-primary/20'>
+          <Card className='col-span-2 md:col-span-1 border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-semibold text-primary flex items-center gap-1.5'>
-                <Coins className='h-4 w-4' /> Total Nilai Aset
+              <CardDescription className='text-xs font-medium'>
+                Total Nilai Aset
               </CardDescription>
-              <CardTitle className='text-2xl font-bold font-mono text-primary'>
+              <CardTitle className='text-2xl font-bold font-mono text-foreground'>
                 {formatRupiah(kpiData.totalNilai)}
               </CardTitle>
             </CardHeader>
@@ -336,10 +291,10 @@ export function InventarisPage() {
           </Card>
 
           {/* 2. Total SKU & Unit */}
-          <Card>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-medium flex items-center gap-1.5'>
-                <Boxes className='h-4 w-4 text-muted-foreground' /> Total SKU Terdaftar
+              <CardDescription className='text-xs font-medium'>
+                Total SKU Terdaftar
               </CardDescription>
               <CardTitle className='text-2xl font-bold'>
                 {formatNumber(kpiData.totalSku)}{' '}
@@ -354,10 +309,10 @@ export function InventarisPage() {
           </Card>
 
           {/* 3. Stok Aman */}
-          <Card>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-medium flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400'>
-                <CheckCircle2 className='h-4 w-4' /> Stok Aman
+              <CardDescription className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>
+                Stok Aman
               </CardDescription>
               <CardTitle className='text-2xl font-bold text-emerald-600 dark:text-emerald-400'>
                 {formatNumber(kpiData.countAman)}{' '}
@@ -372,10 +327,10 @@ export function InventarisPage() {
           </Card>
 
           {/* 4. Stok Menipis */}
-          <Card>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-medium flex items-center gap-1.5 text-amber-600 dark:text-amber-400'>
-                <AlertTriangle className='h-4 w-4' /> Stok Menipis
+              <CardDescription className='text-xs font-medium text-amber-600 dark:text-amber-400'>
+                Stok Menipis
               </CardDescription>
               <CardTitle className='text-2xl font-bold text-amber-600 dark:text-amber-400'>
                 {formatNumber(kpiData.countMenipis)}{' '}
@@ -390,10 +345,10 @@ export function InventarisPage() {
           </Card>
 
           {/* 5. Stok Habis */}
-          <Card>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
             <CardHeader className='pb-2 pt-4 px-4'>
-              <CardDescription className='text-xs font-medium flex items-center gap-1.5 text-rose-600 dark:text-rose-400'>
-                <XCircle className='h-4 w-4' /> Stok Habis
+              <CardDescription className='text-xs font-medium text-rose-600 dark:text-rose-400'>
+                Stok Habis
               </CardDescription>
               <CardTitle className='text-2xl font-bold text-rose-600 dark:text-rose-400'>
                 {formatNumber(kpiData.countHabis)}{' '}
@@ -409,7 +364,7 @@ export function InventarisPage() {
         </div>
 
         {/* Filters & Search Toolbar */}
-        <Card>
+        <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
           <CardContent className='p-4 sm:p-5'>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5'>
               {/* Search Bar */}
@@ -490,9 +445,9 @@ export function InventarisPage() {
         </Card>
 
         {/* Data Table */}
-        <Card>
+        <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm'>
           <CardContent className='p-0'>
-            <div className='rounded-md border overflow-x-auto'>
+            <div className='overflow-x-auto'>
               <Table>
                 <TableHeader className='bg-muted/50'>
                   <TableRow>
@@ -572,16 +527,16 @@ export function InventarisPage() {
                             <Badge
                               variant={
                                 status === 'AMAN'
-                                  ? 'outline'
+                                  ? 'secondary'
                                   : status === 'MENIPIS'
                                   ? 'secondary'
                                   : 'destructive'
                               }
-                              className={`text-[11px] font-semibold ${
+                              className={`text-[11px] font-semibold border-0 ${
                                 status === 'AMAN'
-                                  ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+                                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
                                   : status === 'MENIPIS'
-                                  ? 'bg-amber-500/10 text-amber-600 border-amber-500/20'
+                                  ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
                                   : ''
                               }`}
                             >

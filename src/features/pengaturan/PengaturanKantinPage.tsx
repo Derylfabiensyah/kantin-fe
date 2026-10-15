@@ -11,7 +11,6 @@ import {
   Coins,
   Save,
   RotateCcw,
-  Info,
   Calendar,
   UserCheck,
   Loader2,
@@ -222,9 +221,8 @@ export const PengaturanKantinPage: React.FC = () => {
           </div>
 
           {/* Alert Sinkronisasi Real-Time */}
-          <Alert className='border-primary/20 bg-primary/5 text-primary'>
-            <Info className='h-4 w-4 text-primary' />
-            <AlertTitle className='text-xs font-bold'>
+          <Alert className='border-0 shadow-none bg-primary/5 text-primary'>
+            <AlertTitle className='text-xs font-bold text-foreground'>
               Sinkronisasi Otomatis ke Klien Kasir POS
             </AlertTitle>
             <AlertDescription className='text-xs text-muted-foreground'>

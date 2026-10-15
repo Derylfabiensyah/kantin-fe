@@ -14,16 +14,16 @@ export function SignIn() {
 
   return (
     <AuthLayout>
-      <Card className='max-w-md w-full gap-4 shadow-sm border-border/70'>
-        <CardHeader className='pb-2'>
+      <Card className='w-full max-w-[390px] gap-5 border-0 bg-muted/60 dark:bg-muted/25 shadow-md py-8 px-6 sm:px-7'>
+        <CardHeader className='pb-1 px-0'>
           <CardTitle className='text-xl font-bold tracking-tight'>
             Masuk Staf Kantin
           </CardTitle>
-          <CardDescription className='text-xs'>
+          <CardDescription className='text-xs leading-relaxed'>
             Gunakan akun staf terdaftar pada portal SKOOLIA untuk mengakses terminal kasir POS atau panel backoffice pengelola.
           </CardDescription>
         </CardHeader>
-        <CardContent className='pt-2'>
+        <CardContent className='pt-1 px-0'>
           <UserAuthForm redirectTo={redirect} />
         </CardContent>
       </Card>

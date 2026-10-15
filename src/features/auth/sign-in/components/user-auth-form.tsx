@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { Loader2, LogIn, School, ShieldCheck } from 'lucide-react'
+import { Loader2, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore, type AuthUser } from '@/stores/auth-store'
 import { apiClient } from '@/lib/api-client'
@@ -24,15 +24,12 @@ import type { UserRole } from '@/stores/useRoleStore'
 const formSchema = z.object({
   email: z
     .string()
-    .min(1, 'Masukkan email atau username staf.')
-    .email('Format email tidak valid.'),
+    .min(1, 'Masukkan username atau email staf.'),
   password: z
     .string()
     .min(1, 'Masukkan kata sandi staf.')
     .min(6, 'Kata sandi minimal 6 karakter.'),
-  sekolahId: z
-    .string()
-    .min(1, 'ID Sekolah wajib diisi.'),
+  sekolahId: z.string().optional().default(''),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -68,18 +65,11 @@ export function UserAuthForm({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: 'admin@skoolia.id',
-      password: 'password123',
-      sekolahId: '10',
+      email: '',
+      password: '',
+      sekolahId: '',
     },
   })
-
-  const handleSelectPresetRole = (roleEmail: string, roleName: string) => {
-    form.setValue('email', roleEmail)
-    form.setValue('password', 'password123')
-    form.setValue('sekolahId', '10')
-    toast.info(`Akun simulasi ${roleName} dipilih`)
-  }
 
   async function onSubmit(data: FormValues) {
     setIsLoading(true)
@@ -92,6 +82,7 @@ export function UserAuthForm({
         data: LoginResponseData
       }>('/api/v1/auth/login', {
         email: data.email,
+        username: data.email,
         password: data.password,
         sekolah_id: Number(data.sekolahId) || 10,
       })
@@ -158,12 +149,13 @@ export function UserAuthForm({
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='text-xs'>Email atau Username Staf</FormLabel>
+                <FormLabel className='text-xs'>Username / Email</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder='staf@skoolia.id'
+                    placeholder='Masukkan username atau email'
                     autoComplete='username'
                     disabled={isLoading}
+                    className='border-0 bg-background shadow-xs'
                     {...field}
                   />
                 </FormControl>
@@ -180,9 +172,10 @@ export function UserAuthForm({
                 <FormLabel className='text-xs'>Kata Sandi</FormLabel>
                 <FormControl>
                   <PasswordInput
-                    placeholder='••••••••'
+                    placeholder='Masukkan kata sandi'
                     autoComplete='current-password'
                     disabled={isLoading}
+                    className='border-0 bg-background shadow-xs'
                     {...field}
                   />
                 </FormControl>
@@ -196,14 +189,12 @@ export function UserAuthForm({
             name='sekolahId'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='text-xs flex items-center gap-1'>
-                  <School className='size-3.5 text-muted-foreground' />
-                  ID Sekolah
-                </FormLabel>
+                <FormLabel className='text-xs'>ID Sekolah</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder='10'
+                    placeholder='Masukkan ID sekolah'
                     disabled={isLoading}
+                    className='border-0 bg-background shadow-xs'
                     {...field}
                   />
                 </FormControl>
@@ -218,56 +209,6 @@ export function UserAuthForm({
           </Button>
         </form>
       </Form>
-
-      {/* Preset Akun Cepat untuk Uji Coba Role */}
-      <div className='pt-2 border-t border-border/60'>
-        <div className='flex items-center gap-1.5 text-xs text-muted-foreground mb-2'>
-          <ShieldCheck className='size-3.5 text-primary' />
-          <span>Pilih Akun Cepat (Uji Coba RBAC):</span>
-        </div>
-        <div className='grid grid-cols-2 gap-1.5'>
-          <Button
-            type='button'
-            variant='outline'
-            size='sm'
-            className='h-7 text-xs justify-start px-2'
-            disabled={isLoading}
-            onClick={() => handleSelectPresetRole('admin@skoolia.id', 'Admin')}
-          >
-            Admin Sekolah
-          </Button>
-          <Button
-            type='button'
-            variant='outline'
-            size='sm'
-            className='h-7 text-xs justify-start px-2'
-            disabled={isLoading}
-            onClick={() => handleSelectPresetRole('kasir@skoolia.id', 'Kasir POS')}
-          >
-            Petugas Kasir
-          </Button>
-          <Button
-            type='button'
-            variant='outline'
-            size='sm'
-            className='h-7 text-xs justify-start px-2'
-            disabled={isLoading}
-            onClick={() => handleSelectPresetRole('tu@skoolia.id', 'Tata Usaha')}
-          >
-            Petugas TU
-          </Button>
-          <Button
-            type='button'
-            variant='outline'
-            size='sm'
-            className='h-7 text-xs justify-start px-2'
-            disabled={isLoading}
-            onClick={() => handleSelectPresetRole('pengelola@skoolia.id', 'Pengelola')}
-          >
-            Pengelola Kantin
-          </Button>
-        </div>
-      </div>
     </div>
   )
 }

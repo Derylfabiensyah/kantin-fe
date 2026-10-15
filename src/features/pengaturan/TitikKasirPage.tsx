@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import {
   Store,
   Plus,
@@ -249,24 +249,6 @@ export const TitikKasirPage: React.FC = () => {
                 <Plus className='h-4 w-4' />
                 <span>Tambah Titik Kasir</span>
               </Button>
-            </div>
-          </div>
-
-          {/* Navigasi Tab Pengaturan Modul */}
-          <div className='inline-flex h-9 items-center justify-center rounded-lg bg-muted/60 p-1 text-muted-foreground w-fit'>
-            <Link
-              to='/pengaturan'
-              className='inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors'
-            >
-              <Sliders className='h-3.5 w-3.5' />
-              <span>Operasional Kantin</span>
-            </Link>
-            <div className='inline-flex items-center gap-1.5 rounded-md bg-background px-3 py-1.5 text-xs font-medium text-foreground shadow-xs'>
-              <Store className='h-3.5 w-3.5' />
-              <span>Manajemen Titik Kasir</span>
-              <Badge variant='secondary' className='ml-1 text-[10px] h-4 px-1.5'>
-                {totalCount}
-              </Badge>
             </div>
           </div>
 

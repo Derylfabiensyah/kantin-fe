@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Link } from '@tanstack/react-router'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
-  Sliders,
   Store,
   Clock,
   ShieldCheck,
@@ -203,21 +201,6 @@ export const PengaturanKantinPage: React.FC = () => {
                 </span>
               </Badge>
             </div>
-          </div>
-
-          {/* Navigasi Tab Pengaturan Modul */}
-          <div className='inline-flex h-9 items-center justify-center rounded-lg bg-muted/60 p-1 text-muted-foreground w-fit'>
-            <div className='inline-flex items-center gap-1.5 rounded-md bg-background px-3 py-1.5 text-xs font-medium text-foreground shadow-xs'>
-              <Sliders className='h-3.5 w-3.5' />
-              <span>Operasional Kantin</span>
-            </div>
-            <Link
-              to='/pengaturan/titik-kasir'
-              className='inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors'
-            >
-              <Store className='h-3.5 w-3.5' />
-              <span>Manajemen Titik Kasir</span>
-            </Link>
           </div>
 
           {/* Alert Sinkronisasi Real-Time */}

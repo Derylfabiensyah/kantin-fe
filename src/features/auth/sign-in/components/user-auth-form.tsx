@@ -29,7 +29,6 @@ const formSchema = z.object({
     .string()
     .min(1, 'Masukkan kata sandi staf.')
     .min(6, 'Kata sandi minimal 6 karakter.'),
-  sekolahId: z.string().optional().default(''),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -67,7 +66,6 @@ export function UserAuthForm({
     defaultValues: {
       email: '',
       password: '',
-      sekolahId: '',
     },
   })
 
@@ -84,7 +82,7 @@ export function UserAuthForm({
         email: data.email,
         username: data.email,
         password: data.password,
-        sekolah_id: Number(data.sekolahId) || 10,
+        sekolah_id: 10,
       })
 
       const resData = response.data?.data
@@ -97,7 +95,7 @@ export function UserAuthForm({
         userId: resData.user.id,
         nama: resData.user.nama,
         email: resData.user.email,
-        sekolahId: resData.user.sekolah?.id || Number(data.sekolahId) || 10,
+        sekolahId: resData.user.sekolah?.id || 10,
         sekolahNama: resData.user.sekolah?.nama || 'PAUD SKOOLIA',
         roles: resData.user.roles || ['ROLE_ADMIN'],
         currentRole: rawRole,
@@ -174,25 +172,6 @@ export function UserAuthForm({
                   <PasswordInput
                     placeholder='Masukkan kata sandi'
                     autoComplete='current-password'
-                    disabled={isLoading}
-                    className='border-0 bg-background shadow-xs'
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='sekolahId'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='text-xs'>ID Sekolah</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder='Masukkan ID sekolah'
                     disabled={isLoading}
                     className='border-0 bg-background shadow-xs'
                     {...field}

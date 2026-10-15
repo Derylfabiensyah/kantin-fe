@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import { useForm, Controller, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
-  UtensilsCrossed,
   Loader2,
   Save,
   Upload,
@@ -191,12 +190,7 @@ export function MenuFormModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-xl max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
-          <div className='flex items-center gap-2 text-primary'>
-            <div className='flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary'>
-              <UtensilsCrossed className='size-4' />
-            </div>
-            <DialogTitle>{isEditing ? 'Ubah Menu Kantin' : 'Tambah Menu Baru'}</DialogTitle>
-          </div>
+          <DialogTitle>{isEditing ? 'Ubah Menu Kantin' : 'Tambah Menu Baru'}</DialogTitle>
           <DialogDescription>
             {isEditing
               ? 'Perbarui detail nama, kategori, harga jual rupiah, dan batas stok minimum.'

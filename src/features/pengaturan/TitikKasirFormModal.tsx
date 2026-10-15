@@ -84,9 +84,7 @@ export const TitikKasirFormModal: React.FC<TitikKasirFormModalProps> = ({
       <DialogContent className='max-w-md sm:max-w-lg'>
         <DialogHeader>
           <div className='flex items-center gap-2.5'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary'>
-              <Store className='h-5 w-5' />
-            </div>
+            <Store className='h-5 w-5 text-primary shrink-0' />
             <div>
               <DialogTitle className='text-lg font-bold'>
                 {isEdit ? 'Edit Titik Kasir' : 'Tambah Titik Kasir Baru'}

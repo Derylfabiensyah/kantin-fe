@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import {
   Store,
   Plus,
@@ -7,13 +7,8 @@ import {
   RefreshCw,
   Edit2,
   Trash2,
-  CheckCircle2,
-  XCircle,
-  Sliders,
-  Cpu,
   MonitorCheck,
   AlertTriangle,
-  PlayCircle,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Header } from '@/components/layout/header'
@@ -226,17 +221,9 @@ export const TitikKasirPage: React.FC = () => {
           {/* Header Title & Nav Tabs */}
           <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
             <div>
-              <div className='flex items-center gap-2 text-xs font-semibold text-primary uppercase tracking-wider'>
-                <Sliders className='h-4 w-4' />
-                <span>Pengaturan Modul Kantin</span>
-              </div>
               <h1 className='text-2xl font-bold tracking-tight text-foreground sm:text-3xl'>
                 Manajemen Titik Kasir
               </h1>
-              <p className='text-xs text-muted-foreground sm:text-sm'>
-                Pengelolaan dan pendaftaran perangkat titik kasir operasional
-                (PRD §6.6).
-              </p>
             </div>
 
             {/* Quick Action Button */}
@@ -252,27 +239,9 @@ export const TitikKasirPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Navigasi Tab Pengaturan Modul */}
-          <div className='inline-flex h-9 items-center justify-center rounded-lg bg-muted/60 p-1 text-muted-foreground w-fit'>
-            <Link
-              to='/pengaturan'
-              className='inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors'
-            >
-              <Sliders className='h-3.5 w-3.5' />
-              <span>Operasional Kantin</span>
-            </Link>
-            <div className='inline-flex items-center gap-1.5 rounded-md bg-background px-3 py-1.5 text-xs font-medium text-foreground shadow-xs'>
-              <Store className='h-3.5 w-3.5' />
-              <span>Manajemen Titik Kasir</span>
-              <Badge variant='secondary' className='ml-1 text-[10px] h-4 px-1.5'>
-                {totalCount}
-              </Badge>
-            </div>
-          </div>
-
           {/* Metric KPI Cards */}
           <div className='grid gap-4 grid-cols-2 md:grid-cols-4'>
-            <Card className='shadow-xs'>
+            <Card className='border-0 shadow-sm'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium'>
                   Total Perangkat
@@ -281,13 +250,12 @@ export const TitikKasirPage: React.FC = () => {
                   {totalCount}
                 </CardTitle>
               </CardHeader>
-              <CardContent className='px-4 pb-3 text-[11px] text-muted-foreground flex items-center gap-1.5'>
-                <Cpu className='h-3.5 w-3.5 text-primary' />
+              <CardContent className='px-4 pb-3 text-[11px] text-muted-foreground'>
                 <span>Titik kasir terdaftar</span>
               </CardContent>
             </Card>
 
-            <Card className='shadow-xs'>
+            <Card className='border-0 shadow-sm'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium'>
                   Titik Kasir Aktif
@@ -296,13 +264,12 @@ export const TitikKasirPage: React.FC = () => {
                   {activeCount}
                 </CardTitle>
               </CardHeader>
-              <CardContent className='px-4 pb-3 text-[11px] text-muted-foreground flex items-center gap-1.5'>
-                <CheckCircle2 className='h-3.5 w-3.5 text-emerald-500' />
+              <CardContent className='px-4 pb-3 text-[11px] text-muted-foreground'>
                 <span>Dapat dipilih di POS</span>
               </CardContent>
             </Card>
 
-            <Card className='shadow-xs'>
+            <Card className='border-0 shadow-sm'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium'>
                   Nonaktif / Perawatan
@@ -311,15 +278,14 @@ export const TitikKasirPage: React.FC = () => {
                   {inactiveCount}
                 </CardTitle>
               </CardHeader>
-              <CardContent className='px-4 pb-3 text-[11px] text-muted-foreground flex items-center gap-1.5'>
-                <XCircle className='h-3.5 w-3.5 text-muted-foreground' />
+              <CardContent className='px-4 pb-3 text-[11px] text-muted-foreground'>
                 <span>Sementara dimatikan</span>
               </CardContent>
             </Card>
 
-            <Card className='shadow-xs border-primary/20 bg-primary/5'>
+            <Card className='border-0 shadow-sm'>
               <CardHeader className='pb-2 pt-4 px-4'>
-                <CardDescription className='text-xs font-medium text-primary'>
+                <CardDescription className='text-xs font-medium'>
                   Kasir POS Aktif
                 </CardDescription>
                 <CardTitle className='text-sm font-bold truncate text-foreground'>
@@ -327,7 +293,7 @@ export const TitikKasirPage: React.FC = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className='px-4 pb-3 text-[11px] text-muted-foreground flex items-center justify-between'>
-                <span className='font-mono text-primary font-semibold'>
+                <span className='font-mono font-semibold text-foreground'>
                   {currentPos ? currentPos.kode : '-'}
                 </span>
                 <Button
@@ -336,7 +302,7 @@ export const TitikKasirPage: React.FC = () => {
                   onClick={() => navigate({ to: '/kasir' })}
                   className='h-6 px-1.5 text-[10px] text-primary hover:text-primary'
                 >
-                  <PlayCircle className='h-3 w-3 mr-1' /> Buka POS
+                  Buka POS
                 </Button>
               </CardContent>
             </Card>
@@ -389,20 +355,6 @@ export const TitikKasirPage: React.FC = () => {
                       </SelectItem>
                     </SelectContent>
                   </Select>
-
-                  <Button
-                    type='button'
-                    variant='outline'
-                    size='icon'
-                    onClick={loadData}
-                    disabled={loading}
-                    className='h-8 w-8 shrink-0'
-                    title='Muat ulang data'
-                  >
-                    <RefreshCw
-                      className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`}
-                    />
-                  </Button>
                 </div>
               </div>
             </CardHeader>
@@ -496,8 +448,8 @@ export const TitikKasirPage: React.FC = () => {
 
                             <TableCell>
                               <Badge
-                                variant='outline'
-                                className='font-mono text-xs font-semibold'
+                                variant='secondary'
+                                className='border-0 bg-muted/80 font-mono text-xs font-semibold text-foreground'
                               >
                                 {item.kode}
                               </Badge>
@@ -527,7 +479,7 @@ export const TitikKasirPage: React.FC = () => {
                               {isCurrentActivePos ? (
                                 <Badge
                                   variant='default'
-                                  className='gap-1 border-primary/20 bg-primary/10 text-primary hover:bg-primary/10 text-[11px]'
+                                  className='gap-1 border-0 bg-primary/10 text-primary hover:bg-primary/10 text-[11px]'
                                 >
                                   <MonitorCheck className='h-3 w-3 text-primary' />
                                   <span>Sedang Dipakai</span>
@@ -552,7 +504,7 @@ export const TitikKasirPage: React.FC = () => {
                               <div className='flex items-center justify-end gap-1'>
                                 <Button
                                   type='button'
-                                  variant='outline'
+                                  variant='ghost'
                                   size='icon'
                                   onClick={() => handleOpenEdit(item)}
                                   className='h-7 w-7'
@@ -562,7 +514,7 @@ export const TitikKasirPage: React.FC = () => {
                                 </Button>
                                 <Button
                                   type='button'
-                                  variant='outline'
+                                  variant='ghost'
                                   size='icon'
                                   onClick={() => setDeletingItem(item)}
                                   className='h-7 w-7 text-destructive hover:bg-destructive/10'

@@ -44,7 +44,6 @@ export const sidebarData: SidebarData = {
           title: 'Kasir POS (Layar Penuh)',
           url: '/kasir',
           icon: ShoppingCart,
-          badge: 'POS',
           roles: ['admin', 'kasir', 'pengelola'],
         },
       ],

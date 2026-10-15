@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Link } from '@tanstack/react-router'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
-  Sliders,
   Store,
   Clock,
   ShieldCheck,
@@ -205,21 +203,6 @@ export const PengaturanKantinPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Navigasi Tab Pengaturan Modul */}
-          <div className='inline-flex h-9 items-center justify-center rounded-lg bg-muted/60 p-1 text-muted-foreground w-fit'>
-            <div className='inline-flex items-center gap-1.5 rounded-md bg-background px-3 py-1.5 text-xs font-medium text-foreground shadow-xs'>
-              <Sliders className='h-3.5 w-3.5' />
-              <span>Operasional Kantin</span>
-            </div>
-            <Link
-              to='/pengaturan/titik-kasir'
-              className='inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors'
-            >
-              <Store className='h-3.5 w-3.5' />
-              <span>Manajemen Titik Kasir</span>
-            </Link>
-          </div>
-
           {/* Alert Sinkronisasi Real-Time */}
           <Alert className='border-0 shadow-none bg-primary/5 text-primary'>
             <AlertTitle className='text-xs font-bold text-foreground'>
@@ -291,7 +274,10 @@ export const PengaturanKantinPage: React.FC = () => {
                         Jam Tutup Kasir Otomatis{' '}
                         <span className='text-destructive'>*</span>
                       </Label>
-                      <Badge variant='outline' className='font-mono text-[11px] bg-background'>
+                      <Badge
+                        variant='secondary'
+                        className='border-0 bg-background font-mono text-[11px] text-muted-foreground'
+                      >
                         Bawaan: 23:59
                       </Badge>
                     </div>

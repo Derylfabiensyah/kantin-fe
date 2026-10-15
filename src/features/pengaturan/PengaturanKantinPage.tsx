@@ -237,10 +237,8 @@ export const PengaturanKantinPage: React.FC = () => {
               {/* Card 1: Identitas & Jam Tutup Otomatis */}
               <Card className='shadow-xs'>
                 <CardHeader>
-                  <div className='flex items-center gap-2'>
-                    <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary'>
-                      <Store className='h-4 w-4' />
-                    </div>
+                  <div className='flex items-center gap-2.5'>
+                    <Store className='h-5 w-5 text-primary shrink-0' />
                     <div>
                       <CardTitle className='text-base font-bold'>
                         Profil & Waktu Operasional
@@ -325,10 +323,8 @@ export const PengaturanKantinPage: React.FC = () => {
               {/* Card 2: Interaksi Kasir POS (Foto & Konfirmasi Manual) */}
               <Card className='shadow-xs'>
                 <CardHeader>
-                  <div className='flex items-center gap-2'>
-                    <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary'>
-                      <Camera className='h-4 w-4' />
-                    </div>
+                  <div className='flex items-center gap-2.5'>
+                    <Camera className='h-5 w-5 text-primary shrink-0' />
                     <div>
                       <CardTitle className='text-base font-bold'>
                         Interaksi Kasir POS & Foto
@@ -449,10 +445,8 @@ export const PengaturanKantinPage: React.FC = () => {
               {/* Card 3: Batas Plafon Top-Up Siswa */}
               <Card className='shadow-xs'>
                 <CardHeader>
-                  <div className='flex items-center gap-2'>
-                    <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary'>
-                      <Coins className='h-4 w-4' />
-                    </div>
+                  <div className='flex items-center gap-2.5'>
+                    <Coins className='h-5 w-5 text-primary shrink-0' />
                     <div>
                       <CardTitle className='text-base font-bold'>
                         Batas Transaksi Top-Up
@@ -530,10 +524,8 @@ export const PengaturanKantinPage: React.FC = () => {
               {/* Card 4: Batas Saldo Maksimum */}
               <Card className='shadow-xs'>
                 <CardHeader>
-                  <div className='flex items-center gap-2'>
-                    <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary'>
-                      <ShieldCheck className='h-4 w-4' />
-                    </div>
+                  <div className='flex items-center gap-2.5'>
+                    <ShieldCheck className='h-5 w-5 text-primary shrink-0' />
                     <div>
                       <CardTitle className='text-base font-bold'>
                         Batas Maksimal Saldo Tersimpan

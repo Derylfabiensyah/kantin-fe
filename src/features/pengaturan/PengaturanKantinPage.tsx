@@ -613,7 +613,7 @@ export const PengaturanKantinPage: React.FC = () => {
                 <div className='flex items-center gap-2.5 w-full sm:w-auto'>
                   <Button
                     type='button'
-                    variant='outline'
+                    variant='ghost'
                     size='sm'
                     onClick={handleResetToDefault}
                     disabled={isSubmitting || loadingPengaturan}

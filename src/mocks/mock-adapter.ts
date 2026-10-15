@@ -568,7 +568,7 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
               roles: roleList,
               sekolah: {
                 id: Number(payload.sekolah_id) || 10,
-                nama: 'SMA Negeri 1 SKOOLIA',
+                nama: 'PAUD SKOOLIA',
               },
             },
           },

@@ -188,7 +188,7 @@ export const PengaturanKantinPage: React.FC = () => {
             <div className='flex items-center gap-2'>
               <Badge
                 variant='outline'
-                className='hidden sm:flex items-center gap-1.5 py-1 px-2.5 text-xs font-mono text-muted-foreground'
+                className='hidden sm:flex items-center gap-1.5 py-1 px-2.5 text-xs font-mono text-muted-foreground border-0 shadow-none'
               >
                 <Calendar className='h-3.5 w-3.5' />
                 <span>

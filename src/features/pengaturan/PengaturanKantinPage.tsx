@@ -274,7 +274,10 @@ export const PengaturanKantinPage: React.FC = () => {
                         Jam Tutup Kasir Otomatis{' '}
                         <span className='text-destructive'>*</span>
                       </Label>
-                      <Badge variant='outline' className='font-mono text-[11px] bg-background'>
+                      <Badge
+                        variant='secondary'
+                        className='border-0 bg-background font-mono text-[11px] text-muted-foreground'
+                      >
                         Bawaan: 23:59
                       </Badge>
                     </div>

@@ -235,7 +235,7 @@ export const PengaturanKantinPage: React.FC = () => {
           <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
             <div className='grid gap-6 md:grid-cols-2'>
               {/* Card 1: Identitas & Jam Tutup Otomatis */}
-              <Card className='border-0 shadow-sm'>
+              <Card className='border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
                 <CardHeader>
                   <div className='flex items-center gap-2.5'>
                     <Store className='h-5 w-5 text-primary shrink-0' />
@@ -265,7 +265,7 @@ export const PengaturanKantinPage: React.FC = () => {
                       <Input
                         id='namaKantin'
                         placeholder='Contoh: Kantin Sehat SKOOLIA'
-                        className='pl-9 text-sm'
+                        className='pl-9 text-sm bg-background'
                         disabled={isSubmitting || loadingPengaturan}
                         {...register('namaKantin')}
                       />
@@ -291,7 +291,7 @@ export const PengaturanKantinPage: React.FC = () => {
                         Jam Tutup Kasir Otomatis{' '}
                         <span className='text-destructive'>*</span>
                       </Label>
-                      <Badge variant='outline' className='font-mono text-[11px]'>
+                      <Badge variant='outline' className='font-mono text-[11px] bg-background'>
                         Bawaan: 23:59
                       </Badge>
                     </div>
@@ -301,7 +301,7 @@ export const PengaturanKantinPage: React.FC = () => {
                         id='jamTutupOtomatis'
                         type='text'
                         placeholder='23:59'
-                        className='pl-9 font-mono text-sm'
+                        className='pl-9 font-mono text-sm bg-background'
                         disabled={isSubmitting || loadingPengaturan}
                         {...register('jamTutupOtomatis')}
                       />
@@ -321,7 +321,7 @@ export const PengaturanKantinPage: React.FC = () => {
               </Card>
 
               {/* Card 2: Interaksi Kasir POS (Foto & Konfirmasi Manual) */}
-              <Card className='border-0 shadow-sm'>
+              <Card className='border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
                 <CardHeader>
                   <div className='flex items-center gap-2.5'>
                     <Camera className='h-5 w-5 text-primary shrink-0' />
@@ -400,7 +400,7 @@ export const PengaturanKantinPage: React.FC = () => {
                         type='number'
                         min={1}
                         max={30}
-                        className='h-9 font-mono text-sm w-24'
+                        className='h-9 font-mono text-sm w-24 bg-background'
                         disabled={isSubmitting || loadingPengaturan}
                         {...register('durasiFotoDetik', {
                           valueAsNumber: true,
@@ -435,7 +435,7 @@ export const PengaturanKantinPage: React.FC = () => {
               </Card>
 
               {/* Card 3: Batas Plafon Top-Up Siswa */}
-              <Card className='border-0 shadow-sm'>
+              <Card className='border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
                 <CardHeader>
                   <div className='flex items-center gap-2.5'>
                     <Coins className='h-5 w-5 text-primary shrink-0' />
@@ -467,7 +467,7 @@ export const PengaturanKantinPage: React.FC = () => {
                       step={1000}
                       min={1000}
                       placeholder='5000'
-                      className='font-mono text-sm'
+                      className='font-mono text-sm bg-background'
                       disabled={isSubmitting || loadingPengaturan}
                       {...register('minTopup', { valueAsNumber: true })}
                     />
@@ -497,7 +497,7 @@ export const PengaturanKantinPage: React.FC = () => {
                       step={10000}
                       min={1000}
                       placeholder='500000'
-                      className='font-mono text-sm'
+                      className='font-mono text-sm bg-background'
                       disabled={isSubmitting || loadingPengaturan}
                       {...register('maksTopup', { valueAsNumber: true })}
                     />
@@ -514,7 +514,7 @@ export const PengaturanKantinPage: React.FC = () => {
               </Card>
 
               {/* Card 4: Batas Saldo Maksimum */}
-              <Card className='border-0 shadow-sm'>
+              <Card className='border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
                 <CardHeader>
                   <div className='flex items-center gap-2.5'>
                     <ShieldCheck className='h-5 w-5 text-primary shrink-0' />
@@ -549,7 +549,7 @@ export const PengaturanKantinPage: React.FC = () => {
                       step={50000}
                       min={10000}
                       placeholder='1000000'
-                      className='font-mono text-sm'
+                      className='font-mono text-sm bg-background'
                       disabled={isSubmitting || loadingPengaturan}
                       {...register('batasSaldoSiswa', { valueAsNumber: true })}
                     />
@@ -582,7 +582,7 @@ export const PengaturanKantinPage: React.FC = () => {
                       step={50000}
                       min={10000}
                       placeholder='500000'
-                      className='font-mono text-sm'
+                      className='font-mono text-sm bg-background'
                       disabled={isSubmitting || loadingPengaturan}
                       {...register('batasSaldoKartuTamu', { valueAsNumber: true })}
                     />
@@ -600,7 +600,7 @@ export const PengaturanKantinPage: React.FC = () => {
             </div>
 
             {/* Bottom Action Footer */}
-            <Card className='border-0 shadow-sm bg-card'>
+            <Card className='border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
               <CardFooter className='flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between'>
                 <div className='flex items-center gap-2 text-xs text-muted-foreground'>
                   <UserCheck className='h-4 w-4 text-emerald-600' />

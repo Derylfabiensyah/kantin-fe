@@ -33,16 +33,18 @@ interface MutationMeta {
 }
 
 function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
+  const commonBadgeClass =
+    'bg-black/5 text-black dark:bg-white/10 dark:text-white border-0'
+
   switch (jenis) {
     case 'BARANG_MASUK':
       return {
         label: 'Barang Masuk',
         badgeVariant: 'outline',
-        badgeClass:
-          'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-0',
+        badgeClass: commonBadgeClass,
         icon: ArrowDownLeft,
         iconClass:
-          'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-400 dark:border-emerald-800',
+          'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/80 dark:text-emerald-400',
         sign: '+',
         isMasuk: true,
       }
@@ -50,11 +52,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       return {
         label: 'Koreksi Pembalik',
         badgeVariant: 'outline',
-        badgeClass:
-          'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border-0',
+        badgeClass: commonBadgeClass,
         icon: RotateCcw,
         iconClass:
-          'bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-950/80 dark:text-amber-400 dark:border-amber-800',
+          'bg-amber-50 text-amber-600 dark:bg-amber-950/80 dark:text-amber-400',
         sign: '-',
         isMasuk: false,
       }
@@ -62,11 +63,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       return {
         label: 'Penjualan Kasir POS',
         badgeVariant: 'outline',
-        badgeClass:
-          'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-0',
+        badgeClass: commonBadgeClass,
         icon: ShoppingCart,
         iconClass:
-          'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/80 dark:text-blue-400 dark:border-blue-800',
+          'bg-blue-50 text-blue-600 dark:bg-blue-950/80 dark:text-blue-400',
         sign: '-',
         isMasuk: false,
       }
@@ -74,11 +74,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       return {
         label: 'Void Penjualan',
         badgeVariant: 'outline',
-        badgeClass:
-          'bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border-0',
+        badgeClass: commonBadgeClass,
         icon: RotateCcw,
         iconClass:
-          'bg-purple-50 text-purple-600 border-purple-200 dark:bg-purple-950/80 dark:text-purple-400 dark:border-purple-800',
+          'bg-purple-50 text-purple-600 dark:bg-purple-950/80 dark:text-purple-400',
         sign: '+',
         isMasuk: true,
       }
@@ -86,11 +85,10 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       return {
         label: 'Opname Fisik (Lebih)',
         badgeVariant: 'outline',
-        badgeClass:
-          'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-0',
+        badgeClass: commonBadgeClass,
         icon: PlusCircle,
         iconClass:
-          'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-400 dark:border-emerald-800',
+          'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/80 dark:text-emerald-400',
         sign: '+',
         isMasuk: true,
       }
@@ -98,23 +96,21 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       return {
         label: 'Opname Fisik (Kurang)',
         badgeVariant: 'outline',
-        badgeClass:
-          'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-0',
+        badgeClass: commonBadgeClass,
         icon: MinusCircle,
         iconClass:
-          'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-400 dark:border-emerald-800',
+          'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/80 dark:text-emerald-400',
         sign: '-',
         isMasuk: false,
       }
     case 'BARANG_RUSAK':
       return {
         label: 'Barang Rusak',
-        badgeVariant: 'destructive',
-        badgeClass:
-          'bg-red-50 text-red-700 dark:bg-red-950/60 dark:text-red-300 border-0',
+        badgeVariant: 'outline',
+        badgeClass: commonBadgeClass,
         icon: Trash2,
         iconClass:
-          'bg-red-50 text-red-600 border-red-200 dark:bg-red-950/80 dark:text-red-400 dark:border-red-800',
+          'bg-red-50 text-red-600 dark:bg-red-950/80 dark:text-red-400',
         sign: '-',
         isMasuk: false,
       }
@@ -122,9 +118,9 @@ function getMutationMeta(jenis: JenisMutasiStok): MutationMeta {
       return {
         label: jenis,
         badgeVariant: 'secondary',
-        badgeClass: 'bg-muted text-muted-foreground border-0',
+        badgeClass: commonBadgeClass,
         icon: ArrowUpRight,
-        iconClass: 'bg-muted text-muted-foreground border-border',
+        iconClass: 'bg-muted text-muted-foreground',
         sign: '-',
         isMasuk: false,
       }
@@ -180,7 +176,7 @@ export function KartuStokTimeline({
           <div key={item.id ?? index} className='relative flex items-start gap-3.5 sm:gap-4 group'>
             {/* Dot / Icon marker on vertical line */}
             <div
-              className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border shadow-xs transition-transform group-hover:scale-105 ${meta.iconClass}`}
+              className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-0 transition-transform group-hover:scale-105 ${meta.iconClass}`}
             >
               <IconComponent className='h-4 w-4' />
             </div>

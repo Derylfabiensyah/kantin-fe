@@ -303,6 +303,28 @@ export function KartuStokPage() {
     toast.success('Kartu stok berhasil diunduh dalam format CSV')
   }
 
+  const getJenisBadgeClass = (jenis: string, arah: string) => {
+    switch (jenis) {
+      case 'BARANG_MASUK':
+      case 'OPNAME_MASUK':
+        return 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400'
+      case 'PENJUALAN':
+        return 'bg-blue-500/15 text-blue-700 dark:text-blue-400'
+      case 'BARANG_RUSAK':
+        return 'bg-rose-500/15 text-rose-700 dark:text-rose-400'
+      case 'PENJUALAN_VOID':
+        return 'bg-amber-500/15 text-amber-700 dark:text-amber-400'
+      case 'OPNAME_KELUAR':
+        return 'bg-purple-500/15 text-purple-700 dark:text-purple-400'
+      case 'BARANG_MASUK_PEMBALIK':
+        return 'bg-destructive/15 text-destructive'
+      default:
+        return arah === 'MASUK'
+          ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400'
+          : 'bg-muted/80 text-muted-foreground'
+    }
+  }
+
   return (
     <>
       <Header fixed>
@@ -345,7 +367,7 @@ export function KartuStokPage() {
 
         {/* Filter & Selector Bar */}
         <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
-          <CardContent className='p-4 sm:p-5 space-y-4'>
+          <CardContent className='p-4 sm:p-5 flex flex-col gap-4 sm:gap-5'>
             <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
               {/* Menu Item Selector */}
               <div className='space-y-1.5 md:col-span-1'>
@@ -410,7 +432,7 @@ export function KartuStokPage() {
             </div>
 
             {/* Quick Presets & Date Filters */}
-            <div className='flex flex-wrap items-center justify-between gap-3 pt-3 border-t text-sm'>
+            <div className='flex flex-wrap items-center justify-between gap-3 text-sm'>
               <div className='flex flex-wrap items-center gap-1.5'>
                 <span className='text-xs text-muted-foreground mr-1 flex items-center gap-1'>
                   <Calendar className='h-3.5 w-3.5' /> Periode:
@@ -418,8 +440,8 @@ export function KartuStokPage() {
                 <Button
                   type='button'
                   size='sm'
-                  variant={periodePreset === 'ALL' ? 'default' : 'outline'}
-                  className='h-7 text-xs px-2.5'
+                  variant={periodePreset === 'ALL' ? 'default' : 'secondary'}
+                  className='h-7 text-xs px-2.5 border-0 shadow-none'
                   onClick={() => handlePresetChange('ALL')}
                 >
                   Semua
@@ -427,8 +449,8 @@ export function KartuStokPage() {
                 <Button
                   type='button'
                   size='sm'
-                  variant={periodePreset === 'TODAY' ? 'default' : 'outline'}
-                  className='h-7 text-xs px-2.5'
+                  variant={periodePreset === 'TODAY' ? 'default' : 'secondary'}
+                  className='h-7 text-xs px-2.5 border-0 shadow-none'
                   onClick={() => handlePresetChange('TODAY')}
                 >
                   Hari Ini
@@ -436,8 +458,8 @@ export function KartuStokPage() {
                 <Button
                   type='button'
                   size='sm'
-                  variant={periodePreset === '7D' ? 'default' : 'outline'}
-                  className='h-7 text-xs px-2.5'
+                  variant={periodePreset === '7D' ? 'default' : 'secondary'}
+                  className='h-7 text-xs px-2.5 border-0 shadow-none'
                   onClick={() => handlePresetChange('7D')}
                 >
                   7 Hari Terakhir
@@ -445,8 +467,8 @@ export function KartuStokPage() {
                 <Button
                   type='button'
                   size='sm'
-                  variant={periodePreset === '30D' ? 'default' : 'outline'}
-                  className='h-7 text-xs px-2.5'
+                  variant={periodePreset === '30D' ? 'default' : 'secondary'}
+                  className='h-7 text-xs px-2.5 border-0 shadow-none'
                   onClick={() => handlePresetChange('30D')}
                 >
                   30 Hari
@@ -454,8 +476,8 @@ export function KartuStokPage() {
                 <Button
                   type='button'
                   size='sm'
-                  variant={periodePreset === 'MONTH' ? 'default' : 'outline'}
-                  className='h-7 text-xs px-2.5'
+                  variant={periodePreset === 'MONTH' ? 'default' : 'secondary'}
+                  className='h-7 text-xs px-2.5 border-0 shadow-none'
                   onClick={() => handlePresetChange('MONTH')}
                 >
                   Bulan Ini
@@ -472,7 +494,7 @@ export function KartuStokPage() {
                     setTanggalDari(e.target.value)
                     setPeriodePreset('ALL')
                   }}
-                  className='h-7 w-36 text-xs'
+                  className='h-7 w-36 text-xs border-0 bg-background/80 dark:bg-background/40 shadow-none'
                 />
                 <span className='text-muted-foreground'>s/d</span>
                 <Input
@@ -482,7 +504,7 @@ export function KartuStokPage() {
                     setTanggalSampai(e.target.value)
                     setPeriodePreset('ALL')
                   }}
-                  className='h-7 w-36 text-xs'
+                  className='h-7 w-36 text-xs border-0 bg-background/80 dark:bg-background/40 shadow-none'
                 />
               </div>
             </div>
@@ -509,16 +531,16 @@ export function KartuStokPage() {
                 <Badge
                   variant={
                     kpiData.status === 'AMAN'
-                      ? 'outline'
+                      ? 'secondary'
                       : kpiData.status === 'MENIPIS'
                       ? 'secondary'
                       : 'destructive'
                   }
-                  className={`text-[10px] font-semibold ${
+                  className={`text-[10px] font-semibold border-0 ${
                     kpiData.status === 'AMAN'
-                      ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
                       : kpiData.status === 'MENIPIS'
-                      ? 'bg-amber-500/10 text-amber-600 border-amber-500/20'
+                      ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
                       : ''
                   }`}
                 >
@@ -595,10 +617,10 @@ export function KartuStokPage() {
 
         {/* Saldo Consistency Audit Banner */}
         <div
-          className={`flex items-center justify-between p-3.5 rounded-lg border text-xs ${
+          className={`flex items-center justify-between p-3.5 rounded-lg border-0 text-xs ${
             isBalanceConsistent
-              ? 'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-300'
-              : 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400'
+              ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300'
+              : 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400'
           }`}
         >
           <div className='flex items-center gap-2'>
@@ -725,8 +747,10 @@ export function KartuStokPage() {
                               </TableCell>
                               <TableCell>
                                 <Badge
-                                  variant='outline'
-                                  className='text-[11px] font-medium'
+                                  className={`text-[11px] font-medium border-0 shadow-none ${getJenisBadgeClass(
+                                    item.jenis,
+                                    item.arah
+                                  )}`}
                                 >
                                   {item.jenis.replace(/_/g, ' ')}
                                 </Badge>

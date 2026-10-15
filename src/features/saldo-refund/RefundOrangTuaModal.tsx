@@ -223,23 +223,16 @@ function RefundOrangTuaFormContent({
   return (
     <DialogContent className='max-w-xl max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
-          <div className='flex items-center gap-2'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary'>
-              <Banknote className='h-5 w-5' />
-            </div>
-            <div>
-              <DialogTitle className='text-lg font-bold'>
-                Refund Sisa Saldo ke Orang Tua / Wali
-              </DialogTitle>
-              <DialogDescription className='text-xs'>
-                Pengembalian dana titipan siswa nonaktif (lulus/pindah/keluar)
-              </DialogDescription>
-            </div>
-          </div>
+          <DialogTitle className='text-lg font-bold text-foreground'>
+            Refund Sisa Saldo ke Orang Tua / Wali
+          </DialogTitle>
+          <DialogDescription className='text-sm text-muted-foreground'>
+            Pengembalian dana titipan siswa nonaktif (lulus/pindah/keluar)
+          </DialogDescription>
         </DialogHeader>
 
         {/* Info Siswa & Sisa Saldo */}
-        <div className='rounded-xl border bg-slate-50 dark:bg-slate-900/50 p-3.5 space-y-2'>
+        <div className='rounded-xl border bg-muted/60 p-3.5 space-y-2'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-3'>
               <img
@@ -248,12 +241,12 @@ function RefundOrangTuaFormContent({
                 className='h-12 w-12 rounded-full object-cover border'
               />
               <div>
-                <p className='font-bold text-sm text-slate-900 dark:text-slate-100'>{siswa.nama}</p>
+                <p className='font-bold text-sm text-foreground'>{siswa.nama}</p>
                 <p className='text-xs text-muted-foreground font-mono'>
                   NIS: {siswa.nis} • {siswa.kelas_terakhir}
                 </p>
                 <div className='flex items-center gap-2 mt-1'>
-                  <Badge variant='outline' className='text-[10px] py-0'>
+                  <Badge variant='outline' className='border-0 bg-muted text-[10px] py-0 font-medium'>
                     Status: {siswa.status_siswa}
                   </Badge>
                   <span className='text-[11px] text-muted-foreground'>
@@ -288,8 +281,8 @@ function RefundOrangTuaFormContent({
               <div
                 className={`flex items-center justify-between rounded-lg border p-3 cursor-pointer transition-all ${
                   metode === 'TRANSFER_BANK'
-                    ? 'border-primary bg-primary/5 ring-1 ring-primary'
-                    : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900'
+                    ? 'border-primary bg-primary/10 ring-1 ring-primary'
+                    : 'border-border hover:bg-muted/50'
                 }`}
                 onClick={() => setMetode('TRANSFER_BANK')}
               >
@@ -306,8 +299,8 @@ function RefundOrangTuaFormContent({
               <div
                 className={`flex items-center justify-between rounded-lg border p-3 cursor-pointer transition-all ${
                   metode === 'TUNAI'
-                    ? 'border-primary bg-primary/5 ring-1 ring-primary'
-                    : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900'
+                    ? 'border-primary bg-primary/10 ring-1 ring-primary'
+                    : 'border-border hover:bg-muted/50'
                 }`}
                 onClick={() => setMetode('TUNAI')}
               >
@@ -318,7 +311,7 @@ function RefundOrangTuaFormContent({
                     <div className='text-muted-foreground text-[11px]'>Diserahkan langsung di TU</div>
                   </Label>
                 </div>
-                <Banknote className='h-4 w-4 text-emerald-600 shrink-0' />
+                <Banknote className='h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0' />
               </div>
             </RadioGroup>
           </div>
@@ -459,7 +452,7 @@ function RefundOrangTuaFormContent({
           </div>
 
           {/* Peringatan & Konfirmasi Blokir Otomatis */}
-          <Alert className='bg-amber-500/10 border-amber-500/20 text-amber-800 dark:text-amber-300'>
+          <Alert className='border-amber-500/30 bg-amber-500/10 text-amber-900 dark:text-amber-200'>
             <AlertTriangle className='h-4 w-4 text-amber-600 dark:text-amber-400' />
             <AlertTitle className='text-xs font-semibold'>
               Konfirmasi Efek Otomatis Sistem (PRD §9.3)
@@ -499,7 +492,7 @@ function RefundOrangTuaFormContent({
             <Button
               type='submit'
               disabled={!isValidSubmit || isSubmitting}
-              className='gap-2 bg-emerald-600 hover:bg-emerald-700 text-white'
+              className='gap-2'
             >
               <Lock className='h-3.5 w-3.5' />
               {isSubmitting ? 'Memproses...' : `Proses Refund ${formatRupiah(siswa.saldo)}`}

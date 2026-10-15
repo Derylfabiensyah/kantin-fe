@@ -21,16 +21,16 @@ const formSchema = z
   .object({
     email: z.email({
       error: (iss) =>
-        iss.input === '' ? 'Please enter your email.' : undefined,
+        iss.input === '' ? 'Masukkan email Anda.' : 'Format email tidak valid.',
     }),
     password: z
       .string()
-      .min(1, 'Please enter your password.')
-      .min(7, 'Password must be at least 7 characters long.'),
-    confirmPassword: z.string().min(1, 'Please confirm your password.'),
+      .min(1, 'Masukkan kata sandi Anda.')
+      .min(7, 'Kata sandi minimal 7 karakter.'),
+    confirmPassword: z.string().min(1, 'Konfirmasi kata sandi Anda.'),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match.",
+    message: 'Konfirmasi kata sandi tidak cocok.',
     path: ['confirmPassword'],
   })
 
@@ -53,12 +53,12 @@ export function SignUpForm({
     setIsLoading(true)
 
     toast.promise(sleep(2000), {
-      loading: 'Creating account...',
+      loading: 'Membuat akun...',
       success: () => {
         setIsLoading(false)
-        return `Account created for ${data.email}.`
+        return `Akun berhasil dibuat untuk ${data.email}.`
       },
-      error: 'Error',
+      error: 'Terjadi kesalahan saat membuat akun',
     })
   }
 
@@ -77,7 +77,7 @@ export function SignUpForm({
               <FormLabel className='text-xs'>Email</FormLabel>
               <FormControl>
                 <Input
-                  placeholder='name@example.com'
+                  placeholder='nama@contoh.com'
                   className='border-0 bg-background shadow-xs'
                   {...field}
                 />
@@ -91,10 +91,10 @@ export function SignUpForm({
           name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='text-xs'>Password</FormLabel>
+              <FormLabel className='text-xs'>Kata Sandi</FormLabel>
               <FormControl>
                 <PasswordInput
-                  placeholder='********'
+                  placeholder='Masukkan kata sandi'
                   className='border-0 bg-background shadow-xs'
                   {...field}
                 />
@@ -108,10 +108,10 @@ export function SignUpForm({
           name='confirmPassword'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='text-xs'>Confirm Password</FormLabel>
+              <FormLabel className='text-xs'>Konfirmasi Kata Sandi</FormLabel>
               <FormControl>
                 <PasswordInput
-                  placeholder='********'
+                  placeholder='Masukkan ulang kata sandi'
                   className='border-0 bg-background shadow-xs'
                   {...field}
                 />
@@ -122,7 +122,7 @@ export function SignUpForm({
         />
         <Button className='mt-2 border-0 shadow-xs' disabled={isLoading}>
           {isLoading ? <Loader2 className='animate-spin' /> : <UserPlus />}
-          Create Account
+          Buat Akun
         </Button>
       </form>
     </Form>

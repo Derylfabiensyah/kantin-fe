@@ -4,10 +4,10 @@ import { type Locator, userEvent } from 'vitest/browser'
 import { SignUpForm } from './sign-up-form'
 
 const FORM_MESSAGES = {
-  emailEmpty: 'Please enter your email.',
-  passwordEmpty: 'Please enter your password.',
-  confirmPasswordEmpty: 'Please confirm your password.',
-  passwordMismatch: "Passwords don't match.",
+  emailEmpty: 'Masukkan email Anda.',
+  passwordEmpty: 'Masukkan kata sandi Anda.',
+  confirmPasswordEmpty: 'Konfirmasi kata sandi Anda.',
+  passwordMismatch: 'Konfirmasi kata sandi tidak cocok.',
 } as const
 
 const toastPromise = vi.hoisted(() =>
@@ -30,9 +30,9 @@ describe('SignUpForm', () => {
 
     screen = await render(<SignUpForm />)
     emailInput = screen.getByRole('textbox', { name: /^Email$/i })
-    passwordInput = screen.getByLabelText(/^Password$/i)
-    confirmPasswordInput = screen.getByLabelText(/^Confirm Password$/i)
-    submitButton = screen.getByRole('button', { name: /^Create Account$/i })
+    passwordInput = screen.getByLabelText(/^Kata Sandi$/i)
+    confirmPasswordInput = screen.getByLabelText(/^Konfirmasi Kata Sandi$/i)
+    submitButton = screen.getByRole('button', { name: /^Buat Akun$/i })
   })
 
   afterEach(() => {

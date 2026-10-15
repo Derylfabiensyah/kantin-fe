@@ -382,24 +382,16 @@ export const PengaturanKantinPage: React.FC = () => {
                       >
                         Durasi Tampil Foto Siswa
                       </Label>
-                      <div className='flex items-center gap-1.5'>
-                        <Badge
-                          variant='default'
-                          className='font-mono text-xs px-2 py-0.5'
-                        >
-                          {watchedDurasi} Detik
-                        </Badge>
-                        <Button
-                          type='button'
-                          variant='ghost'
-                          size='sm'
-                          onClick={handleTestPreviewCountdown}
-                          className='h-6 px-1.5 text-[10px]'
-                          title='Uji coba hitung mundur foto'
-                        >
-                          <Eye className='h-3 w-3 mr-1' /> Tes Hitung Mundur
-                        </Button>
-                      </div>
+                      <Button
+                        type='button'
+                        variant='ghost'
+                        size='sm'
+                        onClick={handleTestPreviewCountdown}
+                        className='h-6 px-1.5 text-[10px]'
+                        title='Uji coba hitung mundur foto'
+                      >
+                        <Eye className='h-3 w-3 mr-1' /> Tes Hitung Mundur
+                      </Button>
                     </div>
 
                     <div className='flex items-center gap-3'>

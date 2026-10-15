@@ -283,9 +283,9 @@ export const TitikKasirPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className='border-0 bg-primary/5 shadow-sm'>
+            <Card className='border-0 shadow-sm'>
               <CardHeader className='pb-2 pt-4 px-4'>
-                <CardDescription className='text-xs font-medium text-primary'>
+                <CardDescription className='text-xs font-medium'>
                   Kasir POS Aktif
                 </CardDescription>
                 <CardTitle className='text-sm font-bold truncate text-foreground'>
@@ -293,7 +293,7 @@ export const TitikKasirPage: React.FC = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className='px-4 pb-3 text-[11px] text-muted-foreground flex items-center justify-between'>
-                <span className='font-mono text-primary font-semibold'>
+                <span className='font-mono font-semibold text-foreground'>
                   {currentPos ? currentPos.kode : '-'}
                 </span>
                 <Button

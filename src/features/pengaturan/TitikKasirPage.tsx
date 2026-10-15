@@ -241,7 +241,7 @@ export const TitikKasirPage: React.FC = () => {
 
           {/* Metric KPI Cards */}
           <div className='grid gap-4 grid-cols-2 md:grid-cols-4'>
-            <Card className='shadow-xs'>
+            <Card className='border-0 shadow-sm'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium'>
                   Total Perangkat
@@ -255,7 +255,7 @@ export const TitikKasirPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className='shadow-xs'>
+            <Card className='border-0 shadow-sm'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium'>
                   Titik Kasir Aktif
@@ -269,7 +269,7 @@ export const TitikKasirPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className='shadow-xs'>
+            <Card className='border-0 shadow-sm'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium'>
                   Nonaktif / Perawatan
@@ -283,7 +283,7 @@ export const TitikKasirPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className='shadow-xs border-primary/20 bg-primary/5'>
+            <Card className='border-0 bg-primary/5 shadow-sm'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium text-primary'>
                   Kasir POS Aktif

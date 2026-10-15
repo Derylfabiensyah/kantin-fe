@@ -12,7 +12,6 @@ import {
   ShieldCheck,
   FileSpreadsheet,
   Settings,
-  Store,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 

@@ -358,7 +358,7 @@ export const TitikKasirPage: React.FC = () => {
 
                   <Button
                     type='button'
-                    variant='outline'
+                    variant='ghost'
                     size='icon'
                     onClick={loadData}
                     disabled={loading}
@@ -518,7 +518,7 @@ export const TitikKasirPage: React.FC = () => {
                               <div className='flex items-center justify-end gap-1'>
                                 <Button
                                   type='button'
-                                  variant='outline'
+                                  variant='ghost'
                                   size='icon'
                                   onClick={() => handleOpenEdit(item)}
                                   className='h-7 w-7'
@@ -528,7 +528,7 @@ export const TitikKasirPage: React.FC = () => {
                                 </Button>
                                 <Button
                                   type='button'
-                                  variant='outline'
+                                  variant='ghost'
                                   size='icon'
                                   onClick={() => setDeletingItem(item)}
                                   className='h-7 w-7 text-destructive hover:bg-destructive/10'

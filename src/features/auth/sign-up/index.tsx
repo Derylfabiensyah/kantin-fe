@@ -22,7 +22,7 @@ export function SignUp() {
             Already have an account?{' '}
             <Link
               to='/sign-in'
-              className='underline underline-offset-4 hover:text-primary'
+              className='underline hover:text-primary'
             >
               Sign In
             </Link>

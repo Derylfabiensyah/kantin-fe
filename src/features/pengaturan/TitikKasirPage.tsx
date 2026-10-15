@@ -355,20 +355,6 @@ export const TitikKasirPage: React.FC = () => {
                       </SelectItem>
                     </SelectContent>
                   </Select>
-
-                  <Button
-                    type='button'
-                    variant='ghost'
-                    size='icon'
-                    onClick={loadData}
-                    disabled={loading}
-                    className='h-8 w-8 shrink-0'
-                    title='Muat ulang data'
-                  >
-                    <RefreshCw
-                      className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`}
-                    />
-                  </Button>
                 </div>
               </div>
             </CardHeader>

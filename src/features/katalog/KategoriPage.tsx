@@ -7,10 +7,7 @@ import {
   Pencil,
   Trash2,
   AlertTriangle,
-  CheckCircle2,
-  XCircle,
   UtensilsCrossed,
-  Layers,
 } from 'lucide-react'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -139,7 +136,7 @@ export function KategoriPage() {
   return (
     <>
       <Header fixed>
-        <SearchComp />
+        <SearchComp showKbd={false} />
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
@@ -150,13 +147,7 @@ export function KategoriPage() {
         {/* Header Title & Actions */}
         <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
           <div>
-            <div className='flex items-center gap-2 text-xs font-medium text-muted-foreground'>
-              <span>Katalog & Inventaris</span>
-              <span>/</span>
-              <span className='text-foreground font-semibold'>Kategori Menu</span>
-            </div>
-            <h1 className='text-2xl font-bold tracking-tight text-foreground flex items-center gap-2 mt-1'>
-              <Tag className='size-6 text-primary' />
+            <h1 className='text-2xl font-bold tracking-tight text-foreground'>
               Manajemen Kategori Menu
             </h1>
             <p className='text-sm text-muted-foreground mt-0.5'>
@@ -175,7 +166,7 @@ export function KategoriPage() {
               <RefreshCw className={`size-3.5 ${loading ? 'animate-spin' : ''}`} />
               Segarkan
             </Button>
-            <Button size='sm' onClick={handleAdd} className='gap-1.5 shadow-sm'>
+            <Button size='sm' onClick={handleAdd} className='gap-1.5 shadow-xs'>
               <Plus className='size-4' />
               Tambah Kategori
             </Button>
@@ -184,49 +175,37 @@ export function KategoriPage() {
 
         {/* Ringkasan Widget */}
         <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
-          <Card className='border shadow-sm'>
-            <CardContent className='p-4 flex items-center justify-between'>
-              <div>
-                <p className='text-xs font-medium text-muted-foreground'>Total Kategori</p>
-                <p className='text-2xl font-bold text-foreground mt-1'>{stats.total}</p>
-              </div>
-              <div className='size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center'>
-                <Layers className='size-5' />
-              </div>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>Total Kategori</p>
+              <h3 className='mt-0.5 text-xl font-bold text-foreground'>{stats.total}</h3>
+              <p className='mt-1 text-[11px] text-muted-foreground'>Kelompok menu terdaftar</p>
             </CardContent>
           </Card>
 
-          <Card className='border shadow-sm'>
-            <CardContent className='p-4 flex items-center justify-between'>
-              <div>
-                <p className='text-xs font-medium text-muted-foreground'>Kategori Aktif</p>
-                <p className='text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1'>
-                  {stats.aktif}
-                </p>
-              </div>
-              <div className='size-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center'>
-                <CheckCircle2 className='size-5' />
-              </div>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>Kategori Aktif</p>
+              <h3 className='mt-0.5 text-xl font-bold text-emerald-600 dark:text-emerald-400'>
+                {stats.aktif}
+              </h3>
+              <p className='mt-1 text-[11px] text-muted-foreground'>Aktif di kasir & laporan</p>
             </CardContent>
           </Card>
 
-          <Card className='border shadow-sm'>
-            <CardContent className='p-4 flex items-center justify-between'>
-              <div>
-                <p className='text-xs font-medium text-muted-foreground'>Nonaktif</p>
-                <p className='text-2xl font-bold text-muted-foreground mt-1'>
-                  {stats.nonaktif}
-                </p>
-              </div>
-              <div className='size-10 rounded-xl bg-muted text-muted-foreground flex items-center justify-center'>
-                <XCircle className='size-5' />
-              </div>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+            <CardContent className='p-4'>
+              <p className='text-xs font-medium text-muted-foreground'>Nonaktif</p>
+              <h3 className='mt-0.5 text-xl font-bold text-muted-foreground'>
+                {stats.nonaktif}
+              </h3>
+              <p className='mt-1 text-[11px] text-muted-foreground'>Tidak digunakan</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Search & Table Card */}
-        <Card className='border shadow-sm'>
+        <Card className='border border-border bg-card shadow-xs'>
           <div className='p-4 border-b flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3'>
             <div className='relative w-full sm:w-72'>
               <Search className='absolute left-2.5 top-2.5 size-4 text-muted-foreground' />
@@ -294,8 +273,8 @@ export function KategoriPage() {
                         </TableCell>
                         <TableCell className='text-center'>
                           <Badge
-                            variant='secondary'
-                            className='font-normal text-xs gap-1 bg-muted/60'
+                            variant='outline'
+                            className='border-0 bg-muted/60 text-muted-foreground font-normal text-xs gap-1'
                           >
                             <UtensilsCrossed className='size-3 text-muted-foreground' />
                             <span>{itemQty} menu</span>
@@ -303,11 +282,17 @@ export function KategoriPage() {
                         </TableCell>
                         <TableCell className='text-center'>
                           {isAktif ? (
-                            <Badge className='bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800 text-[11px]'>
+                            <Badge
+                              variant='outline'
+                              className='border-0 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 text-[11px] font-medium'
+                            >
                               Aktif
                             </Badge>
                           ) : (
-                            <Badge variant='outline' className='text-muted-foreground text-[11px]'>
+                            <Badge
+                              variant='outline'
+                              className='border-0 bg-muted text-muted-foreground text-[11px] font-medium'
+                            >
                               Nonaktif
                             </Badge>
                           )}

@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Tag, Loader2, Save } from 'lucide-react'
+import { Loader2, Save } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -93,14 +93,9 @@ export function KategoriFormModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-md'>
         <DialogHeader>
-          <div className='flex items-center gap-2 text-primary'>
-            <div className='flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary'>
-              <Tag className='size-4' />
-            </div>
-            <DialogTitle>
-              {isEditing ? 'Ubah Kategori Menu' : 'Tambah Kategori Baru'}
-            </DialogTitle>
-          </div>
+          <DialogTitle>
+            {isEditing ? 'Ubah Kategori Menu' : 'Tambah Kategori Baru'}
+          </DialogTitle>
           <DialogDescription>
             {isEditing
               ? 'Perbarui informasi kategori menu kantin sekolah.'

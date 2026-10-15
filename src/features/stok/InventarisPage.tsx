@@ -47,24 +47,6 @@ export function InventarisPage() {
   const [selectedStatus, setSelectedStatus] = useState<'ALL' | 'AMAN' | 'MENIPIS' | 'HABIS'>('ALL')
   const [sortBy, setSortBy] = useState<'NILAI_DESC' | 'NILAI_ASC' | 'STOK_ASC' | 'STOK_DESC' | 'NAMA_ASC'>('NILAI_DESC')
 
-  const loadData = async () => {
-    try {
-      setIsLoading(true)
-      const [invData, kategoris] = await Promise.all([
-        stokApi.getInventaris(false),
-        katalogApi.getKategoriList().catch(() => []),
-      ])
-
-      setInventarisList(invData)
-      setKategoriList(kategoris)
-    } catch (err: unknown) {
-      const msg =
-        err instanceof Error ? err.message : 'Gagal memuat laporan inventaris'
-      toast.error('Gagal Memuat Inventaris', { description: msg })
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   useEffect(() => {
     let isMounted = true

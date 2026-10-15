@@ -253,18 +253,18 @@ export const TitikKasirPage: React.FC = () => {
           </div>
 
           {/* Navigasi Tab Pengaturan Modul */}
-          <div className='flex items-center gap-2 border-b pb-2'>
+          <div className='inline-flex h-9 items-center justify-center rounded-lg bg-muted/60 p-1 text-muted-foreground w-fit'>
             <Link
               to='/pengaturan'
-              className='inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground transition-colors'
+              className='inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors'
             >
               <Sliders className='h-3.5 w-3.5' />
               <span>Operasional Kantin</span>
             </Link>
-            <div className='inline-flex items-center gap-2 rounded-lg bg-primary/10 px-3 py-2 text-xs font-bold text-primary'>
+            <div className='inline-flex items-center gap-1.5 rounded-md bg-background px-3 py-1.5 text-xs font-medium text-foreground shadow-xs'>
               <Store className='h-3.5 w-3.5' />
               <span>Manajemen Titik Kasir</span>
-              <Badge variant='secondary' className='ml-1 text-[10px]'>
+              <Badge variant='secondary' className='ml-1 text-[10px] h-4 px-1.5'>
                 {totalCount}
               </Badge>
             </div>

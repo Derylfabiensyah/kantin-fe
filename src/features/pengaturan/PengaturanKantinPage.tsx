@@ -180,17 +180,9 @@ export const PengaturanKantinPage: React.FC = () => {
           {/* Header Title & Nav Tabs */}
           <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
             <div>
-              <div className='flex items-center gap-2 text-xs font-semibold text-primary uppercase tracking-wider'>
-                <Sliders className='h-4 w-4' />
-                <span>Pengaturan Modul Kantin</span>
-              </div>
               <h1 className='text-2xl font-bold tracking-tight text-foreground sm:text-3xl'>
                 Konfigurasi Operasional Kantin
               </h1>
-              <p className='text-xs text-muted-foreground sm:text-sm'>
-                Atur parameter operasional kasir, batas saldo, dan kebijakan
-                transaksi sekolah (PRD §9.1 & §10).
-              </p>
             </div>
 
             {/* Quick Audit Info Badge */}

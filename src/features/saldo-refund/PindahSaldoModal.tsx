@@ -79,10 +79,8 @@ function PindahSaldoFormContent({
     let isMounted = true
     const loadStudents = async () => {
       try {
-        const res = await apiClient
-          .get('/api/v1/tu/topup/siswa')
-          .catch(() => apiClient.get('/api/v1/tu/siswa'))
-        if (isMounted && res.data?.data) {
+        const res = await apiClient.get('/api/saldo/refund/kandidat')
+        if (isMounted && res.data?.data && Array.isArray(res.data.data)) {
           setActiveStudents(res.data.data)
         }
       } catch {
@@ -143,15 +141,14 @@ function PindahSaldoFormContent({
     const refNo = `TRF-SDR-${dateCode}-${seq}`
 
     const payload = {
-      siswaAsalId: siswaAsal.siswa_id,
+      siswaSumberId: siswaAsal.siswa_id,
       siswaTujuanId: targetSibling.siswa_id,
-      nominal: nominalTransfer,
-      beritaAcara: beritaAcara.trim(),
       referensiId: refNo,
+      catatan: beritaAcara.trim() || `Pindah saldo ke saudara: ${targetSibling.nama}`,
     }
 
     try {
-      await apiClient.post('/api/saldo/transfer-saudara', payload).catch(async () => {
+      await apiClient.post('/api/saldo/pindah-saldo', payload).catch(async () => {
         // Fallback: two koreksi operations if dedicated endpoint pending
         await apiClient.post('/api/saldo/koreksi', {
           subjekTipe: 'SISWA',
@@ -200,7 +197,7 @@ function PindahSaldoFormContent({
       toast.success(
         `Pemindahan saldo ke ${targetSibling.nama} berhasil secara atomik!`,
         {
-          description: `Saldo Rp ${nominalTransfer.toLocaleString('id-ID')} masuk ke akun adik/saudara. Kartu RFID lama ${siswaAsal.nama} otomatis diblokir permanen.`,
+          description: `Saldo ${formatRupiah(nominalTransfer)} masuk ke akun adik/saudara. Kartu RFID lama ${siswaAsal.nama} otomatis diblokir permanen.`,
         }
       )
 

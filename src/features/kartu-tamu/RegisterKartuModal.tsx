@@ -97,19 +97,13 @@ export function RegisterKartuModal({
       let newCard: KartuTamuMock | null = null
 
       try {
-        const res = await apiClient
-          .post('/api/kartu-tamu', {
-            nomorKartu: nextNomor,
-            rfidUid: detectedUid,
-            catatan: labelPemegang.trim() || undefined,
-            aktif: true,
-          })
-          .catch(() =>
-            apiClient.post('/api/v1/tu/kartu-tamu/register', {
-              uid: detectedUid,
-              label_pemegang: labelPemegang.trim(),
-            })
-          )
+        const res = await apiClient.post('/api/kartu-tamu', {
+          nomorKartu: nextNomor,
+          rfidUid: detectedUid,
+          labelPemegang: labelPemegang.trim() || undefined,
+          catatan: labelPemegang.trim() || undefined,
+          aktif: true,
+        })
 
         if (res.data?.data) {
           newCard = mapBackendToKartuTamu(res.data.data, 0)

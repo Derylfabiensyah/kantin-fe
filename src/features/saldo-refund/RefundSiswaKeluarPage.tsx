@@ -64,9 +64,9 @@ export function RefundSiswaKeluarPage() {
     let isMounted = true
     const loadInitialData = async () => {
       try {
-        const res = await apiClient
-          .get('/api/v1/tu/siswa/nonaktif')
-          .catch(() => apiClient.get('/api/saldo/refund/siswa-nonaktif'))
+        const res = await apiClient.get('/api/saldo/refund/kandidat', {
+          params: { hanyaTidakAktif: true },
+        })
         if (isMounted && res.data?.data && Array.isArray(res.data.data)) {
           setStudents(res.data.data)
         }
@@ -83,9 +83,9 @@ export function RefundSiswaKeluarPage() {
   const refreshNonaktifStudents = async () => {
     setIsLoading(true)
     try {
-      const res = await apiClient
-        .get('/api/v1/tu/siswa/nonaktif')
-        .catch(() => apiClient.get('/api/saldo/refund/siswa-nonaktif'))
+      const res = await apiClient.get('/api/saldo/refund/kandidat', {
+        params: { hanyaTidakAktif: true },
+      })
       if (res.data?.data && Array.isArray(res.data.data)) {
         setStudents(res.data.data)
       }
@@ -244,8 +244,8 @@ export function RefundSiswaKeluarPage() {
 
   return (
     <>
-      <Header>
-        <div className='ml-auto flex items-center space-x-4'>
+      <Header fixed>
+        <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
         </div>

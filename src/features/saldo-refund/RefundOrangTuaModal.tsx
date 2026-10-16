@@ -157,6 +157,7 @@ function RefundOrangTuaFormContent({
     const refNo = `REFUND-ORTU-${dateCode}-${seq}`
 
     const payload = {
+      subjekId: siswa.siswa_id,
       siswaId: siswa.siswa_id,
       nominal: siswa.saldo,
       metode,
@@ -166,7 +167,7 @@ function RefundOrangTuaFormContent({
       noRekening: metode === 'TRANSFER_BANK' ? noRekening.trim() : undefined,
       namaRekening: metode === 'TRANSFER_BANK' ? namaRekening.trim() : undefined,
       buktiUrl: buktiUrl || undefined,
-      catatan: catatan.trim(),
+      catatan: catatan.trim() || `Refund saldo ke orang tua: ${namaPenerima.trim()} (${metode})`,
       referensiId: refNo,
     }
 
@@ -208,7 +209,7 @@ function RefundOrangTuaFormContent({
       }
 
       toast.success(`Refund sisa saldo ${siswa.nama} berhasil diproses!`, {
-        description: `Saldo Rp ${siswa.saldo.toLocaleString('id-ID')} diserahkan ke ${namaPenerima.trim()}. Kartu RFID lama otomatis diblokir permanen.`,
+        description: `Saldo ${formatRupiah(siswa.saldo)} diserahkan ke ${namaPenerima.trim()}. Kartu RFID lama otomatis diblokir permanen.`,
       })
 
       onOpenChange(false)

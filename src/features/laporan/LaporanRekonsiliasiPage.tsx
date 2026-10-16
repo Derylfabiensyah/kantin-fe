@@ -517,9 +517,9 @@ export function LaporanRekonsiliasiPage() {
                           </TableCell>
                           <TableCell className="text-center font-mono text-xs">
                             {posItem.arah === 'KREDIT' ? (
-                              <span className="text-emerald-600 font-bold">+ KREDIT</span>
+                              <span className="text-emerald-600 font-bold">KREDIT</span>
                             ) : posItem.arah === 'DEBIT' ? (
-                              <span className="text-blue-600 font-bold">− DEBIT</span>
+                              <span className="text-blue-600 font-bold">DEBIT</span>
                             ) : (
                               <span className="text-muted-foreground">STATUS</span>
                             )}

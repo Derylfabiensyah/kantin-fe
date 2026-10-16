@@ -40,6 +40,23 @@ import type {
   BarisPenjualanKasir,
 } from './types'
 
+const getCategoryBadgeClass = (kategori: string) => {
+  const k = (kategori || '').toLowerCase()
+  if (k.includes('berat')) {
+    return 'border-0 bg-orange-500/15 text-orange-700 dark:bg-orange-500/20 dark:text-orange-300'
+  }
+  if (k.includes('dingin') || k.includes('minum')) {
+    return 'border-0 bg-cyan-500/15 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-300'
+  }
+  if (k.includes('snack') || k.includes('roti')) {
+    return 'border-0 bg-purple-500/15 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300'
+  }
+  if (k.includes('hangat')) {
+    return 'border-0 bg-rose-500/15 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300'
+  }
+  return 'border-0 bg-slate-500/15 text-slate-700 dark:bg-slate-500/20 dark:text-slate-300'
+}
+
 export function LaporanPenjualanPage() {
   const [ringkasan, setRingkasan] = useState<RingkasanPenjualan | null>(null)
   const [items, setItems] = useState<BarisPenjualanItem[]>([])
@@ -378,7 +395,7 @@ export function LaporanPenjualanPage() {
 
             {/* TAB CONTENT 1: PENJUALAN PER ITEM */}
             <TabsContent value="item" className="space-y-4">
-              <Card className="border-0">
+              <Card className="border-0 bg-muted/70 dark:bg-muted/30">
                 <CardHeader>
                   <CardTitle className="text-base font-bold">
                     Penjualan & Laba Kotor per Item Menu
@@ -427,7 +444,10 @@ export function LaporanPenjualanPage() {
                                 {item.nama}
                               </TableCell>
                               <TableCell>
-                                <Badge variant="secondary" className="border-0 text-xs font-normal">
+                                <Badge
+                                  variant="secondary"
+                                  className={`text-xs font-medium ${getCategoryBadgeClass(item.kategoriNama)}`}
+                                >
                                   {item.kategoriNama}
                                 </Badge>
                               </TableCell>
@@ -475,7 +495,7 @@ export function LaporanPenjualanPage() {
 
             {/* TAB CONTENT 2: PENJUALAN PER KATEGORI */}
             <TabsContent value="kategori" className="space-y-4">
-              <Card className="border-0">
+              <Card className="border-0 bg-muted/70 dark:bg-muted/30">
                 <CardHeader>
                   <CardTitle className="text-base font-bold">
                     Penjualan & Laba Kotor per Kategori
@@ -553,7 +573,7 @@ export function LaporanPenjualanPage() {
 
             {/* TAB CONTENT 3: PENJUALAN PER KASIR */}
             <TabsContent value="kasir" className="space-y-4">
-              <Card className="border-0">
+              <Card className="border-0 bg-muted/70 dark:bg-muted/30">
                 <CardHeader>
                   <CardTitle className="text-base font-bold">
                     Penjualan per Titik Kasir & Petugas

@@ -373,10 +373,10 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
           </div>
           <Button
             type='button'
-            variant='outline'
+            variant='secondary'
             size='sm'
             onClick={handleAddRow}
-            className='flex items-center gap-1.5 text-xs bg-background'
+            className='flex items-center gap-1.5 text-xs border-0 bg-background hover:bg-accent'
           >
             <Plus className='h-3.5 w-3.5' />
             Tambah Baris Menu

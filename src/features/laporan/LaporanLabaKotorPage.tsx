@@ -278,7 +278,7 @@ export function LaporanLabaKotorPage() {
           </div>
 
           {/* TABEL PROFITABILITAS PER MENU */}
-          <Card className="border-0">
+          <Card className="border-0 bg-muted/70 dark:bg-muted/30">
             <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <CardTitle className="text-base font-bold">

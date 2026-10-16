@@ -74,20 +74,13 @@ export function TopupKartuTamuModal({
       let saldoFinal = saldoBaru
 
       try {
-        const res = await apiClient
-          .post('/api/saldo/topup', {
-            subjekTipe: 'KARTU_TAMU',
-            subjekId: kartu.id,
-            nominal: nominalNum,
-            penyetor: namaPenyetor.trim(),
-            referensiId: refNo,
-          })
-          .catch(() =>
-            apiClient.post(`/api/v1/tu/kartu-tamu/${kartu.id}/topup`, {
-              nominal: nominalNum,
-              nama_penyetor: namaPenyetor.trim(),
-            })
-          )
+        const res = await apiClient.post('/api/saldo/topup', {
+          subjekTipe: 'KARTU_TAMU',
+          subjekId: kartu.id,
+          nominal: nominalNum,
+          penyetor: namaPenyetor.trim(),
+          referensiId: refNo,
+        })
         const resData = res.data?.data
         saldoFinal = resData?.saldoSetelah ?? resData?.saldo_baru ?? saldoBaru
       } catch {

@@ -60,28 +60,11 @@ export function RefundKartuModal({
 
     try {
       try {
-        await apiClient
-          .put(`/api/kartu-tamu/${kartu.id}`, {
-            catatan: '',
-          })
-          .catch(() =>
-            apiClient.post(`/api/v1/tu/kartu-tamu/${kartu.id}/refund`, {
-              nama_penerima: namaPenerima.trim(),
-            })
-          )
-
-        if (kartu.saldo > 0) {
-          await apiClient
-            .post('/api/saldo/koreksi', {
-              subjekTipe: 'KARTU_TAMU',
-              subjekId: kartu.id,
-              arah: 'DEBIT',
-              nominal: kartu.saldo,
-              alasan: `Refund tunai pengembalian kartu tamu oleh ${namaPenerima.trim()}`,
-              referensiId: refNo,
-            })
-            .catch(() => {})
-        }
+        await apiClient.post('/api/kartu-tamu/refund', {
+          kartuId: kartu.id,
+          referensiId: refNo,
+          catatan: `Refund tunai pengembalian kartu tamu oleh ${namaPenerima.trim()}`,
+        })
       } catch {
         // Fallback simulasi
       }

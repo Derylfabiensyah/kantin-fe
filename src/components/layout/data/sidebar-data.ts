@@ -94,6 +94,7 @@ export const sidebarData: SidebarData = {
           title: 'Top-up Tunai Siswa',
           url: '/tu/topup',
           icon: Banknote,
+          roles: ['admin', 'tu'],
         },
         {
           title: 'Setoran Kas TU Harian',

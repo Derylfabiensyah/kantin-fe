@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
-  Scale,
   CheckCircle2,
   AlertTriangle,
   Download,
@@ -246,19 +245,9 @@ export function LaporanRekonsiliasiPage() {
           {/* Header Action Section */}
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <div className="flex items-center gap-3">
-                <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-xl">
-                  <Scale className="h-5 w-5" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold tracking-tight">
-                    Laporan Rekonsiliasi Harian
-                  </h1>
-                  <p className="text-muted-foreground text-sm">
-                    Pemeriksaan invariant akuntansi: Topup − Refund = Saldo Siswa + Saldo Kartu Tamu + Penjualan Bersih (PRD §5).
-                  </p>
-                </div>
-              </div>
+              <h1 className="text-2xl font-bold tracking-tight">
+                Laporan Rekonsiliasi Harian
+              </h1>
             </div>
 
             <div className="flex flex-wrap items-center gap-2.5">

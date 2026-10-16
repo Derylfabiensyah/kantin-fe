@@ -57,9 +57,7 @@ export function KontrolSiswaPage() {
     let isMounted = true
     const loadInitialData = async () => {
       try {
-        const res = await apiClient
-          .get('/api/v1/kontrol-siswa')
-          .catch(() => apiClient.get('/api/v1/tu/siswa'))
+        const res = await apiClient.get('/api/saldo/refund/kandidat')
         if (isMounted && res.data?.data && Array.isArray(res.data.data)) {
           setStudents(res.data.data)
         }
@@ -76,9 +74,7 @@ export function KontrolSiswaPage() {
   const refreshStudents = async () => {
     setIsLoading(true)
     try {
-      const res = await apiClient
-        .get('/api/v1/kontrol-siswa')
-        .catch(() => apiClient.get('/api/v1/tu/siswa'))
+      const res = await apiClient.get('/api/saldo/refund/kandidat')
       if (res.data?.data && Array.isArray(res.data.data)) {
         setStudents(res.data.data)
       }
@@ -153,16 +149,18 @@ export function KontrolSiswaPage() {
   const handleTestCashierValidation = async (studentToTest: KartuSiswaMock) => {
     // Sample cart: Nasi Uduk (ID 1, Kat 1) + Es Teh Manis (ID 9, Kat 3)
     const testItems = [
-      { menu_id: 1, qty: 1 },
-      { menu_id: 9, qty: 1 },
+      { menuId: 1, qty: 1 },
+      { menuId: 9, qty: 1 },
     ]
 
     try {
-      const res = await apiClient.post('/api/v1/kasir/transaksi', {
-        kartu_uid: studentToTest.uid,
+      const res = await apiClient.post('/api/kasir/tap', {
+        rfidUid: studentToTest.uid,
+        titikKasirId: 1,
         items: testItems,
+        idempotencyKey: `TAP-TEST-${Date.now()}-${studentToTest.siswa_id}`,
       })
-      if (res.data?.status === 'SUCCESS') {
+      if (res.data?.status === 'SUCCESS' || res.data?.responseCode === 200 || res.data?.code === 200) {
         const total = (res.data?.data?.total || 16000) as number
         toast.success(`Uji Validasi Kasir: LOLOS`, {
           description: `Siswa ${studentToTest.nama} lolos membeli Nasi Uduk & Es Teh (${formatRupiah(total)}).`,

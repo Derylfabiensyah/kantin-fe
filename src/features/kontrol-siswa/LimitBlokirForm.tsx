@@ -114,17 +114,14 @@ function LimitBlokirFormContent({
     if (!isValidNominal || isSubmitting) return
 
     setIsSubmitting(true)
-    const payload = {
-      limit_harian: nominalLimitNum,
-      limit_harian_enabled: limitEnabled,
-      blocked_items: blockedItemIds,
-      blocked_categories: blockedCategoryIds,
-      catatan_kontrol: catatan.trim(),
-    }
 
     try {
       const res = await apiClient
-        .put(`/api/v1/kontrol-siswa/${student.siswa_id}`, payload)
+        .put('/api/kontrol-kartu/limit-harian', {
+          subjekTipe: 'SISWA',
+          subjekId: student.siswa_id,
+          nominal: limitEnabled ? nominalLimitNum : null,
+        })
         .catch(() => null)
 
       const updatedStudent: KartuSiswaMock = {
@@ -538,8 +535,8 @@ export function LimitBlokirForm({
     const loadCatalog = async () => {
       try {
         const [catRes, menuRes] = await Promise.all([
-          apiClient.get('/katalog/kategori').catch(() => null),
-          apiClient.get('/katalog/menu').catch(() => null),
+          apiClient.get('/api/katalog/kategori').catch(() => null),
+          apiClient.get('/api/katalog/menu').catch(() => null),
         ])
         if (isMounted) {
           if (catRes?.data?.data && Array.isArray(catRes.data.data)) {

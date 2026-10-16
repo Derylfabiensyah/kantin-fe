@@ -4,7 +4,6 @@ import {
   CheckCircle2,
   AlertTriangle,
   Download,
-  RefreshCw,
   Search,
   Wallet,
   ArrowDownLeft,
@@ -44,23 +43,11 @@ export function LaporanRekonsiliasiPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
 
-  const loadData = async () => {
-    try {
-      setIsLoading(true)
-      const res = await laporanApi.getRekonsiliasi()
-      setData(res)
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Gagal memuat rekonsiliasi'
-      toast.error('Gagal Memuat Laporan', { description: msg })
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   useEffect(() => {
     let isMounted = true
-    const init = async () => {
+    const loadData = async () => {
       try {
+        setIsLoading(true)
         const res = await laporanApi.getRekonsiliasi()
         if (!isMounted) return
         setData(res)
@@ -72,7 +59,7 @@ export function LaporanRekonsiliasiPage() {
         if (isMounted) setIsLoading(false)
       }
     }
-    void init()
+    void loadData()
     return () => {
       isMounted = false
     }
@@ -275,17 +262,6 @@ export function LaporanRekonsiliasiPage() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2.5">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => void loadData()}
-                disabled={isLoading}
-                className="gap-2"
-              >
-                <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-                <span>Segarkan</span>
-              </Button>
-
               <Button
                 variant="default"
                 size="sm"

@@ -315,7 +315,7 @@ export function LaporanRekonsiliasiPage() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center text-center">
                   {/* Sisi Kiri */}
-                  <div className="space-y-1 p-2">
+                  <div className="rounded-xl border-0 bg-card p-4 shadow-xs space-y-1">
                     <p className="text-xs text-muted-foreground font-medium uppercase">
                       Sisi 1: Top-up Bersih
                     </p>
@@ -350,7 +350,7 @@ export function LaporanRekonsiliasiPage() {
                   </div>
 
                   {/* Sisi Kanan */}
-                  <div className="space-y-1 p-2">
+                  <div className="rounded-xl border-0 bg-card p-4 shadow-xs space-y-1">
                     <p className="text-xs text-muted-foreground font-medium uppercase">
                       Sisi 2: Penggunaan & Saldo
                     </p>

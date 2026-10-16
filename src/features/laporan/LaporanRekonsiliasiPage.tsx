@@ -443,7 +443,7 @@ export function LaporanRekonsiliasiPage() {
           </div>
 
           {/* RINCIAN TABEL POS REKONSILIASI & LEDGER */}
-          <Card>
+          <Card className="border-0 shadow-sm">
             <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <CardTitle className="text-base font-bold">
@@ -468,7 +468,7 @@ export function LaporanRekonsiliasiPage() {
             </CardHeader>
 
             <CardContent>
-              <div className="rounded-lg border overflow-hidden">
+              <div className="rounded-lg border-0 overflow-hidden">
                 <Table>
                   <TableHeader className="bg-muted/50">
                     <TableRow>
@@ -504,13 +504,12 @@ export function LaporanRekonsiliasiPage() {
                           </TableCell>
                           <TableCell className="text-center">
                             <Badge
-                              variant="outline"
                               className={
                                 posItem.kategori === 'MASUK'
-                                  ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
+                                  ? 'border-0 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400'
                                   : posItem.kategori === 'KELUAR'
-                                  ? 'border-amber-500 bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300'
-                                  : 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
+                                  ? 'border-0 bg-amber-500/15 text-amber-700 dark:text-amber-400'
+                                  : 'border-0 bg-blue-500/15 text-blue-700 dark:text-blue-400'
                               }
                             >
                               {posItem.kategori}

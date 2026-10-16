@@ -256,19 +256,9 @@ export function LaporanPenjualanPage() {
           {/* Header Action Section */}
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <div className="flex items-center gap-3">
-                <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-xl">
-                  <TrendingUp className="h-5 w-5" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold tracking-tight">
-                    Laporan Penjualan & Laba Kotor
-                  </h1>
-                  <p className="text-muted-foreground text-sm">
-                    Analisis penjualan bersih, total HPP, dan laba kotor per menu, per kategori, per kasir, dan periode tanggal (PRD §9.5).
-                  </p>
-                </div>
-              </div>
+              <h1 className="text-2xl font-bold tracking-tight">
+                Laporan Penjualan & Laba Kotor
+              </h1>
             </div>
 
             <div className="flex items-center gap-2.5">

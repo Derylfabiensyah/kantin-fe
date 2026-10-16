@@ -400,7 +400,7 @@ export function LaporanPenjualanPage() {
 
             {/* TAB CONTENT 1: PENJUALAN PER ITEM */}
             <TabsContent value="item" className="space-y-4">
-              <Card className="border-0 bg-muted/70 dark:bg-muted/30">
+              <Card className="border-0">
                 <CardHeader>
                   <CardTitle className="text-base font-bold">
                     Penjualan & Laba Kotor per Item Menu
@@ -410,7 +410,7 @@ export function LaporanPenjualanPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="rounded-lg border overflow-hidden">
+                  <div className="overflow-hidden rounded-lg">
                     <Table>
                       <TableHeader className="bg-muted/50">
                         <TableRow>
@@ -449,7 +449,7 @@ export function LaporanPenjualanPage() {
                                 {item.nama}
                               </TableCell>
                               <TableCell>
-                                <Badge variant="outline" className="text-xs">
+                                <Badge variant="secondary" className="border-0 text-xs font-normal">
                                   {item.kategoriNama}
                                 </Badge>
                               </TableCell>
@@ -497,7 +497,7 @@ export function LaporanPenjualanPage() {
 
             {/* TAB CONTENT 2: PENJUALAN PER KATEGORI */}
             <TabsContent value="kategori" className="space-y-4">
-              <Card className="border-0 bg-muted/70 dark:bg-muted/30">
+              <Card className="border-0">
                 <CardHeader>
                   <CardTitle className="text-base font-bold">
                     Penjualan & Laba Kotor per Kategori
@@ -507,7 +507,7 @@ export function LaporanPenjualanPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="rounded-lg border overflow-hidden">
+                  <div className="overflow-hidden rounded-lg">
                     <Table>
                       <TableHeader className="bg-muted/50">
                         <TableRow>
@@ -575,7 +575,7 @@ export function LaporanPenjualanPage() {
 
             {/* TAB CONTENT 3: PENJUALAN PER KASIR */}
             <TabsContent value="kasir" className="space-y-4">
-              <Card className="border-0 bg-muted/70 dark:bg-muted/30">
+              <Card className="border-0">
                 <CardHeader>
                   <CardTitle className="text-base font-bold">
                     Penjualan per Titik Kasir & Petugas
@@ -585,7 +585,7 @@ export function LaporanPenjualanPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="rounded-lg border overflow-hidden">
+                  <div className="overflow-hidden rounded-lg">
                     <Table>
                       <TableHeader className="bg-muted/50">
                         <TableRow>

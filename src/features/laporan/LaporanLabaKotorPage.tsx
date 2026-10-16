@@ -295,7 +295,7 @@ export function LaporanLabaKotorPage() {
           </div>
 
           {/* TABEL PROFITABILITAS PER MENU */}
-          <Card className="border-0 bg-muted/70 dark:bg-muted/30">
+          <Card className="border-0">
             <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <CardTitle className="text-base font-bold">
@@ -349,7 +349,7 @@ export function LaporanLabaKotorPage() {
             </CardHeader>
 
             <CardContent>
-              <div className="rounded-lg border overflow-hidden">
+              <div className="overflow-hidden rounded-lg">
                 <Table>
                   <TableHeader className="bg-muted/50">
                     <TableRow>

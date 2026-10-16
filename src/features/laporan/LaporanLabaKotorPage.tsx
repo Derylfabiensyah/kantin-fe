@@ -1,13 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
   Coins,
-  TrendingUp,
   Download,
   RefreshCw,
   Search,
-  Receipt,
-  Percent,
-  Sparkles,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -246,13 +242,10 @@ export function LaporanLabaKotorPage() {
           {/* SUMMARY CARDS GRID */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Card className="border-0 bg-muted/70 dark:bg-muted/30">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Total Laba Kotor
                 </CardTitle>
-                <div className="rounded-lg bg-emerald-500/10 p-2 text-emerald-600">
-                  <TrendingUp className="h-4 w-4" />
-                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold tracking-tight text-emerald-600">
@@ -265,13 +258,10 @@ export function LaporanLabaKotorPage() {
             </Card>
 
             <Card className="border-0 bg-muted/70 dark:bg-muted/30">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Rata-rata Gross Margin
                 </CardTitle>
-                <div className="rounded-lg bg-blue-500/10 p-2 text-blue-600">
-                  <Percent className="h-4 w-4" />
-                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold tracking-tight text-blue-600">
@@ -284,13 +274,10 @@ export function LaporanLabaKotorPage() {
             </Card>
 
             <Card className="border-0 bg-muted/70 dark:bg-muted/30">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Beban Pokok Penjualan (HPP)
                 </CardTitle>
-                <div className="rounded-lg bg-orange-500/10 p-2 text-orange-600">
-                  <Receipt className="h-4 w-4" />
-                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold tracking-tight">
@@ -303,13 +290,10 @@ export function LaporanLabaKotorPage() {
             </Card>
 
             <Card className="border-0 bg-muted/70 dark:bg-muted/30">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Menu Juara Laba
                 </CardTitle>
-                <div className="rounded-lg bg-purple-500/10 p-2 text-purple-600">
-                  <Sparkles className="h-4 w-4" />
-                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-base font-bold tracking-tight truncate">

@@ -25,6 +25,7 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { formatRupiah } from '@/lib/formatters'
 import { PrintSlipModal, type TopupSlipData } from './PrintSlipModal'
 import { StudentSearchCard } from './StudentSearchCard'
 
@@ -151,9 +152,9 @@ export function TopupTunaiPage() {
 
       if (result) {
         toast.success(
-          `Top-up Rp ${nominalNum.toLocaleString('id-ID')} berhasil!`,
+          `Top-up ${formatRupiah(nominalNum)} berhasil!`,
           {
-            description: `Saldo baru ${currentStudent.nama}: Rp ${result.saldo_baru.toLocaleString('id-ID')}`,
+            description: `Saldo baru ${currentStudent.nama}: ${formatRupiah(result.saldo_baru)}`,
           }
         )
 
@@ -193,7 +194,7 @@ export function TopupTunaiPage() {
     <>
       <Header fixed>
         <Search showKbd={false} />
-        <div className='ml-auto flex items-center space-x-4'>
+        <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
         </div>
@@ -256,7 +257,7 @@ export function TopupTunaiPage() {
                 Batas Saldo Maksimal
               </p>
               <h3 className='mt-0.5 text-xl font-bold text-foreground'>
-                Rp {MAX_SALDO_SEKOLAH.toLocaleString('id-ID')}
+                {formatRupiah(MAX_SALDO_SEKOLAH)}
               </h3>
             </CardContent>
           </Card>
@@ -307,7 +308,7 @@ export function TopupTunaiPage() {
                           }`}
                           onClick={() => handleSelectPreset(preset)}
                         >
-                          Rp {preset.toLocaleString('id-ID')}
+                          {formatRupiah(preset)}
                         </Button>
                       ))}
                     </div>
@@ -367,13 +368,13 @@ export function TopupTunaiPage() {
                           <div className='flex justify-between text-muted-foreground'>
                             <span>Saldo Siswa saat ini:</span>
                             <span className='font-mono font-medium text-foreground'>
-                              Rp {saldoSaatIni.toLocaleString('id-ID')}
+                              {formatRupiah(saldoSaatIni)}
                             </span>
                           </div>
                           <div className='flex justify-between font-medium text-emerald-600 dark:text-emerald-400'>
                             <span>Nominal Top-up (+):</span>
                             <span className='font-mono font-bold'>
-                              Rp {nominalNum.toLocaleString('id-ID')}
+                              {formatRupiah(nominalNum)}
                             </span>
                           </div>
                           <div className='flex justify-between border-t border-border pt-2 text-base font-bold text-foreground'>
@@ -385,7 +386,7 @@ export function TopupTunaiPage() {
                                   : 'text-emerald-600 dark:text-emerald-400'
                               }`}
                             >
-                              Rp {saldoBaru.toLocaleString('id-ID')}
+                              {formatRupiah(saldoBaru)}
                             </span>
                           </div>
                         </div>
@@ -404,12 +405,12 @@ export function TopupTunaiPage() {
                           <AlertDescription className='mt-1 text-xs leading-relaxed'>
                             Saldo baru (
                             <strong>
-                              Rp {saldoBaru.toLocaleString('id-ID')}
+                              {formatRupiah(saldoBaru)}
                             </strong>
                             ) melampaui batas maksimum yang diizinkan sekolah
                             sebesar{' '}
                             <strong>
-                              Rp {MAX_SALDO_SEKOLAH.toLocaleString('id-ID')}
+                              {formatRupiah(MAX_SALDO_SEKOLAH)}
                             </strong>
                             . Kurangi nominal top-up.
                           </AlertDescription>

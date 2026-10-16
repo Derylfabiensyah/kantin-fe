@@ -10,6 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { formatRupiah } from '@/lib/formatters'
 import {
   Card,
   CardContent,
@@ -158,7 +159,7 @@ export function StudentSearchCard({
                         </div>
                         <div className='flex items-center gap-2'>
                           <span className='text-xs font-semibold text-emerald-600 dark:text-emerald-400'>
-                            Rp {student.saldo.toLocaleString('id-ID')}
+                            {formatRupiah(student.saldo)}
                           </span>
                           {selectedStudent?.siswa_id === student.siswa_id && (
                             <Check className='h-4 w-4 text-primary' />
@@ -287,7 +288,7 @@ export function StudentSearchCard({
                   <div>
                     <span className='text-muted-foreground'>Limit Harian:</span>{' '}
                     <span className='font-medium text-foreground'>
-                      Rp {selectedStudent.limit_harian.toLocaleString('id-ID')}
+                      {formatRupiah(selectedStudent.limit_harian)}
                     </span>
                   </div>
                 </div>
@@ -299,7 +300,7 @@ export function StudentSearchCard({
                 Saldo Saat Ini
               </span>
               <span className='font-mono text-xl font-bold text-emerald-600 dark:text-emerald-400'>
-                Rp {selectedStudent.saldo.toLocaleString('id-ID')}
+                {formatRupiah(selectedStudent.saldo)}
               </span>
             </div>
           </div>

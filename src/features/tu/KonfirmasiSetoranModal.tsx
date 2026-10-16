@@ -14,6 +14,7 @@ import apiClient from '@/lib/api-client'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { formatRupiah } from '@/lib/formatters'
 import {
   Dialog,
   DialogContent,
@@ -121,7 +122,7 @@ function KonfirmasiSetoranFormContent({
           catatan.trim() ||
           (selisih === 0
             ? 'Uang fisik pas sesuai total sistem'
-            : `Selisih kas ${selisih < 0 ? 'kurang' : 'lebih'} Rp ${Math.abs(selisih).toLocaleString('id-ID')}`),
+            : `Selisih kas ${selisih < 0 ? 'kurang' : 'lebih'} ${formatRupiah(Math.abs(selisih))}`),
         bendahara_nama: bendaharaNama,
         konfirmasi_pada: new Date().toISOString(),
       }
@@ -129,7 +130,7 @@ function KonfirmasiSetoranFormContent({
       toast.success(
         selisih === 0
           ? 'Setoran kas fisik berhasil dikonfirmasi (Kas Pas)!'
-          : `Setoran kas berhasil dikonfirmasi dengan catatan selisih Rp ${selisih.toLocaleString('id-ID')}`
+          : `Setoran kas berhasil dikonfirmasi dengan catatan selisih ${formatRupiah(selisih)}`
       )
 
       onSuccess?.(updatedData)
@@ -174,8 +175,8 @@ function KonfirmasiSetoranFormContent({
               Jml Transaksi Top-up:
             </span>
             <span className='font-medium text-foreground'>
-              {setoran.total_transaksi} Transaksi (Siswa: Rp{' '}
-              {setoran.total_topup_siswa.toLocaleString('id-ID')})
+              {setoran.total_transaksi} Transaksi (Siswa:{' '}
+              {formatRupiah(setoran.total_topup_siswa)})
             </span>
           </div>
           <div>
@@ -183,7 +184,7 @@ function KonfirmasiSetoranFormContent({
               Top-up Kartu Tamu:
             </span>
             <span className='font-medium text-foreground'>
-              Rp {setoran.total_topup_kartu_tamu.toLocaleString('id-ID')}
+              {formatRupiah(setoran.total_topup_kartu_tamu)}
             </span>
           </div>
         </div>
@@ -198,7 +199,7 @@ function KonfirmasiSetoranFormContent({
             </p>
           </div>
           <span className='font-mono text-lg font-bold text-primary'>
-            Rp {totalSistem.toLocaleString('id-ID')}
+            {formatRupiah(totalSistem)}
           </span>
         </div>
       </div>
@@ -304,26 +305,24 @@ function KonfirmasiSetoranFormContent({
               className='gap-1 border-0 bg-destructive/15 text-xs font-medium text-destructive'
             >
               <AlertTriangle className='h-3.5 w-3.5' />
-              Defisit Kas Fisik (-Rp {Math.abs(selisih).toLocaleString('id-ID')}
-              )
+              Defisit Kas Fisik (-{formatRupiah(Math.abs(selisih))})
             </Badge>
           ) : (
             <Badge
               className='gap-1 border-0 bg-blue-500/15 text-xs font-medium text-blue-700 dark:text-blue-400'
             >
               <Info className='h-3.5 w-3.5' />
-              Surplus Kas Fisik (+Rp {selisih.toLocaleString('id-ID')})
+              Surplus Kas Fisik (+{formatRupiah(selisih)})
             </Badge>
           )}
         </div>
 
         <div className='flex items-center justify-between border-t border-border pt-1 text-xs'>
           <span className='text-muted-foreground'>
-            Total Sistem: Rp {totalSistem.toLocaleString('id-ID')}
+            Total Sistem: {formatRupiah(totalSistem)}
           </span>
           <span className='font-mono text-muted-foreground'>
-            Selisih: {selisih >= 0 ? '+' : ''}Rp{' '}
-            {selisih.toLocaleString('id-ID')}
+            Selisih: {selisih >= 0 ? '+' : ''}{formatRupiah(selisih)}
           </span>
         </div>
       </div>

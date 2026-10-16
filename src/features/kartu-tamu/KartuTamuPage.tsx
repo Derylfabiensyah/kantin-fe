@@ -16,6 +16,7 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search as SearchComp } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { formatRupiah } from '@/lib/formatters'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -220,16 +221,15 @@ export function KartuTamuPage() {
     <>
       <Header fixed>
         <SearchComp showKbd={false} />
-        <div className='ml-auto flex items-center space-x-4'>
+        <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
         </div>
       </Header>
 
-      <Main>
-        <div className='space-y-6 pb-10'>
-          {/* Page Header */}
-          <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
+      <Main className='space-y-6 pb-10'>
+        {/* Page Header */}
+        <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
             <div>
               <h1 className='text-2xl font-bold tracking-tight text-foreground'>
                 Manajemen Kartu Tamu
@@ -282,7 +282,7 @@ export function KartuTamuPage() {
                   Total Saldo Mengendap
                 </p>
                 <h3 className='mt-0.5 text-xl font-bold text-foreground'>
-                  Rp {totalSaldo.toLocaleString('id-ID')}
+                  {formatRupiah(totalSaldo)}
                 </h3>
                 <p className='mt-1 text-[11px] text-muted-foreground'>
                   Akumulasi saldo tamu aktif
@@ -345,7 +345,7 @@ export function KartuTamuPage() {
             <div className='overflow-x-auto'>
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className='bg-muted/40'>
                     <TableHead className='text-xs font-medium w-[110px]'>
                       No. Kartu
                     </TableHead>
@@ -430,7 +430,7 @@ export function KartuTamuPage() {
                                 : 'text-muted-foreground'
                             }`}
                           >
-                            Rp {card.saldo.toLocaleString('id-ID')}
+                            {formatRupiah(card.saldo)}
                           </span>
                         </TableCell>
 
@@ -577,7 +577,6 @@ export function KartuTamuPage() {
               })}
             </div>
           </div>
-        </div>
       </Main>
 
       {/* Modals */}

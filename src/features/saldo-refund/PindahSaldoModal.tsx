@@ -200,7 +200,7 @@ function PindahSaldoFormContent({
       toast.success(
         `Pemindahan saldo ke ${targetSibling.nama} berhasil secara atomik!`,
         {
-          description: `Saldo Rp ${nominalTransfer.toLocaleString('id-ID')} masuk ke akun adik/saudara. Kartu RFID lama ${siswaAsal.nama} otomatis diblokir permanen.`,
+          description: `Saldo ${formatRupiah(nominalTransfer)} masuk ke akun adik/saudara. Kartu RFID lama ${siswaAsal.nama} otomatis diblokir permanen.`,
         }
       )
 

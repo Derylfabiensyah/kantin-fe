@@ -245,9 +245,9 @@ export function RefundSiswaKeluarPage() {
 
   return (
     <>
-      <Header>
+      <Header fixed>
         <SearchComp showKbd={false} />
-        <div className='ml-auto flex items-center space-x-4'>
+        <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
         </div>
@@ -296,7 +296,7 @@ export function RefundSiswaKeluarPage() {
 
         {/* KPI Cards Ringkasan */}
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
+          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
             <CardHeader className='pb-2'>
               <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Dana Titipan Mengendap
@@ -310,7 +310,7 @@ export function RefundSiswaKeluarPage() {
             </CardContent>
           </Card>
 
-          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
+          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
             <CardHeader className='pb-2'>
               <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Menunggu Refund / Pindah
@@ -324,7 +324,7 @@ export function RefundSiswaKeluarPage() {
             </CardContent>
           </Card>
 
-          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
+          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
             <CardHeader className='pb-2'>
               <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Selesai Diproses
@@ -338,7 +338,7 @@ export function RefundSiswaKeluarPage() {
             </CardContent>
           </Card>
 
-          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
+          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
             <CardHeader className='pb-2'>
               <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Kartu RFID Diamankan

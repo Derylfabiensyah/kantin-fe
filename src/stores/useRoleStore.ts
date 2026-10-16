@@ -42,6 +42,16 @@ export const ROLE_CONFIGS: Record<UserRole, RoleConfig> = {
   },
 }
 
+function getStoredUser() {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = localStorage.getItem('kantin_user')
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
+
 interface RoleStoreState {
   currentRole: UserRole
   schoolName: string
@@ -52,16 +62,22 @@ interface RoleStoreState {
   setRole: (role: UserRole) => void
   setModuleStatus: (status: 'ONLINE' | 'STANDALONE' | 'MAINTENANCE') => void
   setSchoolName: (name: string) => void
+  setUserName: (name: string) => void
+  setUserEmail: (email: string) => void
 }
 
+const storedUser = getStoredUser()
+
 export const useRoleStore = create<RoleStoreState>((set) => ({
-  currentRole: 'admin', // Default admin untuk akses luas
-  schoolName: 'PAUD SKOOLIA',
+  currentRole: (storedUser?.currentRole as UserRole) || 'admin',
+  schoolName: storedUser?.sekolahNama || 'PAUD SKOOLIA',
   canteenName: 'Kantin SKOOLIA',
   moduleStatus: 'ONLINE',
-  userName: 'Deryl Fabiensyah',
-  userEmail: 'derylfabiensyah@skoolia.id',
+  userName: storedUser?.nama || '',
+  userEmail: storedUser?.email || '',
   setRole: (role) => set({ currentRole: role }),
   setModuleStatus: (status) => set({ moduleStatus: status }),
   setSchoolName: (name) => set({ schoolName: name }),
+  setUserName: (name) => set({ userName: name }),
+  setUserEmail: (email) => set({ userEmail: email }),
 }))

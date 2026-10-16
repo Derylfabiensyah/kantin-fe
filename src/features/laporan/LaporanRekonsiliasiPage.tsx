@@ -309,7 +309,7 @@ export function LaporanRekonsiliasiPage() {
             <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-semibold tracking-wide uppercase text-muted-foreground">
-                  Rumus Invariant Saldo
+                  Invariant Saldo
                 </CardTitle>
               </CardHeader>
               <CardContent>

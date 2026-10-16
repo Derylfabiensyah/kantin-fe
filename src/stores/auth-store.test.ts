@@ -55,16 +55,22 @@ describe('useAuthStore', () => {
     expect(useAuthStoreAfterReload.getState().auth.accessToken).toBe('')
   })
 
-  it('updates the signed-in user via setUser', async () => {
+  it('updates the signed-in user via setUser and syncs with useRoleStore', async () => {
     const useAuthStore = await importAuthStore()
+    const { useRoleStore } = await import('./useRoleStore')
 
     useAuthStore.getState().auth.setUser({ ...sampleUser })
 
     expect(useAuthStore.getState().auth.user).toEqual(sampleUser)
+    expect(useRoleStore.getState().userName).toBe(sampleUser.nama)
+    expect(useRoleStore.getState().userEmail).toBe(sampleUser.email)
+    expect(useRoleStore.getState().schoolName).toBe(sampleUser.sekolahNama)
+    expect(useRoleStore.getState().currentRole).toBe(sampleUser.currentRole)
   })
 
   it('reset clears user and access token and drops persistence', async () => {
     const useAuthStore = await importAuthStore()
+    const { useRoleStore } = await import('./useRoleStore')
     useAuthStore.getState().auth.setAccessToken('will-be-cleared')
     useAuthStore.getState().auth.setUser({ ...sampleUser })
 
@@ -72,6 +78,8 @@ describe('useAuthStore', () => {
 
     expect(useAuthStore.getState().auth.user).toBeNull()
     expect(useAuthStore.getState().auth.accessToken).toBe('')
+    expect(useRoleStore.getState().userName).toBe('')
+    expect(useRoleStore.getState().userEmail).toBe('')
 
     vi.resetModules()
     const useAuthStoreAfterReload = await importAuthStore()

@@ -306,7 +306,7 @@ export function LaporanRekonsiliasiPage() {
 
           {/* INVARIANT FORMULA EVALUATION CARD */}
           {data && (
-            <Card className="border-0 shadow-sm bg-linear-to-r from-primary/5 via-card to-background">
+            <Card className="border-0 shadow-sm bg-card">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-semibold tracking-wide uppercase text-muted-foreground flex items-center justify-between">
                   <span>Rumus Invariant Saldo (PRD §5)</span>

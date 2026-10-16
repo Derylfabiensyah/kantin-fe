@@ -182,7 +182,7 @@ export function LaporanKerugianStokPage() {
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">
-              Pusat Laporan Keuangan
+              Laporan Keuangan
             </span>
             <span className="text-muted-foreground text-xs">/</span>
             <span className="text-xs font-medium">Kerugian Stok</span>
@@ -194,7 +194,7 @@ export function LaporanKerugianStokPage() {
         </div>
       </Header>
 
-      <Main fixed>
+      <Main>
         <div className="space-y-6 pb-12">
           {/* Header Action Section */}
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

@@ -375,7 +375,7 @@ export function KartuStokPage() {
         </div>
 
         {/* Filter & Selector Bar */}
-        <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
+        <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
           <CardContent className='p-4 sm:p-5 flex flex-col gap-4 sm:gap-5'>
             <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
               {/* Menu Item Selector */}
@@ -523,7 +523,7 @@ export function KartuStokPage() {
         {/* Selected Menu KPI Card Grid */}
         <div className='grid grid-cols-2 md:grid-cols-5 gap-3.5'>
           {/* 1. Saldo Berjalan Saat Ini */}
-          <Card className='relative overflow-hidden border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
+          <Card className='relative overflow-hidden border-0 bg-muted/70 dark:bg-muted/30'>
             <CardHeader className='pb-2 pt-4 px-4'>
               <CardDescription className='text-xs font-medium'>
                 Stok Berjalan Saat Ini
@@ -564,7 +564,7 @@ export function KartuStokPage() {
           </Card>
 
           {/* 2. Total Masuk Periode */}
-          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardHeader className='pb-2 pt-4 px-4'>
               <CardDescription className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>
                 Total Masuk
@@ -579,7 +579,7 @@ export function KartuStokPage() {
           </Card>
 
           {/* 3. Total Keluar Periode */}
-          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardHeader className='pb-2 pt-4 px-4'>
               <CardDescription className='text-xs font-medium text-rose-600 dark:text-rose-400'>
                 Total Keluar
@@ -594,7 +594,7 @@ export function KartuStokPage() {
           </Card>
 
           {/* 4. Snapshot HPP */}
-          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardHeader className='pb-2 pt-4 px-4'>
               <CardDescription className='text-xs font-medium'>
                 Snapshot HPP Terkini
@@ -609,7 +609,7 @@ export function KartuStokPage() {
           </Card>
 
           {/* 5. Valuasi Nilai Persediaan */}
-          <Card className='col-span-2 md:col-span-1 border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'>
+          <Card className='col-span-2 md:col-span-1 border-0 bg-muted/70 dark:bg-muted/30'>
             <CardHeader className='pb-2 pt-4 px-4'>
               <CardDescription className='text-xs font-medium'>
                 Total Nilai Stok Item
@@ -692,7 +692,7 @@ export function KartuStokPage() {
 
           {/* TAB 1: Tabel Mutasi */}
           <TabsContent value='table' className='space-y-4 m-0'>
-            <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-sm'>
+            <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
               <CardContent className='p-0'>
                 <div className='overflow-x-auto'>
                   <Table>

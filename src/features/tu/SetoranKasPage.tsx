@@ -303,7 +303,7 @@ export function SetoranKasPage() {
 
         {/* Top KPI Cards */}
         <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardContent className='p-4'>
               <p className='text-xs font-medium text-muted-foreground'>
                 Total Sistem (Penerimaan TU)
@@ -319,7 +319,7 @@ export function SetoranKasPage() {
             </CardContent>
           </Card>
 
-          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardContent className='p-4'>
               <p className='text-xs font-medium text-muted-foreground'>
                 Total Uang Fisik Disetor
@@ -333,7 +333,7 @@ export function SetoranKasPage() {
             </CardContent>
           </Card>
 
-          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardContent className='p-4'>
               <p className='text-xs font-medium text-muted-foreground'>
                 Akumulasi Selisih Kas Fisik
@@ -360,7 +360,7 @@ export function SetoranKasPage() {
             </CardContent>
           </Card>
 
-          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardContent className='p-4'>
               <p className='text-xs font-medium text-muted-foreground'>
                 Status Konfirmasi Setoran
@@ -379,7 +379,7 @@ export function SetoranKasPage() {
         </div>
 
         {/* Filter Bar */}
-        <Card className='border border-border bg-card shadow-xs'>
+        <Card className='border border-border bg-card'>
           <CardContent className='p-4'>
             <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
               <div className='flex flex-1 flex-wrap items-center gap-3'>
@@ -454,7 +454,7 @@ export function SetoranKasPage() {
         </Card>
 
         {/* Rekapitulasi Table */}
-        <Card className='overflow-hidden border border-border bg-card shadow-xs'>
+        <Card className='overflow-hidden border border-border bg-card'>
           <CardHeader className='border-b bg-muted/20 px-6 py-4'>
             <div className='flex items-center justify-between'>
               <div>
@@ -656,7 +656,7 @@ export function SetoranKasPage() {
                                       setSelectedSetoranForConfirm(item)
                                       setIsConfirmModalOpen(true)
                                     }}
-                                    className='h-7 gap-1 bg-emerald-600 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700'
+                                    className='h-7 gap-1 bg-emerald-600 text-xs font-semibold text-white hover:bg-emerald-700'
                                   >
                                     <CheckCircle2 className='h-3.5 w-3.5' />
                                     Konfirmasi

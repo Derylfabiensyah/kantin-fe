@@ -164,7 +164,7 @@ export function KategoriPage() {
               <RefreshCw className={`size-3.5 ${loading ? 'animate-spin' : ''}`} />
               Segarkan
             </Button>
-            <Button size='sm' onClick={handleAdd} className='gap-1.5 shadow-xs'>
+            <Button size='sm' onClick={handleAdd} className='gap-1.5'>
               <Plus className='size-4' />
               Tambah Kategori
             </Button>
@@ -173,7 +173,7 @@ export function KategoriPage() {
 
         {/* Ringkasan Widget */}
         <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
-          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardContent className='p-4'>
               <p className='text-xs font-medium text-muted-foreground'>Total Kategori</p>
               <h3 className='mt-0.5 text-xl font-bold text-foreground'>{stats.total}</h3>
@@ -181,7 +181,7 @@ export function KategoriPage() {
             </CardContent>
           </Card>
 
-          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardContent className='p-4'>
               <p className='text-xs font-medium text-muted-foreground'>Kategori Aktif</p>
               <h3 className='mt-0.5 text-xl font-bold text-emerald-600 dark:text-emerald-400'>
@@ -191,7 +191,7 @@ export function KategoriPage() {
             </CardContent>
           </Card>
 
-          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardContent className='p-4'>
               <p className='text-xs font-medium text-muted-foreground'>Nonaktif</p>
               <h3 className='mt-0.5 text-xl font-bold text-muted-foreground'>
@@ -203,7 +203,7 @@ export function KategoriPage() {
         </div>
 
         {/* Search & Table Card */}
-        <Card className='border border-border bg-card shadow-xs'>
+        <Card className='border border-border bg-card'>
           <div className='p-4 border-b flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3'>
             <div className='relative w-full sm:w-72'>
               <Search className='absolute left-2.5 top-2.5 size-4 text-muted-foreground' />

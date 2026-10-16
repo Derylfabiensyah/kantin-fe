@@ -31,7 +31,7 @@ export function KasirWelcomePage() {
 
   return (
     <div className='flex h-full w-full items-center justify-center p-6 bg-muted/20'>
-      <Card className='max-w-2xl w-full shadow-lg border-primary/20'>
+      <Card className='max-w-2xl w-full border-primary/20'>
         <CardHeader className='text-center pb-2'>
           <div className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary'>
             <Store className='h-8 w-8' />

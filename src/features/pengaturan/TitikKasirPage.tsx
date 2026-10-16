@@ -250,7 +250,7 @@ export const TitikKasirPage: React.FC = () => {
 
           {/* Metric KPI Cards */}
           <div className='grid gap-4 grid-cols-2 md:grid-cols-4'>
-            <Card className='border-0 shadow-sm'>
+            <Card className='border-0'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium'>
                   Total Perangkat
@@ -264,7 +264,7 @@ export const TitikKasirPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className='border-0 shadow-sm'>
+            <Card className='border-0'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium'>
                   Titik Kasir Aktif
@@ -278,7 +278,7 @@ export const TitikKasirPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className='border-0 shadow-sm'>
+            <Card className='border-0'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium'>
                   Nonaktif / Perawatan
@@ -292,7 +292,7 @@ export const TitikKasirPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className='border-0 shadow-sm'>
+            <Card className='border-0'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium'>
                   Kasir POS Aktif
@@ -318,7 +318,7 @@ export const TitikKasirPage: React.FC = () => {
           </div>
 
           {/* Main Card: Tabel Titik Kasir */}
-          <Card className='shadow-xs'>
+          <Card>
             <CardHeader className='border-b bg-card/50 pb-4'>
               <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
                 <div>

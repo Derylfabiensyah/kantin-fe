@@ -290,7 +290,7 @@ export function LaporanRiwayatSiswaPage() {
                 size="sm"
                 onClick={handleExportExcel}
                 disabled={isLoading || !profil}
-                className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
+                className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
               >
                 <Download className="h-4 w-4" />
                 <span>Ekspor Excel (.xlsx)</span>
@@ -337,7 +337,7 @@ export function LaporanRiwayatSiswaPage() {
                   </div>
 
                   <div className="flex flex-wrap items-center gap-4 border-t pt-4 md:border-t-0 md:pt-0">
-                    <div className="rounded-xl border bg-card px-4 py-2.5 text-center shadow-2xs">
+                    <div className="rounded-xl border bg-card px-4 py-2.5 text-center">
                       <p className="text-[11px] font-medium text-muted-foreground uppercase">
                         Saldo Berjalan
                       </p>
@@ -346,7 +346,7 @@ export function LaporanRiwayatSiswaPage() {
                       </p>
                     </div>
 
-                    <div className="rounded-xl border bg-card px-4 py-2.5 text-center shadow-2xs">
+                    <div className="rounded-xl border bg-card px-4 py-2.5 text-center">
                       <p className="text-[11px] font-medium text-muted-foreground uppercase">
                         Belanja Hari Ini
                       </p>
@@ -355,7 +355,7 @@ export function LaporanRiwayatSiswaPage() {
                       </p>
                     </div>
 
-                    <div className="rounded-xl border bg-card px-4 py-2.5 text-center shadow-2xs">
+                    <div className="rounded-xl border bg-card px-4 py-2.5 text-center">
                       <p className="text-[11px] font-medium text-muted-foreground uppercase">
                         Limit Harian
                       </p>

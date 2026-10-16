@@ -132,7 +132,7 @@ export function KartuTamuSlipModal({
 
         {/* Receipt Wrapper */}
         <div className='p-5 bg-muted/40 flex justify-center no-print-bg'>
-          <div className='printable-slip w-full bg-white text-slate-900 border border-slate-300 rounded-xl p-5 shadow-sm space-y-4 font-mono text-xs'>
+          <div className='printable-slip w-full bg-white text-slate-900 border border-slate-300 rounded-xl p-5 space-y-4 font-mono text-xs'>
 
             {/* Header Nota */}
             <div className='text-center space-y-1 pb-3 print-border-dashed border-b border-dashed border-slate-300'>

@@ -251,7 +251,7 @@ export function LaporanRekonsiliasiPage() {
                 size="sm"
                 onClick={handleExportExcel}
                 disabled={isLoading || !data}
-                className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
+                className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
               >
                 <Download className="h-4 w-4" />
                 <span>Ekspor Excel (.xlsx)</span>
@@ -263,11 +263,11 @@ export function LaporanRekonsiliasiPage() {
           {data && !data.seimbang && (
             <div
               data-testid="banner-peringatan-selisih"
-              className="relative overflow-hidden rounded-xl border-2 border-red-600 bg-red-50 p-6 text-red-950 shadow-xl dark:border-red-500 dark:bg-red-950/80 dark:text-red-100"
+              className="relative overflow-hidden rounded-xl border-2 border-red-600 bg-red-50 p-6 text-red-950 dark:border-red-500 dark:bg-red-950/80 dark:text-red-100"
             >
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-600 text-white shadow-md">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-600 text-white">
                     <ShieldAlert className="h-7 w-7 animate-pulse" />
                   </div>
                   <div className="space-y-1">
@@ -294,7 +294,7 @@ export function LaporanRekonsiliasiPage() {
                       <span className="rounded-md bg-red-200/80 px-2.5 py-1 font-medium text-red-900 dark:bg-red-900/60 dark:text-red-200">
                         Total Penggunaan: {formatRupiah(data.totalPenggunaan)}
                       </span>
-                      <span className="rounded-md bg-red-600 px-2.5 py-1 font-bold text-white shadow-xs">
+                      <span className="rounded-md bg-red-600 px-2.5 py-1 font-bold text-white">
                         Perlu Investigasi Bendahara & TU
                       </span>
                     </div>
@@ -306,7 +306,7 @@ export function LaporanRekonsiliasiPage() {
 
           {/* INVARIANT FORMULA EVALUATION CARD */}
           {data && (
-            <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-semibold tracking-wide uppercase text-muted-foreground">
                   Invariant Saldo
@@ -315,7 +315,7 @@ export function LaporanRekonsiliasiPage() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center text-center">
                   {/* Sisi Kiri */}
-                  <div className="rounded-xl border-0 bg-card p-4 shadow-xs space-y-1">
+                  <div className="rounded-xl border-0 bg-card p-4 space-y-1">
                     <p className="text-xs text-muted-foreground font-medium uppercase">
                       Sisi 1: Top-up Bersih
                     </p>
@@ -350,7 +350,7 @@ export function LaporanRekonsiliasiPage() {
                   </div>
 
                   {/* Sisi Kanan */}
-                  <div className="rounded-xl border-0 bg-card p-4 shadow-xs space-y-1">
+                  <div className="rounded-xl border-0 bg-card p-4 space-y-1">
                     <p className="text-xs text-muted-foreground font-medium uppercase">
                       Sisi 2: Penggunaan & Saldo
                     </p>
@@ -368,7 +368,7 @@ export function LaporanRekonsiliasiPage() {
 
           {/* METRIC SUMMARY CARDS GRID */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30">
               <CardHeader className="p-4 pb-1">
                 <CardTitle className="text-xs font-medium text-muted-foreground">
                   Total Top-up Masuk
@@ -385,7 +385,7 @@ export function LaporanRekonsiliasiPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30">
               <CardHeader className="p-4 pb-1">
                 <CardTitle className="text-xs font-medium text-muted-foreground">
                   Penjualan Bersih
@@ -402,7 +402,7 @@ export function LaporanRekonsiliasiPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30">
               <CardHeader className="p-4 pb-1">
                 <CardTitle className="text-xs font-medium text-muted-foreground">
                   Saldo Mengendap (Kewajiban)
@@ -419,7 +419,7 @@ export function LaporanRekonsiliasiPage() {
               </CardContent>
             </Card>
 
-            <Card className={data && !data.seimbang ? 'border-0 bg-red-500/10 dark:bg-red-950/30 shadow-sm transition-all hover:shadow-md' : 'border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'}>
+            <Card className={data && !data.seimbang ? 'border-0 bg-red-500/10 dark:bg-red-950/30' : 'border-0 bg-muted/70 dark:bg-muted/30'}>
               <CardHeader className="p-4 pb-1">
                 <CardTitle className="text-xs font-medium text-muted-foreground">
                   Status Rekonsiliasi
@@ -443,7 +443,7 @@ export function LaporanRekonsiliasiPage() {
           </div>
 
           {/* RINCIAN TABEL POS REKONSILIASI & LEDGER */}
-          <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
+          <Card className="border-0 bg-muted/70 dark:bg-muted/30">
             <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <CardTitle className="text-base font-bold">

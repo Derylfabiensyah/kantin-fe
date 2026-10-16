@@ -228,7 +228,7 @@ export function KontrolSiswaPage() {
 
         {/* KPI Cards Ringkasan */}
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardHeader className='pb-2'>
               <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Total Siswa Terdaftar
@@ -242,7 +242,7 @@ export function KontrolSiswaPage() {
             </CardContent>
           </Card>
 
-          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardHeader className='pb-2'>
               <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Ortu Belum Pakai App
@@ -257,7 +257,7 @@ export function KontrolSiswaPage() {
             </CardContent>
           </Card>
 
-          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardHeader className='pb-2'>
               <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Limit Belanja Aktif
@@ -272,7 +272,7 @@ export function KontrolSiswaPage() {
             </CardContent>
           </Card>
 
-          <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardHeader className='pb-2'>
               <CardDescription className='text-xs font-semibold text-muted-foreground uppercase tracking-wider'>
                 Larangan Menu Aktif
@@ -289,7 +289,7 @@ export function KontrolSiswaPage() {
         </div>
 
         {/* Toolbar Pencarian & Filter */}
-        <Card className='shadow-xs'>
+        <Card>
           <CardContent className='p-4'>
             <div className='flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3'>
               <div className='relative flex-1'>
@@ -345,7 +345,7 @@ export function KontrolSiswaPage() {
         </Card>
 
         {/* Tabel Siswa */}
-        <Card className='shadow-xs'>
+        <Card>
           <CardContent className='p-0'>
             <div className='overflow-x-auto'>
               <Table>

@@ -152,7 +152,7 @@ export function StokOpnamePage() {
               size="sm"
               variant="destructive"
               onClick={() => setIsQuickDamageModalOpen(true)}
-              className="h-8 gap-1.5 text-xs text-white font-semibold shadow-sm"
+              className="h-8 gap-1.5 text-xs text-white font-semibold"
             >
               <PlusCircle className="h-3.5 w-3.5" />
               Catat Barang Rusak

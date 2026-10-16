@@ -71,7 +71,7 @@ export function KasirLayout() {
       <header className='flex h-14 shrink-0 items-center justify-between border-b px-4 bg-card/60 backdrop-blur'>
         {/* Sisi Kiri: Branding & Titik Kasir */}
         <div className='flex items-center gap-3'>
-          <div className='flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold shadow-sm'>
+          <div className='flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold'>
             <Store className='h-5 w-5' />
           </div>
           <div>

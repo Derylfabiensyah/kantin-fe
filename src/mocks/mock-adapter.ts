@@ -1271,32 +1271,58 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
     }
 
-    // --- 6. TU: Pencarian Siswa & Kartu Tamu (Backend-aligned /api/kartu-tamu) ---
+    // --- 6. TU: Pencarian Siswa & Kartu Tamu / Kandidat Saldo ---
     if (
-      (url.includes('/api/v1/tu/siswa') || url.includes('/api/tu/siswa')) &&
+      (url.includes('/api/saldo/refund/kandidat') ||
+        url.includes('/api/v1/tu/siswa') ||
+        url.includes('/api/tu/siswa')) &&
       method === 'get'
     ) {
+      const urlObj = new URL(url, 'http://localhost')
+      const isTidakAktif =
+        urlObj.searchParams.get('hanyaTidakAktif') === 'true' ||
+        params?.hanyaTidakAktif === true ||
+        params?.hanyaTidakAktif === 'true'
+
+      if (isTidakAktif) {
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            message: 'Berhasil mengambil daftar siswa nonaktif',
+            data: siswaNonaktifList,
+          },
+        }
+      }
+
       return {
         status: 200,
         data: {
           code: 200,
           status: 'SUCCESS',
+          message: 'Berhasil mengambil daftar siswa',
           data: siswaList,
         },
       }
     }
 
     // --- 7. TU: Setoran Kas TU Harian ---
-    // GET /api/v1/tu/setoran or /api/tu/setoran
+    // GET /api/saldo/setoran-tu/rekap, /api/saldo/setoran-tu, /api/v1/tu/setoran, or /api/tu/setoran
     if (
-      (url.includes('/api/v1/tu/setoran') || url.includes('/api/tu/setoran')) &&
+      (url.includes('/api/saldo/setoran-tu') ||
+        url.includes('/api/v1/tu/setoran') ||
+        url.includes('/api/tu/setoran')) &&
       !url.includes('/konfirmasi') &&
       method === 'get'
     ) {
       const urlObj = new URL(url, 'http://localhost')
-      const tanggalParam = urlObj.searchParams.get('tanggal')
-      const petugasIdParam = urlObj.searchParams.get('petugasId')
-      const statusParam = urlObj.searchParams.get('status')
+      const tanggalParam =
+        urlObj.searchParams.get('tanggal') || (params?.tanggal as string)
+      const petugasIdParam =
+        urlObj.searchParams.get('petugasId') || (params?.petugasId as string)
+      const statusParam =
+        urlObj.searchParams.get('status') || (params?.status as string)
 
       let filtered = [...setoranKasList]
       if (tanggalParam) {
@@ -1322,29 +1348,46 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
     }
 
-    // POST /api/v1/tu/setoran/konfirmasi or /api/tu/setoran/konfirmasi or /api/v1/tu/setoran/:id/konfirmasi
+    // POST /api/saldo/setoran-tu or /api/v1/tu/setoran/konfirmasi or /api/tu/setoran/konfirmasi
     if (
-      (url.includes('/api/v1/tu/setoran') || url.includes('/api/tu/setoran')) &&
+      (url.includes('/api/saldo/setoran-tu') ||
+        url.includes('/api/v1/tu/setoran') ||
+        url.includes('/api/tu/setoran')) &&
       (url.includes('/konfirmasi') || method === 'post')
     ) {
       const idMatch = url.match(/\/setoran\/([^/]+)\/konfirmasi/)
       const targetId =
         (idMatch ? idMatch[1] : (payload.id as string)) ||
-        (payload.setoran_id as string)
-      const uangFisik = Number(payload.uang_fisik ?? payload.uangFisik) || 0
+        (payload.setoran_id as string) ||
+        (payload.setoranId as string)
+      const tanggal = String(payload.tanggal || '')
+      const uangFisik =
+        Number(
+          payload.jumlahDisetor ?? payload.uang_fisik ?? payload.uangFisik
+        ) || 0
       const catatan = String(payload.catatan ?? payload.keterangan ?? '').trim()
       const bendaharaNama = String(
         payload.bendahara_nama ?? 'Siti Rahma (Bendahara)'
       )
 
-      const setoranIdx = setoranKasList.findIndex((s) => s.id === targetId)
+      let setoranIdx = -1
+      if (targetId) {
+        setoranIdx = setoranKasList.findIndex((s) => s.id === targetId)
+      } else if (tanggal) {
+        setoranIdx = setoranKasList.findIndex((s) => s.tanggal === tanggal)
+      }
+
+      if (setoranIdx === -1 && setoranKasList.length > 0) {
+        setoranIdx = 0
+      }
+
       if (setoranIdx === -1) {
         return {
           status: 404,
           data: {
             code: 404,
             status: 'NOT_FOUND',
-            message: `Setoran kas dengan ID ${targetId} tidak ditemukan`,
+            message: `Setoran kas tidak ditemukan`,
           },
         }
       }
@@ -1457,9 +1500,10 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
     }
 
-    // GET /api/transaksi/sesi-tutup or /api/v1/kasir/transaksi-lampau
+    // GET /api/kasir/transaksi or /api/transaksi/sesi-tutup or /api/v1/kasir/transaksi-lampau
     if (
-      (url.includes('/api/transaksi/sesi-tutup') ||
+      (url.includes('/api/kasir/transaksi') ||
+        url.includes('/api/transaksi/sesi-tutup') ||
         url.includes('/api/v1/kasir/transaksi-lampau')) &&
       method === 'get'
     ) {
@@ -1658,10 +1702,232 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       }
     }
 
+    // POST /api/kartu-tamu/refund
+    if (url.includes('/api/kartu-tamu/refund') && method === 'post') {
+      const kartuId = Number(payload.kartuId || payload.kartu_id)
+      const referensiId = String(
+        payload.referensiId ||
+          payload.referensi_id ||
+          `REFUND-KT-${Date.now().toString().slice(-6)}`
+      )
+      const catatan = String(payload.catatan || 'Refund saldo kartu tamu')
+
+      const card = kartuTamuList.find((k) => k.id === kartuId)
+      if (!card) {
+        return { status: 404, data: { message: 'Kartu tamu tidak ditemukan' } }
+      }
+
+      const nominalRefund = card.saldo
+      card.saldo = 0
+      card.is_active = false
+      card.status = 'AVAILABLE'
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Refund kartu tamu berhasil diproses',
+          data: {
+            kartuId: card.id,
+            nomorKartu: card.nomor_kartu,
+            nominalRefund,
+            referensiId,
+            catatan,
+          },
+        },
+      }
+    }
+
+    // POST /api/kartu-tamu/pindah-saldo
+    if (url.includes('/api/kartu-tamu/pindah-saldo') && method === 'post') {
+      const kartuSumberId = Number(
+        payload.kartuSumberId || payload.kartu_sumber_id
+      )
+      const kartuTujuanId = Number(
+        payload.kartuTujuanId || payload.kartu_tujuan_id
+      )
+      const referensiId = String(
+        payload.referensiId ||
+          payload.referensi_id ||
+          `PINDAH-KT-${Date.now().toString().slice(-6)}`
+      )
+      const catatan = String(payload.catatan || 'Pemindahan saldo kartu tamu')
+
+      const sumber = kartuTamuList.find((k) => k.id === kartuSumberId)
+      const tujuan = kartuTamuList.find((k) => k.id === kartuTujuanId)
+
+      if (!sumber || !tujuan) {
+        return {
+          status: 404,
+          data: {
+            message: 'Kartu sumber atau kartu tujuan tidak ditemukan',
+          },
+        }
+      }
+
+      const nominalTransfer = sumber.saldo
+      sumber.saldo = 0
+      tujuan.saldo += nominalTransfer
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Pemindahan saldo kartu tamu berhasil',
+          data: {
+            referensiId,
+            kartuSumberId: sumber.id,
+            kartuTujuanId: tujuan.id,
+            nominal: nominalTransfer,
+            catatan,
+          },
+        },
+      }
+    }
+
+    // --- Kontrol Kartu (Backend-aligned /api/kontrol-kartu/*) ---
+    // POST /api/kontrol-kartu/blokir
+    if (url.includes('/api/kontrol-kartu/blokir') && method === 'post') {
+      const subjekTipe = String(payload.subjekTipe || 'SISWA').toUpperCase()
+      const subjekId = Number(payload.subjekId)
+      const diblokir = Boolean(payload.diblokir)
+      const alasan = String(payload.alasan || '')
+
+      if (subjekTipe === 'KARTU_TAMU') {
+        const card = kartuTamuList.find((k) => k.id === subjekId)
+        if (!card) {
+          return {
+            status: 404,
+            data: { message: 'Kartu tamu tidak ditemukan' },
+          }
+        }
+        card.is_active = !diblokir
+        card.status = diblokir ? 'BLOCKED' : 'AVAILABLE'
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            message: diblokir
+              ? 'Kartu tamu berhasil diblokir'
+              : 'Kartu tamu berhasil dibuka blokirnya',
+            data: { subjekTipe, subjekId, diblokir, alasan },
+          },
+        }
+      } else {
+        const siswa = siswaList.find((s) => s.siswa_id === subjekId)
+        if (!siswa) {
+          return { status: 404, data: { message: 'Siswa tidak ditemukan' } }
+        }
+        siswa.is_blocked = diblokir
+        return {
+          status: 200,
+          data: {
+            code: 200,
+            status: 'SUCCESS',
+            message: diblokir
+              ? 'Kartu siswa berhasil diblokir'
+              : 'Kartu siswa berhasil dibuka blokirnya',
+            data: { subjekTipe, subjekId, diblokir, alasan },
+          },
+        }
+      }
+    }
+
+    // PUT /api/kontrol-kartu/limit-harian
+    if (url.includes('/api/kontrol-kartu/limit-harian') && method === 'put') {
+      const subjekTipe = String(payload.subjekTipe || 'SISWA').toUpperCase()
+      const subjekId = Number(payload.subjekId)
+      const nominal =
+        payload.nominal !== null && payload.nominal !== undefined
+          ? Number(payload.nominal)
+          : null
+
+      const siswa = siswaList.find((s) => s.siswa_id === subjekId)
+      if (!siswa) {
+        return { status: 404, data: { message: 'Siswa tidak ditemukan' } }
+      }
+
+      siswa.limit_harian = nominal || 0
+      siswa.limit_harian_enabled = nominal !== null && nominal > 0
+      siswa.updated_at = new Date().toISOString()
+
+      return {
+        status: 200,
+        data: {
+          code: 200,
+          status: 'SUCCESS',
+          message: 'Limit harian berhasil diperbarui',
+          data: {
+            subjekTipe,
+            subjekId,
+            limitHarian: siswa.limit_harian,
+            limitHarianEnabled: siswa.limit_harian_enabled,
+          },
+        },
+      }
+    }
+
+    // GET /api/kontrol-kartu/{subjekTipe}/{subjekId}
+    if (url.includes('/api/kontrol-kartu/') && method === 'get') {
+      const match = url.match(/\/api\/kontrol-kartu\/([^/]+)\/([^/]+)/)
+      if (match) {
+        const subjekTipe = match[1].toUpperCase()
+        const subjekId = Number(match[2])
+        if (subjekTipe === 'KARTU_TAMU') {
+          const card = kartuTamuList.find((k) => k.id === subjekId)
+          if (!card)
+            return {
+              status: 404,
+              data: { message: 'Kartu tamu tidak ditemukan' },
+            }
+          return {
+            status: 200,
+            data: {
+              code: 200,
+              status: 'SUCCESS',
+              data: {
+                subjekTipe,
+                subjekId,
+                diblokir: !card.is_active,
+                limitHarian: null,
+              },
+            },
+          }
+        } else {
+          const siswa = siswaList.find((s) => s.siswa_id === subjekId)
+          if (!siswa)
+            return {
+              status: 404,
+              data: { message: 'Siswa tidak ditemukan' },
+            }
+          return {
+            status: 200,
+            data: {
+              code: 200,
+              status: 'SUCCESS',
+              data: {
+                subjekTipe,
+                subjekId,
+                diblokir: siswa.is_blocked,
+                limitHarian: siswa.limit_harian_enabled
+                  ? siswa.limit_harian
+                  : null,
+              },
+            },
+          }
+        }
+      }
+    }
+
     // Kartu Tamu Endpoints: /api/kartu-tamu and /api/v1/tu/kartu-tamu
     if (
-      url.includes('/api/kartu-tamu') ||
-      url.includes('/api/v1/tu/kartu-tamu')
+      (url.includes('/api/kartu-tamu') ||
+        url.includes('/api/v1/tu/kartu-tamu')) &&
+      !url.includes('/refund') &&
+      !url.includes('/pindah-saldo')
     ) {
       // POST: Buat kartu baru
       if (method === 'post') {
@@ -2868,7 +3134,9 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
       !url.includes('/api/saldo/refund/siswa-nonaktif') &&
       method === 'post'
     ) {
-      const siswaId = Number(payload.siswaId ?? payload.siswa_id)
+      const siswaId = Number(
+        payload.subjekId ?? payload.siswaId ?? payload.siswa_id
+      )
       const metode = (payload.metode as string) || 'TUNAI'
       const namaPenerima = String(
         payload.namaPenerima || payload.nama_penerima || 'Orang Tua / Wali'
@@ -2965,13 +3233,23 @@ export function setupMockAdapter(axiosInstance: AxiosInstance) {
     }
 
     // POST: Pindah Saldo ke Saudara Kandung (Atomik)
-    if (url.includes('/api/saldo/transfer-saudara') && method === 'post') {
-      const siswaAsalId = Number(payload.siswaAsalId ?? payload.siswa_asal_id)
+    if (
+      (url.includes('/api/saldo/pindah-saldo') ||
+        url.includes('/api/saldo/transfer-saudara')) &&
+      method === 'post'
+    ) {
+      const siswaAsalId = Number(
+        payload.siswaSumberId ??
+          payload.siswaAsalId ??
+          payload.siswa_asal_id ??
+          payload.siswaId
+      )
       const siswaTujuanId = Number(
         payload.siswaTujuanId ?? payload.siswa_tujuan_id
       )
       const beritaAcara = String(
-        payload.beritaAcara ||
+        payload.catatan ||
+          payload.beritaAcara ||
           payload.berita_acara ||
           'Pindah saldo ke saudara kandung'
       )

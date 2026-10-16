@@ -71,26 +71,40 @@ export function BlokirKartuModal({
     setIsSubmitting(true)
     try {
       try {
-        await apiClient
-          .delete(`/api/kartu-tamu/${kartu.id}`)
-          .catch(() =>
-            apiClient.post(`/api/v1/tu/kartu-tamu/${kartu.id}/blokir`, {
-              transfer_saldo_ke: transferSaldo ? Number(targetKartuId) : undefined,
-            })
-          )
+        const dateCode = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+        const seq = Math.floor(1000 + Math.random() * 9000)
+        const refId = `KT-TRF-${dateCode}-${seq}`
 
         if (transferSaldo && targetKartuId && kartu.saldo > 0) {
-          const dateCode = new Date().toISOString().slice(0, 10).replace(/-/g, '')
-          const seq = Math.floor(1000 + Math.random() * 9000)
           await apiClient
-            .post('/api/saldo/topup', {
-              subjekTipe: 'KARTU_TAMU',
-              subjekId: Number(targetKartuId),
-              nominal: kartu.saldo,
-              penyetor: `Transfer Sisa Saldo (${kartu.nomor_kartu})`,
-              referensiId: `KT-TRF-${dateCode}-${seq}`,
+            .post('/api/kartu-tamu/pindah-saldo', {
+              kartuSumberId: kartu.id,
+              kartuTujuanId: Number(targetKartuId),
+              referensiId: refId,
+              catatan: `Pindah saldo kartu hilang/rusak ${kartu.nomor_kartu}`,
             })
-            .catch(() => {})
+            .catch(async () => {
+              await apiClient.post('/api/kontrol-kartu/blokir', {
+                subjekTipe: 'KARTU_TAMU',
+                subjekId: kartu.id,
+                diblokir: true,
+                alasan: 'Kartu hilang atau rusak',
+              })
+              await apiClient.post('/api/saldo/topup', {
+                subjekTipe: 'KARTU_TAMU',
+                subjekId: Number(targetKartuId),
+                nominal: kartu.saldo,
+                penyetor: `Transfer Sisa Saldo (${kartu.nomor_kartu})`,
+                referensiId: refId,
+              })
+            })
+        } else {
+          await apiClient.post('/api/kontrol-kartu/blokir', {
+            subjekTipe: 'KARTU_TAMU',
+            subjekId: kartu.id,
+            diblokir: true,
+            alasan: 'Kartu hilang atau rusak',
+          })
         }
       } catch {
         // Fallback simulasi

@@ -22,7 +22,7 @@ export function KasirWelcomePage() {
 
   useEffect(() => {
     apiClient
-      .get('/api/v1/kasir/sesi')
+      .post('/api/kasir/sesi/buka', { titikKasirId: 1 })
       .then((res) => {
         setSesi(res.data?.data)
       })

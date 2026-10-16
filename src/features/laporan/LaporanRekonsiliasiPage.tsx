@@ -308,11 +308,8 @@ export function LaporanRekonsiliasiPage() {
           {data && (
             <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-semibold tracking-wide uppercase text-muted-foreground flex items-center justify-between">
-                  <span>Rumus Invariant Saldo (PRD §5)</span>
-                  <Badge variant="secondary" className="border-0 font-mono text-xs">
-                    Audit Harian Otomatis
-                  </Badge>
+                <CardTitle className="text-sm font-semibold tracking-wide uppercase text-muted-foreground">
+                  Rumus Invariant Saldo (PRD §5)
                 </CardTitle>
               </CardHeader>
               <CardContent>

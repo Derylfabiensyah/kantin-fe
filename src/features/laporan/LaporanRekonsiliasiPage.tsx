@@ -443,7 +443,7 @@ export function LaporanRekonsiliasiPage() {
           </div>
 
           {/* RINCIAN TABEL POS REKONSILIASI & LEDGER */}
-          <Card className="border-0 shadow-sm">
+          <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
             <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <CardTitle className="text-base font-bold">
@@ -461,16 +461,16 @@ export function LaporanRekonsiliasiPage() {
                     placeholder="Cari pos mutasi..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-8 text-sm"
+                    className="pl-8 text-sm bg-background"
                   />
                 </div>
               </div>
             </CardHeader>
 
             <CardContent>
-              <div className="rounded-lg border-0 overflow-hidden">
+              <div className="rounded-lg border-0 overflow-hidden bg-card/60 dark:bg-card/30">
                 <Table>
-                  <TableHeader className="bg-muted/50">
+                  <TableHeader className="bg-muted/80 dark:bg-muted/50">
                     <TableRow>
                       <TableHead className="w-12 text-center">#</TableHead>
                       <TableHead>Pos Akuntansi / Ledger</TableHead>

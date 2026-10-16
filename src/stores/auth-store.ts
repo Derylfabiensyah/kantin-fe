@@ -57,6 +57,13 @@ export const useAuthStore = create<AuthState>()((set, get) => {
   const initialToken = parseStoredToken()
   const initialUser = parseStoredUser()
 
+  if (initialUser) {
+    useRoleStore.getState().setRole(initialUser.currentRole)
+    useRoleStore.getState().setSchoolName(initialUser.sekolahNama)
+    useRoleStore.getState().setUserName(initialUser.nama)
+    useRoleStore.getState().setUserEmail(initialUser.email)
+  }
+
   return {
     auth: {
       user: initialUser,
@@ -65,11 +72,15 @@ export const useAuthStore = create<AuthState>()((set, get) => {
       setUser: (user) => {
         if (user) {
           localStorage.setItem(AUTH_USER_STORAGE, JSON.stringify(user))
-          // Sinkronisasi ke useRoleStore untuk header dan sidebar
+          // Sinkronisasi ke useRoleStore untuk header, sidebar, dan profil
           useRoleStore.getState().setRole(user.currentRole)
           useRoleStore.getState().setSchoolName(user.sekolahNama)
+          useRoleStore.getState().setUserName(user.nama)
+          useRoleStore.getState().setUserEmail(user.email)
         } else {
           localStorage.removeItem(AUTH_USER_STORAGE)
+          useRoleStore.getState().setUserName('')
+          useRoleStore.getState().setUserEmail('')
         }
         set((state) => ({ ...state, auth: { ...state.auth, user } }))
       },
@@ -95,6 +106,9 @@ export const useAuthStore = create<AuthState>()((set, get) => {
         removeCookie(ACCESS_TOKEN_COOKIE)
         localStorage.removeItem(ACCESS_TOKEN_STORAGE)
         localStorage.removeItem(AUTH_USER_STORAGE)
+        useRoleStore.getState().setRole('admin')
+        useRoleStore.getState().setUserName('')
+        useRoleStore.getState().setUserEmail('')
         set((state) => ({
           ...state,
           auth: { ...state.auth, user: null, accessToken: '' },

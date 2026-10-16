@@ -17,10 +17,10 @@ import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
   user: {
-    name: 'Deryl Fabiensyah',
-    email: 'derylfabiensyah@skoolia.id',
+    name: 'Staf Kantin',
+    email: 'staf@skoolia.id',
     avatar: '/avatars/shadcn.jpg',
-    role: 'Pengelola Kantin',
+    role: 'Admin Sekolah',
     schoolName: 'PAUD SKOOLIA',
   },
   teams: [

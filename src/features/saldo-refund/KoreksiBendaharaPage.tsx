@@ -91,22 +91,18 @@ export function KoreksiBendaharaPage() {
       setIsLoading(true)
       try {
         const [resKoreksi, resTx] = await Promise.all([
-          apiClient
-            .get('/api/saldo/koreksi')
-            .catch(() => apiClient.get('/api/v1/bendahara/koreksi')),
-          apiClient
-            .get('/api/transaksi/sesi-tutup')
-            .catch(() => apiClient.get('/api/v1/kasir/transaksi-lampau')),
+          apiClient.get('/api/saldo/koreksi').catch(() => null),
+          apiClient.get('/api/transaksi/sesi-tutup').catch(() => null),
         ])
 
         if (isMounted) {
-          if (resKoreksi.data?.data && Array.isArray(resKoreksi.data.data)) {
+          if (resKoreksi?.data?.data && Array.isArray(resKoreksi.data.data)) {
             setKoreksiList(resKoreksi.data.data)
           } else {
             setKoreksiList(MOCK_KOREKSI_BENDAHARA)
           }
 
-          if (resTx.data?.data && Array.isArray(resTx.data.data)) {
+          if (resTx?.data?.data && Array.isArray(resTx.data.data)) {
             setTransaksiList(resTx.data.data)
           } else {
             setTransaksiList(MOCK_TRANSAKSI_SESI_TUTUP)
@@ -131,21 +127,17 @@ export function KoreksiBendaharaPage() {
     setIsLoading(true)
     try {
       const [resKoreksi, resTx] = await Promise.all([
-        apiClient
-          .get('/api/saldo/koreksi')
-          .catch(() => apiClient.get('/api/v1/bendahara/koreksi')),
-        apiClient
-          .get('/api/transaksi/sesi-tutup')
-          .catch(() => apiClient.get('/api/v1/kasir/transaksi-lampau')),
+        apiClient.get('/api/saldo/koreksi').catch(() => null),
+        apiClient.get('/api/transaksi/sesi-tutup').catch(() => null),
       ])
 
-      if (resKoreksi.data?.data && Array.isArray(resKoreksi.data.data)) {
+      if (resKoreksi?.data?.data && Array.isArray(resKoreksi.data.data)) {
         setKoreksiList(resKoreksi.data.data)
       } else {
         setKoreksiList(MOCK_KOREKSI_BENDAHARA)
       }
 
-      if (resTx.data?.data && Array.isArray(resTx.data.data)) {
+      if (resTx?.data?.data && Array.isArray(resTx.data.data)) {
         setTransaksiList(resTx.data.data)
       } else {
         setTransaksiList(MOCK_TRANSAKSI_SESI_TUTUP)

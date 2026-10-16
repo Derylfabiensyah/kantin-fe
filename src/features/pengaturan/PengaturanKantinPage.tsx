@@ -165,10 +165,19 @@ export const PengaturanKantinPage: React.FC = () => {
   return (
     <>
       <Header>
-        <div className='ms-auto flex items-center space-x-4'>
-          <ThemeSwitch />
-          <ConfigDrawer />
-          <ProfileDropdown />
+        <div className='flex w-full items-center justify-between'>
+          <div className='flex items-center gap-2'>
+            <span className='text-muted-foreground text-xs font-semibold uppercase tracking-wider'>
+              Pengaturan Kantin
+            </span>
+            <span className='text-muted-foreground text-xs'>/</span>
+            <span className='text-xs font-medium'>Operasional Kantin</span>
+          </div>
+          <div className='flex items-center gap-2'>
+            <ThemeSwitch />
+            <ConfigDrawer />
+            <ProfileDropdown />
+          </div>
         </div>
       </Header>
 

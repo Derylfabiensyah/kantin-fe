@@ -328,9 +328,18 @@ export function KartuStokPage() {
   return (
     <>
       <Header fixed>
-        <div className='ml-auto flex items-center space-x-4'>
-          <ThemeSwitch />
-          <ProfileDropdown />
+        <div className='flex w-full items-center justify-between'>
+          <div className='flex items-center gap-2'>
+            <span className='text-muted-foreground text-xs font-semibold uppercase tracking-wider'>
+              Manajemen Stok
+            </span>
+            <span className='text-muted-foreground text-xs'>/</span>
+            <span className='text-xs font-medium'>Kartu Stok Mutasi</span>
+          </div>
+          <div className='flex items-center gap-2'>
+            <ThemeSwitch />
+            <ProfileDropdown />
+          </div>
         </div>
       </Header>
 

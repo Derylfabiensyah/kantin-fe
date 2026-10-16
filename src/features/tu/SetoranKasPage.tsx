@@ -85,15 +85,9 @@ export function SetoranKasPage() {
     const load = async () => {
       setIsLoading(true)
       try {
-        const res = await apiClient
-          .get('/api/v1/tu/setoran', {
-            params: { tanggal: selectedDate },
-          })
-          .catch(() =>
-            apiClient.get('/api/tu/setoran', {
-              params: { tanggal: selectedDate },
-            })
-          )
+        const res = await apiClient.get('/api/saldo/setoran-tu/rekap', {
+          params: { tanggal: selectedDate },
+        })
 
         if (isMounted) {
           if (res.data?.data && Array.isArray(res.data.data)) {
@@ -129,15 +123,9 @@ export function SetoranKasPage() {
   const handleRefresh = async () => {
     setIsLoading(true)
     try {
-      const res = await apiClient
-        .get('/api/v1/tu/setoran', {
-          params: { tanggal: selectedDate },
-        })
-        .catch(() =>
-          apiClient.get('/api/tu/setoran', {
-            params: { tanggal: selectedDate },
-          })
-        )
+      const res = await apiClient.get('/api/saldo/setoran-tu/rekap', {
+        params: { tanggal: selectedDate },
+      })
 
       if (res.data?.data && Array.isArray(res.data.data)) {
         setSetoranList(res.data.data)

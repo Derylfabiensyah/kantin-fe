@@ -100,16 +100,18 @@ function KonfirmasiSetoranFormContent({
 
     setIsSubmitting(true)
     try {
+      const dateCode = (setoran.tanggal || new Date().toISOString().slice(0, 10)).replace(/-/g, '')
+      const refId = `BA-SETORAN-${dateCode}-${setoran.petugas_id || setoran.id}`
+
       const payload = {
-        id: setoran.id,
-        uang_fisik: uangFisik,
-        catatan: catatan.trim(),
-        bendahara_nama: bendaharaNama,
+        tanggal: setoran.tanggal,
+        petugasId: setoran.petugas_id || 1,
+        jumlahDisetor: uangFisik,
+        referensiId: refId,
+        catatan: catatan.trim() || undefined,
       }
 
-      const res = await apiClient
-        .post(`/api/v1/tu/setoran/${setoran.id}/konfirmasi`, payload)
-        .catch(() => apiClient.post('/api/tu/setoran/konfirmasi', payload))
+      const res = await apiClient.post('/api/saldo/setoran-tu', payload)
 
       const updatedData: SetoranKasItem = (res.data
         ?.data as SetoranKasItem) || {

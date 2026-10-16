@@ -24,6 +24,7 @@ import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { formatRupiah } from '@/lib/formatters'
 import { PrintSlipModal, type TopupSlipData } from './PrintSlipModal'
 import { StudentSearchCard } from './StudentSearchCard'
 
@@ -47,10 +48,8 @@ export function TopupTunaiPage() {
     let isMounted = true
     const loadStudents = async () => {
       try {
-        const res = await apiClient
-          .get('/api/v1/tu/topup/siswa')
-          .catch(() => apiClient.get('/api/v1/tu/siswa'))
-        if (isMounted && res.data?.data) {
+        const res = await apiClient.get('/api/saldo/refund/kandidat')
+        if (isMounted && res.data?.data && Array.isArray(res.data.data)) {
           setStudents(res.data.data)
         }
       } catch {
@@ -68,10 +67,8 @@ export function TopupTunaiPage() {
   const handleRefresh = async () => {
     setIsRefreshing(true)
     try {
-      const res = await apiClient
-        .get('/api/v1/tu/topup/siswa')
-        .catch(() => apiClient.get('/api/v1/tu/siswa'))
-      if (res.data?.data) {
+      const res = await apiClient.get('/api/saldo/refund/kandidat')
+      if (res.data?.data && Array.isArray(res.data.data)) {
         setStudents(res.data.data)
       }
       toast.success('Data siswa berhasil dimuat ulang')
@@ -114,24 +111,46 @@ export function TopupTunaiPage() {
     try {
       let result: TopupSlipData | null = null
 
+      const now = new Date()
+      const dateCode = now.toISOString().slice(0, 10).replace(/-/g, '')
+      const randomSeq = Math.floor(1000 + Math.random() * 9000)
+      const refNo = `TU-TOPUP-${dateCode}-${randomSeq}`
+
       try {
-        const response = await apiClient.post('/api/v1/tu/topup', {
-          siswa_id: currentStudent.siswa_id,
+        const response = await apiClient.post('/api/saldo/topup', {
+          subjekTipe: 'SISWA',
+          subjekId: currentStudent.siswa_id,
           nominal: nominalNum,
-          nama_penyetor: namaPenyetor.trim(),
-          petugas_nama: 'Wibisana Bama (Petugas TU)',
+          penyetor: namaPenyetor.trim(),
+          referensiId: refNo,
         })
-        result = response.data?.data as TopupSlipData
+        const resData = response.data?.data
+        const saldoAwal = resData?.saldoSebelum ?? currentStudent.saldo
+        const saldoBaruRes = resData?.saldoSetelah ?? saldoAwal + nominalNum
+
+        result = {
+          ref_no: refNo,
+          waktu: resData?.waktu || now.toISOString(),
+          petugas_nama: 'Wibisana Bama (Petugas TU)',
+          nama_penyetor: namaPenyetor.trim(),
+          nominal: nominalNum,
+          saldo_awal: saldoAwal,
+          saldo_baru: saldoBaruRes,
+          siswa: {
+            siswa_id: currentStudent.siswa_id,
+            nis: currentStudent.nis,
+            nama: currentStudent.nama,
+            kelas: currentStudent.kelas,
+            foto_url: currentStudent.foto_url,
+          },
+        }
       } catch {
         // Fallback simulasi frontend jika backend API / mock adapter tidak merespons
         const saldoAwal = currentStudent.saldo
         const saldoBaruCalculated = saldoAwal + nominalNum
-        const now = new Date()
-        const dateCode = now.toISOString().slice(0, 10).replace(/-/g, '')
-        const randomSeq = Math.floor(1000 + Math.random() * 9000)
 
         result = {
-          ref_no: `TU-TOPUP-${dateCode}-${randomSeq}`,
+          ref_no: refNo,
           waktu: now.toISOString(),
           petugas_nama: 'Wibisana Bama (Petugas TU)',
           nama_penyetor: namaPenyetor.trim(),
@@ -150,9 +169,9 @@ export function TopupTunaiPage() {
 
       if (result) {
         toast.success(
-          `Top-up Rp ${nominalNum.toLocaleString('id-ID')} berhasil!`,
+          `Top-up ${formatRupiah(nominalNum)} berhasil!`,
           {
-            description: `Saldo baru ${currentStudent.nama}: Rp ${result.saldo_baru.toLocaleString('id-ID')}`,
+            description: `Saldo baru ${currentStudent.nama}: ${formatRupiah(result.saldo_baru)}`,
           }
         )
 
@@ -191,7 +210,7 @@ export function TopupTunaiPage() {
   return (
     <>
       <Header fixed>
-        <div className='ml-auto flex items-center space-x-4'>
+        <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
         </div>
@@ -254,7 +273,7 @@ export function TopupTunaiPage() {
                 Batas Saldo Maksimal
               </p>
               <h3 className='mt-0.5 text-xl font-bold text-foreground'>
-                Rp {MAX_SALDO_SEKOLAH.toLocaleString('id-ID')}
+                {formatRupiah(MAX_SALDO_SEKOLAH)}
               </h3>
             </CardContent>
           </Card>
@@ -305,7 +324,7 @@ export function TopupTunaiPage() {
                           }`}
                           onClick={() => handleSelectPreset(preset)}
                         >
-                          Rp {preset.toLocaleString('id-ID')}
+                          {formatRupiah(preset)}
                         </Button>
                       ))}
                     </div>
@@ -365,13 +384,13 @@ export function TopupTunaiPage() {
                           <div className='flex justify-between text-muted-foreground'>
                             <span>Saldo Siswa saat ini:</span>
                             <span className='font-mono font-medium text-foreground'>
-                              Rp {saldoSaatIni.toLocaleString('id-ID')}
+                              {formatRupiah(saldoSaatIni)}
                             </span>
                           </div>
                           <div className='flex justify-between font-medium text-emerald-600 dark:text-emerald-400'>
                             <span>Nominal Top-up (+):</span>
                             <span className='font-mono font-bold'>
-                              Rp {nominalNum.toLocaleString('id-ID')}
+                              {formatRupiah(nominalNum)}
                             </span>
                           </div>
                           <div className='flex justify-between border-t border-border pt-2 text-base font-bold text-foreground'>
@@ -383,7 +402,7 @@ export function TopupTunaiPage() {
                                   : 'text-emerald-600 dark:text-emerald-400'
                               }`}
                             >
-                              Rp {saldoBaru.toLocaleString('id-ID')}
+                              {formatRupiah(saldoBaru)}
                             </span>
                           </div>
                         </div>
@@ -402,12 +421,12 @@ export function TopupTunaiPage() {
                           <AlertDescription className='mt-1 text-xs leading-relaxed'>
                             Saldo baru (
                             <strong>
-                              Rp {saldoBaru.toLocaleString('id-ID')}
+                              {formatRupiah(saldoBaru)}
                             </strong>
                             ) melampaui batas maksimum yang diizinkan sekolah
                             sebesar{' '}
                             <strong>
-                              Rp {MAX_SALDO_SEKOLAH.toLocaleString('id-ID')}
+                              {formatRupiah(MAX_SALDO_SEKOLAH)}
                             </strong>
                             . Kurangi nominal top-up.
                           </AlertDescription>

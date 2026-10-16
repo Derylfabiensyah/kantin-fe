@@ -68,9 +68,7 @@ const STATUS_CONFIG = {
 }
 
 async function fetchCardsWithBalances(): Promise<KartuTamuMock[]> {
-  const res = await apiClient
-    .get('/api/kartu-tamu')
-    .catch(() => apiClient.get('/api/v1/tu/kartu-tamu'))
+  const res = await apiClient.get('/api/kartu-tamu')
 
   const rawList = (res.data?.data || []) as KartuTamuBackendDto[]
   if (!Array.isArray(rawList) || rawList.length === 0) {

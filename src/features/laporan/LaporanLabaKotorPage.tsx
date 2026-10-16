@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
-  Coins,
   Download,
   Search,
 } from 'lucide-react'
@@ -38,6 +37,23 @@ import { formatRupiah, formatNumber } from '@/lib/formatters'
 import { exportTableToExcel } from '@/lib/excelExport'
 import { laporanApi } from './api/laporan-api'
 import type { RingkasanPenjualan, BarisPenjualanItem } from './types'
+
+const getCategoryBadgeClass = (kategori: string) => {
+  const k = (kategori || '').toLowerCase()
+  if (k.includes('berat')) {
+    return 'border-0 bg-orange-500/15 text-orange-700 dark:bg-orange-500/20 dark:text-orange-300'
+  }
+  if (k.includes('dingin') || k.includes('minum')) {
+    return 'border-0 bg-cyan-500/15 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-300'
+  }
+  if (k.includes('snack') || k.includes('roti')) {
+    return 'border-0 bg-purple-500/15 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300'
+  }
+  if (k.includes('hangat')) {
+    return 'border-0 bg-rose-500/15 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300'
+  }
+  return 'border-0 bg-slate-500/15 text-slate-700 dark:bg-slate-500/20 dark:text-slate-300'
+}
 
 export function LaporanLabaKotorPage() {
   const [ringkasan, setRingkasan] = useState<RingkasanPenjualan | null>(null)
@@ -181,19 +197,9 @@ export function LaporanLabaKotorPage() {
           {/* Header Action Section */}
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <div className="flex items-center gap-3">
-                <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-xl">
-                  <Coins className="h-5 w-5" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold tracking-tight">
-                    Laporan Laba Kotor
-                  </h1>
-                  <p className="text-muted-foreground text-sm">
-                    Analisis profitabilitas kantin: Laba kotor = Penjualan bersih − Σ HPP item terjual (PRD §5 & §9.5).
-                  </p>
-                </div>
-              </div>
+              <h1 className="text-2xl font-bold tracking-tight">
+                Laporan Laba Kotor
+              </h1>
             </div>
 
             <div className="flex items-center gap-2.5">
@@ -371,7 +377,10 @@ export function LaporanLabaKotorPage() {
                             {item.nama}
                           </TableCell>
                           <TableCell>
-                            <Badge variant="outline" className="text-xs">
+                            <Badge
+                              variant="secondary"
+                              className={`text-xs font-medium ${getCategoryBadgeClass(item.kategoriNama)}`}
+                            >
                               {item.kategoriNama}
                             </Badge>
                           </TableCell>

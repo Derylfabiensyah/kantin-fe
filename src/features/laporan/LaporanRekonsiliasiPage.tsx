@@ -306,7 +306,7 @@ export function LaporanRekonsiliasiPage() {
 
           {/* INVARIANT FORMULA EVALUATION CARD */}
           {data && (
-            <Card className="border-0 shadow-sm bg-card">
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-semibold tracking-wide uppercase text-muted-foreground flex items-center justify-between">
                   <span>Rumus Invariant Saldo (PRD §5)</span>
@@ -318,7 +318,7 @@ export function LaporanRekonsiliasiPage() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center text-center">
                   {/* Sisi Kiri */}
-                  <div className="rounded-xl border-0 bg-muted/60 dark:bg-muted/25 p-4 shadow-xs space-y-1">
+                  <div className="space-y-1 p-2">
                     <p className="text-xs text-muted-foreground font-medium uppercase">
                       Sisi 1: Top-up Bersih
                     </p>
@@ -353,7 +353,7 @@ export function LaporanRekonsiliasiPage() {
                   </div>
 
                   {/* Sisi Kanan */}
-                  <div className="rounded-xl border-0 bg-muted/60 dark:bg-muted/25 p-4 shadow-xs space-y-1">
+                  <div className="space-y-1 p-2">
                     <p className="text-xs text-muted-foreground font-medium uppercase">
                       Sisi 2: Penggunaan & Saldo
                     </p>
@@ -371,7 +371,7 @@ export function LaporanRekonsiliasiPage() {
 
           {/* METRIC SUMMARY CARDS GRID */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card className="border-0 shadow-sm">
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Total Top-up Masuk
@@ -388,7 +388,7 @@ export function LaporanRekonsiliasiPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-sm">
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Penjualan Bersih
@@ -405,7 +405,7 @@ export function LaporanRekonsiliasiPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-sm">
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Saldo Mengendap (Kewajiban)
@@ -422,7 +422,7 @@ export function LaporanRekonsiliasiPage() {
               </CardContent>
             </Card>
 
-            <Card className={data && !data.seimbang ? 'border-0 shadow-sm bg-red-50/40 dark:bg-red-950/20' : 'border-0 shadow-sm'}>
+            <Card className={data && !data.seimbang ? 'border-0 shadow-sm bg-red-50/40 dark:bg-red-950/20 transition-all hover:shadow-md' : 'border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Status Rekonsiliasi

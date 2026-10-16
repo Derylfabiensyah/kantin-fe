@@ -49,14 +49,14 @@ describe('Kasir Tap Transaksi & Validasi 6 Tahap (API Layer)', () => {
           idempotencyKey: req.idempotencyKey,
           titikKasirId: req.titikKasirId || 1,
         }
-        const res = await testAxios.post('/api/v1/kasir/transaksi', payload)
+        const res = await testAxios.post('/api/kasir/tap', payload)
         return res.data?.data
       }
     )
 
     vi.spyOn(kasirApi, 'voidTransaksi').mockImplementation(
       async (transaksiId: number, alasan?: string) => {
-        await testAxios.post(`/api/v1/kasir/transaksi/${transaksiId}/void`, {
+        await testAxios.post(`/api/kasir/transaksi/${transaksiId}/void`, {
           alasan: alasan || 'Void darurat unit test',
         })
       }

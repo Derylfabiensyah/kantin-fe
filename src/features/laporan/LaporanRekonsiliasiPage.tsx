@@ -311,11 +311,11 @@ export function LaporanRekonsiliasiPage() {
 
           {/* INVARIANT FORMULA EVALUATION CARD */}
           {data && (
-            <Card className="border-primary/20 bg-linear-to-r from-primary/5 via-card to-background">
+            <Card className="border-0 shadow-sm bg-linear-to-r from-primary/5 via-card to-background">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-semibold tracking-wide uppercase text-muted-foreground flex items-center justify-between">
                   <span>Rumus Invariant Saldo (PRD §5)</span>
-                  <Badge variant="outline" className="font-mono text-xs">
+                  <Badge variant="secondary" className="border-0 font-mono text-xs">
                     Audit Harian Otomatis
                   </Badge>
                 </CardTitle>
@@ -323,7 +323,7 @@ export function LaporanRekonsiliasiPage() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center text-center">
                   {/* Sisi Kiri */}
-                  <div className="rounded-xl border bg-card p-4 shadow-2xs space-y-1">
+                  <div className="rounded-xl border-0 bg-muted/60 dark:bg-muted/25 p-4 shadow-xs space-y-1">
                     <p className="text-xs text-muted-foreground font-medium uppercase">
                       Sisi 1: Top-up Bersih
                     </p>
@@ -338,10 +338,10 @@ export function LaporanRekonsiliasiPage() {
                   {/* Simbol Sama Dengan */}
                   <div className="flex flex-col items-center justify-center">
                     <div
-                      className={`flex h-12 w-12 items-center justify-center rounded-full border-2 ${
+                      className={`flex h-12 w-12 items-center justify-center rounded-full border-0 ${
                         data.seimbang
-                          ? 'border-emerald-500 bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400'
-                          : 'border-red-500 bg-red-50 text-red-600 dark:bg-red-950 dark:text-red-400'
+                          ? 'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400'
+                          : 'bg-red-500/15 text-red-600 dark:bg-red-950/60 dark:text-red-400'
                       }`}
                     >
                       <span className="text-xl font-black">
@@ -360,7 +360,7 @@ export function LaporanRekonsiliasiPage() {
                   </div>
 
                   {/* Sisi Kanan */}
-                  <div className="rounded-xl border bg-card p-4 shadow-2xs space-y-1">
+                  <div className="rounded-xl border-0 bg-muted/60 dark:bg-muted/25 p-4 shadow-xs space-y-1">
                     <p className="text-xs text-muted-foreground font-medium uppercase">
                       Sisi 2: Penggunaan & Saldo
                     </p>

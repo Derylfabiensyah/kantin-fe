@@ -9,6 +9,7 @@ import {
   FileText,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { formatRupiah } from '@/lib/formatters'
 import {
   Dialog,
   DialogContent,
@@ -209,13 +210,13 @@ export function PrintSlipModal({
               <div className='print-dark-override flex items-center justify-between text-[11px] text-slate-600'>
                 <span>Saldo Awal Siswa:</span>
                 <span className='font-medium text-slate-800'>
-                  Rp {slipData.saldo_awal.toLocaleString('id-ID')}
+                  {formatRupiah(slipData.saldo_awal)}
                 </span>
               </div>
               <div className='print-dark-override flex items-center justify-between text-xs font-bold text-emerald-700'>
                 <span>Nominal Setoran Tunai (+):</span>
                 <span className='text-sm'>
-                  Rp {slipData.nominal.toLocaleString('id-ID')}
+                  {formatRupiah(slipData.nominal)}
                 </span>
               </div>
 
@@ -225,7 +226,7 @@ export function PrintSlipModal({
                   SALDO BARU:
                 </span>
                 <span className='print-dark-override font-mono text-base text-emerald-700'>
-                  Rp {slipData.saldo_baru.toLocaleString('id-ID')}
+                  {formatRupiah(slipData.saldo_baru)}
                 </span>
               </div>
             </div>

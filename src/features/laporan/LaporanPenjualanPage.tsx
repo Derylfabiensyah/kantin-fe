@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
   Download,
-  RefreshCw,
   Search,
   Receipt,
   Tag,
@@ -259,17 +258,6 @@ export function LaporanPenjualanPage() {
             </div>
 
             <div className="flex items-center gap-2.5">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => void loadData()}
-                disabled={isLoading}
-                className="gap-2"
-              >
-                <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-                <span>Segarkan</span>
-              </Button>
-
               <Button
                 variant="default"
                 size="sm"

@@ -186,7 +186,7 @@ export function LaporanLabaKotorPage() {
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">
-              Pusat Laporan Keuangan
+              Laporan Keuangan
             </span>
             <span className="text-muted-foreground text-xs">/</span>
             <span className="text-xs font-medium">Laba Kotor</span>

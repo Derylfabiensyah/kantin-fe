@@ -133,7 +133,7 @@ export const sidebarData: SidebarData = {
       roles: ['admin', 'bendahara', 'pengelola'],
       items: [
         {
-          title: 'Pusat Laporan Keuangan',
+          title: 'Laporan Keuangan',
           icon: FileSpreadsheet,
           roles: ['admin', 'bendahara', 'pengelola', 'tu'],
           items: [

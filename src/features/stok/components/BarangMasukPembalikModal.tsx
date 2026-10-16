@@ -130,7 +130,7 @@ function PembalikFormContent({
 
       <div className='space-y-4 py-4 text-xs'>
         {/* Box Ringkasan Transaksi Asal */}
-        <div className='space-y-2 rounded-lg border-0 bg-muted/60 dark:bg-muted/25 p-3 shadow-xs'>
+        <div className='space-y-2 rounded-lg border-0 bg-muted/60 dark:bg-muted/25 p-3'>
           <div className='flex items-center justify-between'>
             <span className='text-sm font-semibold text-foreground'>
               {mutasi.menuNama || `Menu #${mutasi.menuId}`}

@@ -244,7 +244,7 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
   return (
     <form onSubmit={handleSubmit} className='space-y-6'>
       {/* Kartu Header Faktur / Nota */}
-      <Card className='border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
+      <Card className='border-0 bg-muted/60 dark:bg-muted/25'>
         <CardHeader className='pb-3'>
           <CardTitle className='flex items-center gap-2 text-base font-semibold'>
             <FileText className='h-4 w-4 text-primary' />
@@ -363,7 +363,7 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
       </Card>
 
       {/* Tabel Multi-Item Restock */}
-      <Card className='border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
+      <Card className='border-0 bg-muted/60 dark:bg-muted/25'>
         <CardHeader className='flex flex-row items-center justify-between pb-3'>
           <div>
             <CardTitle className='flex items-center gap-2 text-base font-semibold'>

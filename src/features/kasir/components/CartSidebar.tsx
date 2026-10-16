@@ -120,7 +120,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({
             return (
               <div
                 key={item.menu.id}
-                className='flex flex-col gap-2 rounded-xl border bg-background p-3 shadow-2xs transition-all hover:border-primary/30'
+                className='flex flex-col gap-2 rounded-xl border bg-background p-3'
               >
                 {/* Baris Atas: Info Item & Tombol Hapus */}
                 <div className='flex items-start justify-between gap-2'>
@@ -236,7 +236,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({
             size='lg'
             disabled={isCartEmpty || isProcessing || isOffline || isSessionClosed}
             onClick={onCheckout}
-            className='h-12 w-full touch-manipulation gap-2 text-sm font-bold shadow-md sm:text-base'
+            className='h-12 w-full touch-manipulation gap-2 text-sm font-bold sm:text-base'
           >
             <CreditCard className='h-5 w-5' />
             <span>

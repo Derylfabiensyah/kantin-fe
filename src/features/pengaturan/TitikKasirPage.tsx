@@ -14,7 +14,6 @@ import { toast } from 'sonner'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search as SearchHeader } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Button } from '@/components/ui/button'
@@ -210,10 +209,20 @@ export const TitikKasirPage: React.FC = () => {
   return (
     <>
       <Header>
-        <SearchHeader className='me-auto' />
-        <ThemeSwitch />
-        <ConfigDrawer />
-        <ProfileDropdown />
+        <div className='flex w-full items-center justify-between'>
+          <div className='flex items-center gap-2'>
+            <span className='text-muted-foreground text-xs font-semibold uppercase tracking-wider'>
+              Pengaturan Kantin
+            </span>
+            <span className='text-muted-foreground text-xs'>/</span>
+            <span className='text-xs font-medium'>Manajemen Titik Kasir</span>
+          </div>
+          <div className='flex items-center gap-2'>
+            <ThemeSwitch />
+            <ConfigDrawer />
+            <ProfileDropdown />
+          </div>
+        </div>
       </Header>
 
       <Main fixed>
@@ -241,7 +250,7 @@ export const TitikKasirPage: React.FC = () => {
 
           {/* Metric KPI Cards */}
           <div className='grid gap-4 grid-cols-2 md:grid-cols-4'>
-            <Card className='border-0 shadow-sm'>
+            <Card className='border-0'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium'>
                   Total Perangkat
@@ -255,7 +264,7 @@ export const TitikKasirPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className='border-0 shadow-sm'>
+            <Card className='border-0'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium'>
                   Titik Kasir Aktif
@@ -269,7 +278,7 @@ export const TitikKasirPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className='border-0 shadow-sm'>
+            <Card className='border-0'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium'>
                   Nonaktif / Perawatan
@@ -283,7 +292,7 @@ export const TitikKasirPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className='border-0 shadow-sm'>
+            <Card className='border-0'>
               <CardHeader className='pb-2 pt-4 px-4'>
                 <CardDescription className='text-xs font-medium'>
                   Kasir POS Aktif
@@ -309,7 +318,7 @@ export const TitikKasirPage: React.FC = () => {
           </div>
 
           {/* Main Card: Tabel Titik Kasir */}
-          <Card className='shadow-xs'>
+          <Card>
             <CardHeader className='border-b bg-card/50 pb-4'>
               <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
                 <div>

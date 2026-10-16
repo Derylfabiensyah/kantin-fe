@@ -107,7 +107,7 @@ export const StudentFeedbackModal: React.FC<StudentFeedbackModalProps> = ({
         <div className='flex flex-col items-center gap-4 py-2'>
           {/* Foto Siswa Ukuran Besar */}
           <div className='relative'>
-            <Avatar className='h-32 w-32 rounded-2xl border-4 border-primary/20 shadow-lg'>
+            <Avatar className='h-32 w-32 rounded-2xl border-4 border-primary/20'>
               {fotoUrl && (
                 <AvatarImage
                   src={fotoUrl}
@@ -126,7 +126,7 @@ export const StudentFeedbackModal: React.FC<StudentFeedbackModalProps> = ({
             <div className='absolute -bottom-2.5 left-1/2 -translate-x-1/2'>
               <Badge
                 variant='secondary'
-                className='border bg-background/95 px-2.5 py-0.5 text-xs font-semibold shadow-sm'
+                className='border bg-background/95 px-2.5 py-0.5 text-xs font-semibold'
               >
                 {isSiswa ? pembeli.kelas || 'Siswa' : 'Kartu Tamu'}
               </Badge>

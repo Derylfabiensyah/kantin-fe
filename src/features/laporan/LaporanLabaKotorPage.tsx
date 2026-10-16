@@ -1,13 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
   Coins,
-  TrendingUp,
   Download,
-  RefreshCw,
   Search,
-  Receipt,
-  Percent,
-  Sparkles,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -52,23 +47,6 @@ export function LaporanLabaKotorPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [marginFilter, setMarginFilter] = useState<'ALL' | 'HIGH' | 'MEDIUM' | 'LOW'>('ALL')
   const [sortBy, setSortBy] = useState<'laba_desc' | 'margin_desc' | 'omset_desc'>('laba_desc')
-
-  const loadData = async () => {
-    try {
-      setIsLoading(true)
-      const [resRingkasan, resItems] = await Promise.all([
-        laporanApi.getPenjualan(),
-        laporanApi.getPenjualanPerItem(),
-      ])
-      setRingkasan(resRingkasan)
-      setItems(resItems)
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Gagal memuat laba kotor'
-      toast.error('Gagal Memuat Laporan Laba Kotor', { description: msg })
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   useEffect(() => {
     let isMounted = true
@@ -220,22 +198,11 @@ export function LaporanLabaKotorPage() {
 
             <div className="flex items-center gap-2.5">
               <Button
-                variant="outline"
-                size="sm"
-                onClick={() => void loadData()}
-                disabled={isLoading}
-                className="gap-2"
-              >
-                <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-                <span>Segarkan</span>
-              </Button>
-
-              <Button
                 variant="default"
                 size="sm"
                 onClick={handleExportExcel}
                 disabled={isLoading || !ringkasan}
-                className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
+                className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
               >
                 <Download className="h-4 w-4" />
                 <span>Ekspor Excel (.xlsx)</span>
@@ -245,14 +212,11 @@ export function LaporanLabaKotorPage() {
 
           {/* SUMMARY CARDS GRID */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30">
+              <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Total Laba Kotor
                 </CardTitle>
-                <div className="rounded-lg bg-emerald-500/10 p-2 text-emerald-600">
-                  <TrendingUp className="h-4 w-4" />
-                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold tracking-tight text-emerald-600">
@@ -264,14 +228,11 @@ export function LaporanLabaKotorPage() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30">
+              <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Rata-rata Gross Margin
                 </CardTitle>
-                <div className="rounded-lg bg-blue-500/10 p-2 text-blue-600">
-                  <Percent className="h-4 w-4" />
-                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold tracking-tight text-blue-600">
@@ -283,14 +244,11 @@ export function LaporanLabaKotorPage() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30">
+              <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Beban Pokok Penjualan (HPP)
                 </CardTitle>
-                <div className="rounded-lg bg-orange-500/10 p-2 text-orange-600">
-                  <Receipt className="h-4 w-4" />
-                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold tracking-tight">
@@ -302,14 +260,11 @@ export function LaporanLabaKotorPage() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30">
+              <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Menu Juara Laba
                 </CardTitle>
-                <div className="rounded-lg bg-purple-500/10 p-2 text-purple-600">
-                  <Sparkles className="h-4 w-4" />
-                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-base font-bold tracking-tight truncate">
@@ -323,7 +278,7 @@ export function LaporanLabaKotorPage() {
           </div>
 
           {/* TABEL PROFITABILITAS PER MENU */}
-          <Card>
+          <Card className="border-0">
             <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <CardTitle className="text-base font-bold">
@@ -377,7 +332,7 @@ export function LaporanLabaKotorPage() {
             </CardHeader>
 
             <CardContent>
-              <div className="rounded-lg border overflow-hidden">
+              <div className="overflow-hidden rounded-lg">
                 <Table>
                   <TableHeader className="bg-muted/50">
                     <TableRow>

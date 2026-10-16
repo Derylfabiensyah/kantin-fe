@@ -397,7 +397,7 @@ function KonfirmasiSetoranFormContent({
         <Button
           type='submit'
           disabled={isSubmitting || (hasSelisih && !catatan.trim())}
-          className='gap-1.5 bg-emerald-600 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700'
+          className='gap-1.5 bg-emerald-600 text-xs font-semibold text-white hover:bg-emerald-700'
         >
           <CheckCircle2 className='h-4 w-4' />
           {isSubmitting ? 'Menyimpan...' : 'Konfirmasi & Catat Setoran'}

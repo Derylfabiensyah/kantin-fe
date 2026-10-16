@@ -465,7 +465,7 @@ export const KasirPosPage: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder='Cari menu makanan atau minuman... (Tekan "/" untuk mencari)'
-                  className='h-10 bg-background/80 pr-16 pl-9 text-sm shadow-2xs'
+                  className='h-10 bg-background/80 pr-16 pl-9 text-sm'
                 />
                 {searchQuery ? (
                   <Button
@@ -664,7 +664,7 @@ export const KasirPosPage: React.FC = () => {
         </div>
 
         {/* Floating Cart Trigger untuk Layar Mobile / Tablet Kecil (< lg) */}
-        <div className='flex shrink-0 border-t bg-card p-3 shadow-lg lg:hidden'>
+        <div className='flex shrink-0 border-t bg-card p-3 lg:hidden'>
           <Button
             type='button'
             className='h-11 w-full justify-between font-bold'

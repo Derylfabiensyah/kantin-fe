@@ -14,7 +14,6 @@ import {
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search as SearchComp } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { formatRupiah } from '@/lib/formatters'
 import { Button } from '@/components/ui/button'
@@ -218,7 +217,6 @@ export function KartuTamuPage() {
   return (
     <>
       <Header fixed>
-        <SearchComp showKbd={false} />
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
@@ -260,7 +258,7 @@ export function KartuTamuPage() {
 
           {/* Summary Cards */}
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-            <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
+            <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
               <CardContent className='p-4'>
                 <p className='text-xs font-medium text-muted-foreground'>
                   Kartu Aktif Beredar
@@ -274,7 +272,7 @@ export function KartuTamuPage() {
               </CardContent>
             </Card>
 
-            <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
+            <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
               <CardContent className='p-4'>
                 <p className='text-xs font-medium text-muted-foreground'>
                   Total Saldo Mengendap
@@ -288,7 +286,7 @@ export function KartuTamuPage() {
               </CardContent>
             </Card>
 
-            <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
+            <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
               <CardContent className='p-4'>
                 <p className='text-xs font-medium text-muted-foreground'>
                   Kartu Diblokir
@@ -302,7 +300,7 @@ export function KartuTamuPage() {
               </CardContent>
             </Card>
 
-            <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
+            <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
               <CardContent className='p-4'>
                 <p className='text-xs font-medium text-muted-foreground'>
                   Kartu Tersedia
@@ -318,7 +316,7 @@ export function KartuTamuPage() {
           </div>
 
           {/* Table Section */}
-          <div className='bg-card rounded-xl border shadow-xs overflow-hidden'>
+          <div className='bg-card rounded-xl border overflow-hidden'>
             {/* Table Header */}
             <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border-b'>
               <div>

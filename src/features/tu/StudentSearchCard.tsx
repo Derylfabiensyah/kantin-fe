@@ -67,7 +67,7 @@ export function StudentSearchCard({
   }
 
   return (
-    <Card className='border border-border bg-card shadow-xs'>
+    <Card className='border border-border bg-card'>
       <CardHeader className='pb-4'>
         <div className='flex flex-wrap items-center justify-between gap-2'>
           <div>
@@ -235,7 +235,7 @@ export function StudentSearchCard({
         {selectedStudent ? (
           <div className='space-y-4 rounded-xl border border-border bg-muted/30 p-4 dark:bg-muted/10'>
             <div className='flex items-start gap-4'>
-              <Avatar className='h-16 w-16 border-2 border-background shadow-xs'>
+              <Avatar className='h-16 w-16 border-2 border-background'>
                 <AvatarImage
                   src={selectedStudent.foto_url}
                   alt={selectedStudent.nama}

@@ -153,7 +153,7 @@ export function UserAuthForm({
                     placeholder='Masukkan username atau email'
                     autoComplete='username'
                     disabled={isLoading}
-                    className='border-0 bg-background shadow-xs'
+                    className='border-0 bg-background'
                     {...field}
                   />
                 </FormControl>
@@ -173,7 +173,7 @@ export function UserAuthForm({
                     placeholder='Masukkan kata sandi'
                     autoComplete='current-password'
                     disabled={isLoading}
-                    className='border-0 bg-background shadow-xs'
+                    className='border-0 bg-background'
                     {...field}
                   />
                 </FormControl>

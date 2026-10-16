@@ -55,7 +55,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search as SearchComp } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { formatRupiah } from '@/lib/formatters'
 import { KoreksiMutasiModal } from './KoreksiMutasiModal'
@@ -266,7 +265,6 @@ export function KoreksiBendaharaPage() {
   return (
     <>
       <Header fixed>
-        <SearchComp showKbd={false} />
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
@@ -322,7 +320,7 @@ export function KoreksiBendaharaPage() {
 
           {/* KPI Summary Cards */}
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-            <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
+            <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
               <CardContent className='p-4'>
                 <p className='text-xs font-medium text-muted-foreground'>
                   Total Mutasi Koreksi Audit
@@ -336,7 +334,7 @@ export function KoreksiBendaharaPage() {
               </CardContent>
             </Card>
 
-            <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
+            <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
               <CardContent className='p-4'>
                 <p className='text-xs font-medium text-muted-foreground'>
                   Total Pembalik Kredit (+Saldo)
@@ -350,7 +348,7 @@ export function KoreksiBendaharaPage() {
               </CardContent>
             </Card>
 
-            <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
+            <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
               <CardContent className='p-4'>
                 <p className='text-xs font-medium text-muted-foreground'>
                   Total Pembalik Debit (-Saldo)
@@ -364,7 +362,7 @@ export function KoreksiBendaharaPage() {
               </CardContent>
             </Card>
 
-            <Card className='border-0 bg-muted/70 shadow-xs dark:bg-muted/30 transition-all hover:shadow-md'>
+            <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
               <CardContent className='p-4'>
                 <p className='text-xs font-medium text-muted-foreground'>
                   Transaksi Lampau Dibalik
@@ -399,7 +397,7 @@ export function KoreksiBendaharaPage() {
             {/* TAB 1: LOG MUTASI KOREKSI BENDAHARA */}
             <TabsContent value='riwayat' className='space-y-4'>
               {/* Filter Toolbar */}
-              <Card className='shadow-xs'>
+              <Card>
                 <CardContent className='p-4'>
                   <div className='flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
                     <div className='flex flex-1 flex-wrap items-center gap-3'>
@@ -478,7 +476,7 @@ export function KoreksiBendaharaPage() {
               </Card>
 
               {/* Tabel Mutasi Koreksi */}
-              <Card className='overflow-hidden shadow-xs'>
+              <Card className='overflow-hidden'>
                 <CardHeader className='border-b bg-muted/20 px-6 py-4'>
                   <div className='flex items-center justify-between'>
                     <div>
@@ -701,7 +699,7 @@ export function KoreksiBendaharaPage() {
                 </AlertDescription>
               </Alert>
 
-              <Card className='overflow-hidden shadow-xs'>
+              <Card className='overflow-hidden'>
                 <CardHeader className='border-b bg-muted/20 px-6 py-4'>
                   <div className='flex items-center justify-between'>
                     <div>

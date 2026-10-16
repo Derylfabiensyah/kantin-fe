@@ -1,7 +1,6 @@
 import { cn } from '@/lib/utils'
 import { Header } from '@/components/layout/header'
 import { BreadcrumbNav } from '@/components/breadcrumb-nav'
-import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Badge } from '@/components/ui/badge'
@@ -55,8 +54,6 @@ export function BackofficeHeader({ className, fixed = true }: BackofficeHeaderPr
           </Badge>
         )}
 
-        {/* Search Palette (Cmd+K) */}
-        <Search />
 
         {/* Theme Switcher (Dark/Light mode) */}
         <ThemeSwitch />

@@ -19,7 +19,6 @@ import { formatRupiah } from '@/lib/formatters'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search as SearchHeader } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Button } from '@/components/ui/button'
@@ -166,10 +165,20 @@ export const PengaturanKantinPage: React.FC = () => {
   return (
     <>
       <Header>
-        <SearchHeader className='me-auto' />
-        <ThemeSwitch />
-        <ConfigDrawer />
-        <ProfileDropdown />
+        <div className='flex w-full items-center justify-between'>
+          <div className='flex items-center gap-2'>
+            <span className='text-muted-foreground text-xs font-semibold uppercase tracking-wider'>
+              Pengaturan Kantin
+            </span>
+            <span className='text-muted-foreground text-xs'>/</span>
+            <span className='text-xs font-medium'>Operasional Kantin</span>
+          </div>
+          <div className='flex items-center gap-2'>
+            <ThemeSwitch />
+            <ConfigDrawer />
+            <ProfileDropdown />
+          </div>
+        </div>
       </Header>
 
       <Main fixed>
@@ -218,7 +227,7 @@ export const PengaturanKantinPage: React.FC = () => {
           <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
             <div className='grid gap-6 md:grid-cols-2'>
               {/* Card 1: Identitas & Jam Tutup Otomatis */}
-              <Card className='border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
+              <Card className='border-0 bg-muted/60 dark:bg-muted/25'>
                 <CardHeader>
                   <div className='flex items-center gap-2.5'>
                     <Store className='h-5 w-5 text-primary shrink-0' />
@@ -307,7 +316,7 @@ export const PengaturanKantinPage: React.FC = () => {
               </Card>
 
               {/* Card 2: Interaksi Kasir POS (Foto & Konfirmasi Manual) */}
-              <Card className='border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
+              <Card className='border-0 bg-muted/60 dark:bg-muted/25'>
                 <CardHeader>
                   <div className='flex items-center gap-2.5'>
                     <Camera className='h-5 w-5 text-primary shrink-0' />
@@ -421,7 +430,7 @@ export const PengaturanKantinPage: React.FC = () => {
               </Card>
 
               {/* Card 3: Batas Plafon Top-Up Siswa */}
-              <Card className='border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
+              <Card className='border-0 bg-muted/60 dark:bg-muted/25'>
                 <CardHeader>
                   <div className='flex items-center gap-2.5'>
                     <Coins className='h-5 w-5 text-primary shrink-0' />
@@ -500,7 +509,7 @@ export const PengaturanKantinPage: React.FC = () => {
               </Card>
 
               {/* Card 4: Batas Saldo Maksimum */}
-              <Card className='border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
+              <Card className='border-0 bg-muted/60 dark:bg-muted/25'>
                 <CardHeader>
                   <div className='flex items-center gap-2.5'>
                     <ShieldCheck className='h-5 w-5 text-primary shrink-0' />
@@ -586,7 +595,7 @@ export const PengaturanKantinPage: React.FC = () => {
             </div>
 
             {/* Bottom Action Footer */}
-            <Card className='border-0 bg-muted/60 dark:bg-muted/25 shadow-sm'>
+            <Card className='border-0 bg-muted/60 dark:bg-muted/25'>
               <CardFooter className='flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between'>
                 <div className='flex items-center gap-2 text-xs text-muted-foreground'>
                   <UserCheck className='h-4 w-4 text-emerald-600' />

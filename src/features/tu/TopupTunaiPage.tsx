@@ -23,7 +23,6 @@ import { Label } from '@/components/ui/label'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { formatRupiah } from '@/lib/formatters'
 import { PrintSlipModal, type TopupSlipData } from './PrintSlipModal'
@@ -211,7 +210,6 @@ export function TopupTunaiPage() {
   return (
     <>
       <Header fixed>
-        <Search showKbd={false} />
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
@@ -247,7 +245,7 @@ export function TopupTunaiPage() {
 
         {/* Ringkasan Status Header Cards */}
         <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
-          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardContent className='p-4'>
               <p className='text-xs font-medium text-muted-foreground'>
                 Total Siswa Terdaftar
@@ -258,7 +256,7 @@ export function TopupTunaiPage() {
             </CardContent>
           </Card>
 
-          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardContent className='p-4'>
               <p className='text-xs font-medium text-muted-foreground'>
                 Status Kartu Siswa
@@ -269,7 +267,7 @@ export function TopupTunaiPage() {
             </CardContent>
           </Card>
 
-          <Card className='border-0 bg-muted/70 dark:bg-muted/30 shadow-xs transition-all hover:shadow-md'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardContent className='p-4'>
               <p className='text-xs font-medium text-muted-foreground'>
                 Batas Saldo Maksimal
@@ -294,7 +292,7 @@ export function TopupTunaiPage() {
 
           {/* Right Column: Topup Form (7 Cols) */}
           <div className='space-y-6 lg:col-span-7'>
-            <Card className='border border-border bg-card shadow-xs'>
+            <Card className='border border-border bg-card'>
               <CardHeader className='pb-4'>
                 <CardTitle className='text-lg font-semibold'>
                   Form Pengisian Saldo Tunai
@@ -319,9 +317,9 @@ export function TopupTunaiPage() {
                           variant={
                             nominalNum === preset ? 'default' : 'outline'
                           }
-                          className={`h-11 text-xs font-semibold transition-all sm:text-sm ${
+                          className={`h-11 text-xs font-semibold sm:text-sm ${
                             nominalNum === preset
-                              ? 'bg-emerald-600 text-white shadow-xs hover:bg-emerald-700'
+                              ? 'bg-emerald-600 text-white hover:bg-emerald-700'
                               : 'border-border bg-background hover:bg-muted text-foreground'
                           }`}
                           onClick={() => handleSelectPreset(preset)}
@@ -458,7 +456,7 @@ export function TopupTunaiPage() {
                   <Button
                     type='submit'
                     disabled={!isValidSubmit || isSubmitting}
-                    className='h-11 w-full gap-2 bg-emerald-600 text-sm font-semibold text-white shadow-xs transition-all hover:bg-emerald-700 disabled:opacity-50'
+                    className='h-11 w-full gap-2 bg-emerald-600 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50'
                   >
                     {isSubmitting ? (
                       <>

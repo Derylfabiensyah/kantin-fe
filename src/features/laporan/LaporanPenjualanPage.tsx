@@ -400,7 +400,7 @@ export function LaporanPenjualanPage() {
 
             {/* TAB CONTENT 1: PENJUALAN PER ITEM */}
             <TabsContent value="item" className="space-y-4">
-              <Card className="border-0">
+              <Card className="border-0 bg-muted/70 dark:bg-muted/30">
                 <CardHeader>
                   <CardTitle className="text-base font-bold">
                     Penjualan & Laba Kotor per Item Menu
@@ -497,7 +497,7 @@ export function LaporanPenjualanPage() {
 
             {/* TAB CONTENT 2: PENJUALAN PER KATEGORI */}
             <TabsContent value="kategori" className="space-y-4">
-              <Card className="border-0">
+              <Card className="border-0 bg-muted/70 dark:bg-muted/30">
                 <CardHeader>
                   <CardTitle className="text-base font-bold">
                     Penjualan & Laba Kotor per Kategori
@@ -575,7 +575,7 @@ export function LaporanPenjualanPage() {
 
             {/* TAB CONTENT 3: PENJUALAN PER KASIR */}
             <TabsContent value="kasir" className="space-y-4">
-              <Card className="border-0">
+              <Card className="border-0 bg-muted/70 dark:bg-muted/30">
                 <CardHeader>
                   <CardTitle className="text-base font-bold">
                     Penjualan per Titik Kasir & Petugas

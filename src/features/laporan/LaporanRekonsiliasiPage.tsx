@@ -10,8 +10,6 @@ import {
   ArrowDownLeft,
   ShieldAlert,
   Coins,
-  ToggleLeft,
-  ToggleRight,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -44,16 +42,12 @@ import type { RingkasanRekonsiliasi, ArusPosRekonsiliasiItem } from './types'
 export function LaporanRekonsiliasiPage() {
   const [data, setData] = useState<RingkasanRekonsiliasi | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [simulasiSelisih, setSimulasiSelisih] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
-  const loadData = async (overrideSimulasi?: boolean) => {
+  const loadData = async () => {
     try {
       setIsLoading(true)
-      const isSim = overrideSimulasi !== undefined ? overrideSimulasi : simulasiSelisih
-      const res = await laporanApi.getRekonsiliasi({
-        simulasiSelisih: isSim,
-      })
+      const res = await laporanApi.getRekonsiliasi()
       setData(res)
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Gagal memuat rekonsiliasi'
@@ -67,7 +61,7 @@ export function LaporanRekonsiliasiPage() {
     let isMounted = true
     const init = async () => {
       try {
-        const res = await laporanApi.getRekonsiliasi({ simulasiSelisih: false })
+        const res = await laporanApi.getRekonsiliasi()
         if (!isMounted) return
         setData(res)
       } catch (err: unknown) {
@@ -83,21 +77,6 @@ export function LaporanRekonsiliasiPage() {
       isMounted = false
     }
   }, [])
-
-  const handleToggleSimulasi = () => {
-    const nextVal = !simulasiSelisih
-    setSimulasiSelisih(nextVal)
-    void loadData(nextVal)
-    if (nextVal) {
-      toast.warning('Mode Simulasi Selisih Aktif', {
-        description: 'Menampilkan kondisi invariant TIDAK seimbang (selisih Rp 75.000) untuk pengujian UI.',
-      })
-    } else {
-      toast.success('Mode Seimbang Dipulihkan', {
-        description: 'Invariant akuntansi kembali seimbang (selisih Rp 0).',
-      })
-    }
-  }
 
   // Baris Rincian Pos Akuntansi
   const rincianPos: ArusPosRekonsiliasiItem[] = useMemo(() => {
@@ -296,26 +275,6 @@ export function LaporanRekonsiliasiPage() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2.5">
-              {/* Tombol Simulasi Selisih untuk pengujian Banner Merah */}
-              <Button
-                variant={simulasiSelisih ? 'destructive' : 'outline'}
-                size="sm"
-                onClick={handleToggleSimulasi}
-                className="gap-2 shadow-xs"
-              >
-                {simulasiSelisih ? (
-                  <>
-                    <ToggleRight className="h-4 w-4" />
-                    <span>Mode Selisih Aktif (Rp 75.000)</span>
-                  </>
-                ) : (
-                  <>
-                    <ToggleLeft className="h-4 w-4" />
-                    <span>Uji Banner Selisih Merah</span>
-                  </>
-                )}
-              </Button>
-
               <Button
                 variant="outline"
                 size="sm"
@@ -381,47 +340,6 @@ export function LaporanRekonsiliasiPage() {
                     </div>
                   </div>
                 </div>
-
-                <div className="flex shrink-0 gap-2">
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleToggleSimulasi()}
-                    className="shadow-sm"
-                  >
-                    Atur Kembali ke Seimbang
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ✅ BANNER STATUS SEIMBANG HIJAU (KETIKA SELISIH == 0) */}
-          {data && data.seimbang && (
-            <div
-              data-testid="banner-status-seimbang"
-              className="flex items-start gap-4 rounded-xl border border-emerald-500/50 bg-emerald-50/80 p-5 text-emerald-950 shadow-xs dark:border-emerald-500/40 dark:bg-emerald-950/40 dark:text-emerald-100"
-            >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-xs">
-                <CheckCircle2 className="h-6 w-6" />
-              </div>
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2">
-                  <h2 className="text-base font-bold text-emerald-800 dark:text-emerald-300">
-                    INVARIANT AKUNTANSI TEREKONSILIASI LENGKAP
-                  </h2>
-                  <Badge className="bg-emerald-600 text-white font-mono text-xs hover:bg-emerald-600">
-                    STATUS: SEIMBANG (0 SELISIH)
-                  </Badge>
-                </div>
-                <p className="text-sm text-emerald-800/90 dark:text-emerald-200/90">
-                  Seluruh arus dana masuk dan keluar cocok 100%. Rumus invariant akuntansi terpenuhi:
-                  {' '}
-                  <span className="font-medium font-mono text-xs bg-emerald-100 dark:bg-emerald-900/60 px-1.5 py-0.5 rounded">
-                    Topup ({formatRupiah(data.totalTopupSemua)}) − Refund ({formatRupiah(data.totalRefundSemua)}) = Saldo Mengendap ({formatRupiah(data.saldoMengendap)}) + Penjualan ({formatRupiah(data.penjualanBersih)})
-                  </span>
-                  . Pembukuan siap diaudit oleh Kepala Sekolah.
-                </p>
               </div>
             </div>
           )}

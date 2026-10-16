@@ -48,10 +48,8 @@ export function TopupTunaiPage() {
     let isMounted = true
     const loadStudents = async () => {
       try {
-        const res = await apiClient
-          .get('/api/v1/tu/topup/siswa')
-          .catch(() => apiClient.get('/api/v1/tu/siswa'))
-        if (isMounted && res.data?.data) {
+        const res = await apiClient.get('/api/saldo/refund/kandidat')
+        if (isMounted && res.data?.data && Array.isArray(res.data.data)) {
           setStudents(res.data.data)
         }
       } catch {
@@ -69,10 +67,8 @@ export function TopupTunaiPage() {
   const handleRefresh = async () => {
     setIsRefreshing(true)
     try {
-      const res = await apiClient
-        .get('/api/v1/tu/topup/siswa')
-        .catch(() => apiClient.get('/api/v1/tu/siswa'))
-      if (res.data?.data) {
+      const res = await apiClient.get('/api/saldo/refund/kandidat')
+      if (res.data?.data && Array.isArray(res.data.data)) {
         setStudents(res.data.data)
       }
       toast.success('Data siswa berhasil dimuat ulang')
@@ -115,24 +111,46 @@ export function TopupTunaiPage() {
     try {
       let result: TopupSlipData | null = null
 
+      const now = new Date()
+      const dateCode = now.toISOString().slice(0, 10).replace(/-/g, '')
+      const randomSeq = Math.floor(1000 + Math.random() * 9000)
+      const refNo = `TU-TOPUP-${dateCode}-${randomSeq}`
+
       try {
-        const response = await apiClient.post('/api/v1/tu/topup', {
-          siswa_id: currentStudent.siswa_id,
+        const response = await apiClient.post('/api/saldo/topup', {
+          subjekTipe: 'SISWA',
+          subjekId: currentStudent.siswa_id,
           nominal: nominalNum,
-          nama_penyetor: namaPenyetor.trim(),
-          petugas_nama: 'Wibisana Bama (Petugas TU)',
+          penyetor: namaPenyetor.trim(),
+          referensiId: refNo,
         })
-        result = response.data?.data as TopupSlipData
+        const resData = response.data?.data
+        const saldoAwal = resData?.saldoSebelum ?? currentStudent.saldo
+        const saldoBaruRes = resData?.saldoSetelah ?? saldoAwal + nominalNum
+
+        result = {
+          ref_no: refNo,
+          waktu: resData?.waktu || now.toISOString(),
+          petugas_nama: 'Wibisana Bama (Petugas TU)',
+          nama_penyetor: namaPenyetor.trim(),
+          nominal: nominalNum,
+          saldo_awal: saldoAwal,
+          saldo_baru: saldoBaruRes,
+          siswa: {
+            siswa_id: currentStudent.siswa_id,
+            nis: currentStudent.nis,
+            nama: currentStudent.nama,
+            kelas: currentStudent.kelas,
+            foto_url: currentStudent.foto_url,
+          },
+        }
       } catch {
         // Fallback simulasi frontend jika backend API / mock adapter tidak merespons
         const saldoAwal = currentStudent.saldo
         const saldoBaruCalculated = saldoAwal + nominalNum
-        const now = new Date()
-        const dateCode = now.toISOString().slice(0, 10).replace(/-/g, '')
-        const randomSeq = Math.floor(1000 + Math.random() * 9000)
 
         result = {
-          ref_no: `TU-TOPUP-${dateCode}-${randomSeq}`,
+          ref_no: refNo,
           waktu: now.toISOString(),
           petugas_nama: 'Wibisana Bama (Petugas TU)',
           nama_penyetor: namaPenyetor.trim(),

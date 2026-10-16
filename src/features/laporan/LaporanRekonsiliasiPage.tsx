@@ -372,16 +372,16 @@ export function LaporanRekonsiliasiPage() {
           {/* METRIC SUMMARY CARDS GRID */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardHeader className="p-4 pb-1">
+                <CardTitle className="text-xs font-medium text-muted-foreground">
                   Total Top-up Masuk
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4 pt-0">
                 <div className="text-2xl font-bold tracking-tight">
                   {data ? formatRupiah(data.totalTopupSemua) : '...'}
                 </div>
-                <div className="text-xs text-muted-foreground mt-1 flex justify-between">
+                <div className="text-xs text-muted-foreground mt-1.5 flex justify-between">
                   <span>Tunai: {data ? formatRupiah(data.topupTunai) : '-'}</span>
                   <span>Online: {data ? formatRupiah(data.topupOnline) : '-'}</span>
                 </div>
@@ -389,54 +389,54 @@ export function LaporanRekonsiliasiPage() {
             </Card>
 
             <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardHeader className="p-4 pb-1">
+                <CardTitle className="text-xs font-medium text-muted-foreground">
                   Penjualan Bersih
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4 pt-0">
                 <div className="text-2xl font-bold tracking-tight">
                   {data ? formatRupiah(data.penjualanBersih) : '...'}
                 </div>
-                <div className="text-xs text-muted-foreground mt-1 flex justify-between">
+                <div className="text-xs text-muted-foreground mt-1.5 flex justify-between">
                   <span>Bruto: {data ? formatRupiah(data.penjualan) : '-'}</span>
-                  <span className="text-amber-600">Void: {data ? formatRupiah(data.voidPenjualan) : '-'}</span>
+                  <span className="text-amber-600 font-medium">Void: {data ? formatRupiah(data.voidPenjualan) : '-'}</span>
                 </div>
               </CardContent>
             </Card>
 
             <Card className="border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardHeader className="p-4 pb-1">
+                <CardTitle className="text-xs font-medium text-muted-foreground">
                   Saldo Mengendap (Kewajiban)
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4 pt-0">
                 <div className="text-2xl font-bold tracking-tight">
                   {data ? formatRupiah(data.saldoMengendap) : '...'}
                 </div>
-                <div className="text-xs text-muted-foreground mt-1 flex justify-between">
+                <div className="text-xs text-muted-foreground mt-1.5 flex justify-between">
                   <span>Siswa: {data ? formatRupiah(data.saldoSiswa) : '-'}</span>
                   <span>Tamu: {data ? formatRupiah(data.saldoKartuTamu) : '-'}</span>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className={data && !data.seimbang ? 'border-0 shadow-sm bg-red-50/40 dark:bg-red-950/20 transition-all hover:shadow-md' : 'border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'}>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+            <Card className={data && !data.seimbang ? 'border-0 bg-red-500/10 dark:bg-red-950/30 shadow-sm transition-all hover:shadow-md' : 'border-0 bg-muted/70 dark:bg-muted/30 shadow-sm transition-all hover:shadow-md'}>
+              <CardHeader className="p-4 pb-1">
+                <CardTitle className="text-xs font-medium text-muted-foreground">
                   Status Rekonsiliasi
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4 pt-0">
                 <div
                   className={`text-2xl font-bold tracking-tight ${
-                    data?.seimbang ? 'text-emerald-600' : 'text-red-600'
+                    data?.seimbang ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'
                   }`}
                 >
                   {data?.seimbang ? 'SEIMBANG' : `SELISIH ${formatRupiah(data?.selisih || 0)}`}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-muted-foreground mt-1.5">
                   {data?.seimbang
                     ? '100% Invariant Akuntansi Terpenuhi'
                     : 'Periksa fisik kas & ledger'}

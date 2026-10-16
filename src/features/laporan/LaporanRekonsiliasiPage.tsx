@@ -332,17 +332,15 @@ export function LaporanRekonsiliasiPage() {
 
                   {/* Simbol Sama Dengan */}
                   <div className="flex flex-col items-center justify-center">
-                    <div
-                      className={`flex h-12 w-12 items-center justify-center rounded-full border-0 ${
+                    <span
+                      className={`text-2xl font-black ${
                         data.seimbang
-                          ? 'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400'
-                          : 'bg-red-500/15 text-red-600 dark:bg-red-950/60 dark:text-red-400'
+                          ? 'text-emerald-600 dark:text-emerald-400'
+                          : 'text-red-600 dark:text-red-400'
                       }`}
                     >
-                      <span className="text-xl font-black">
-                        {data.seimbang ? '=' : '≠'}
-                      </span>
-                    </div>
+                      {data.seimbang ? '=' : '≠'}
+                    </span>
                     <span
                       className={`mt-1 text-xs font-bold ${
                         data.seimbang ? 'text-emerald-600' : 'text-red-600'

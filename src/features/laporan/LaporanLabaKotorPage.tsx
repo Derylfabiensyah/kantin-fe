@@ -245,7 +245,7 @@ export function LaporanLabaKotorPage() {
 
           {/* SUMMARY CARDS GRID */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Total Laba Kotor
@@ -264,7 +264,7 @@ export function LaporanLabaKotorPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Rata-rata Gross Margin
@@ -283,7 +283,7 @@ export function LaporanLabaKotorPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Beban Pokok Penjualan (HPP)
@@ -302,7 +302,7 @@ export function LaporanLabaKotorPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-0 bg-muted/70 dark:bg-muted/30">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Menu Juara Laba
@@ -323,7 +323,7 @@ export function LaporanLabaKotorPage() {
           </div>
 
           {/* TABEL PROFITABILITAS PER MENU */}
-          <Card>
+          <Card className="border-0 bg-muted/70 dark:bg-muted/30">
             <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <CardTitle className="text-base font-bold">

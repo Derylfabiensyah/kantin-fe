@@ -48,23 +48,6 @@ export function LaporanLabaKotorPage() {
   const [marginFilter, setMarginFilter] = useState<'ALL' | 'HIGH' | 'MEDIUM' | 'LOW'>('ALL')
   const [sortBy, setSortBy] = useState<'laba_desc' | 'margin_desc' | 'omset_desc'>('laba_desc')
 
-  const loadData = async () => {
-    try {
-      setIsLoading(true)
-      const [resRingkasan, resItems] = await Promise.all([
-        laporanApi.getPenjualan(),
-        laporanApi.getPenjualanPerItem(),
-      ])
-      setRingkasan(resRingkasan)
-      setItems(resItems)
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Gagal memuat laba kotor'
-      toast.error('Gagal Memuat Laporan Laba Kotor', { description: msg })
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   useEffect(() => {
     let isMounted = true
     const init = async () => {

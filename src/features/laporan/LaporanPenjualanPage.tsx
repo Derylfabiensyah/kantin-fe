@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from 'react'
 import {
   Download,
   Search,
-  Receipt,
   Tag,
   Store,
   Layers,
@@ -52,27 +51,6 @@ export function LaporanPenjualanPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<'terlaris' | 'laba' | 'margin'>('terlaris')
 
-  const loadData = async () => {
-    try {
-      setIsLoading(true)
-      const [resRingkasan, resItems, resKategoris, resKasirs] = await Promise.all([
-        laporanApi.getPenjualan(),
-        laporanApi.getPenjualanPerItem(),
-        laporanApi.getPenjualanPerKategori(),
-        laporanApi.getPenjualanPerKasir(),
-      ])
-
-      setRingkasan(resRingkasan)
-      setItems(resItems)
-      setKategoris(resKategoris)
-      setKasirs(resKasirs)
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Gagal memuat data penjualan'
-      toast.error('Gagal Memuat Laporan Penjualan', { description: msg })
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   useEffect(() => {
     let isMounted = true

@@ -1,13 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
-  CheckCircle2,
-  AlertTriangle,
   Download,
   Search,
-  Wallet,
-  ArrowDownLeft,
   ShieldAlert,
-  Coins,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -378,14 +373,11 @@ export function LaporanRekonsiliasiPage() {
 
           {/* METRIC SUMMARY CARDS GRID */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <Card className="border-0 shadow-sm">
+              <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Total Top-up Masuk
                 </CardTitle>
-                <div className="rounded-lg bg-emerald-500/10 p-2 text-emerald-600">
-                  <ArrowDownLeft className="h-4 w-4" />
-                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold tracking-tight">
@@ -398,14 +390,11 @@ export function LaporanRekonsiliasiPage() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <Card className="border-0 shadow-sm">
+              <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Penjualan Bersih
                 </CardTitle>
-                <div className="rounded-lg bg-blue-500/10 p-2 text-blue-600">
-                  <Coins className="h-4 w-4" />
-                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold tracking-tight">
@@ -418,14 +407,11 @@ export function LaporanRekonsiliasiPage() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <Card className="border-0 shadow-sm">
+              <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Saldo Mengendap (Kewajiban)
                 </CardTitle>
-                <div className="rounded-lg bg-indigo-500/10 p-2 text-indigo-600">
-                  <Wallet className="h-4 w-4" />
-                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold tracking-tight">
@@ -438,24 +424,11 @@ export function LaporanRekonsiliasiPage() {
               </CardContent>
             </Card>
 
-            <Card className={data && !data.seimbang ? 'border-red-500 bg-red-50/20 dark:bg-red-950/20' : ''}>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <Card className={data && !data.seimbang ? 'border-0 shadow-sm bg-red-50/40 dark:bg-red-950/20' : 'border-0 shadow-sm'}>
+              <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Status Rekonsiliasi
                 </CardTitle>
-                <div
-                  className={`rounded-lg p-2 ${
-                    data?.seimbang
-                      ? 'bg-emerald-500/10 text-emerald-600'
-                      : 'bg-red-500/10 text-red-600'
-                  }`}
-                >
-                  {data?.seimbang ? (
-                    <CheckCircle2 className="h-4 w-4" />
-                  ) : (
-                    <AlertTriangle className="h-4 w-4" />
-                  )}
-                </div>
               </CardHeader>
               <CardContent>
                 <div

@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/select'
 import apiClient from '@/lib/api-client'
 import { toast } from 'sonner'
+import { formatRupiah } from '@/lib/formatters'
 import type { KartuTamuMock } from '@/mocks/mock-data'
 
 interface BlokirKartuModalProps {
@@ -106,7 +107,7 @@ export function BlokirKartuModal({
 
       toast.success(`Kartu ${kartu.nomor_kartu} berhasil diblokir!`, {
         description: targetCard
-          ? `Saldo Rp ${kartu.saldo.toLocaleString('id-ID')} dipindah ke ${targetCard.nomor_kartu}`
+          ? `Saldo ${formatRupiah(kartu.saldo)} dipindah ke ${targetCard.nomor_kartu}`
           : 'Status kartu telah berubah menjadi BLOCKED.',
       })
 
@@ -143,7 +144,7 @@ export function BlokirKartuModal({
           <div className='text-right shrink-0'>
             <p className='text-xs text-muted-foreground'>Saldo Tersisa</p>
             <p className='font-bold text-xl text-destructive font-mono'>
-              Rp {kartu.saldo.toLocaleString('id-ID')}
+              {formatRupiah(kartu.saldo)}
             </p>
           </div>
         </div>
@@ -184,7 +185,7 @@ export function BlokirKartuModal({
                     Transfer sisa saldo ke Kartu Tamu lain
                   </label>
                   <p className='text-xs text-muted-foreground mt-0.5'>
-                    Pindahkan Rp {kartu.saldo.toLocaleString('id-ID')} ke kartu
+                    Pindahkan {formatRupiah(kartu.saldo)} ke kartu
                     aktif lainnya sebelum memblokir
                   </p>
                 </div>
@@ -218,8 +219,8 @@ export function BlokirKartuModal({
                               <span className='text-muted-foreground text-xs'>
                                 {c.label_pemegang || '(Tanpa label)'}
                               </span>
-                              <span className='ml-auto text-emerald-600 dark:text-emerald-400 text-xs font-mono font-medium'>
-                                Rp {c.saldo.toLocaleString('id-ID')}
+                              <span className='ms-auto text-emerald-600 dark:text-emerald-400 text-xs font-mono font-medium'>
+                                {formatRupiah(c.saldo)}
                               </span>
                             </div>
                           </SelectItem>

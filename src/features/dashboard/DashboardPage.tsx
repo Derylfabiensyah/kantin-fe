@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
   TrendingUp,
@@ -6,14 +6,11 @@ import {
   AlertTriangle,
   Scale,
   CheckCircle2,
-  Plus,
   Boxes,
   FileSpreadsheet,
   Banknote,
   Store,
-  ArrowRight,
   Sparkles,
-  Info,
 } from 'lucide-react'
 import {
   ResponsiveContainer,
@@ -25,7 +22,6 @@ import {
   Legend,
   CartesianGrid,
 } from 'recharts'
-import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -44,19 +40,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { BackofficeHeader } from '@/components/layout/backoffice-header'
 import { Main } from '@/components/layout/main'
-import { MOCK_MENU, type MenuItemMock } from '@/mocks/mock-data'
+import { MOCK_MENU } from '@/mocks/mock-data'
 
 // Data tren penjualan 7 hari terakhir
 const SALES_TREND_DATA = [
@@ -137,13 +123,8 @@ const formatRupiah = (val: number) => {
 }
 
 export function DashboardPage() {
-  // State menu stok
-  const [menuItems, setMenuItems] = useState<MenuItemMock[]>(MOCK_MENU)
-
-  // State dialog restock cepat
-  const [restockModalOpen, setRestockModalOpen] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<MenuItemMock | null>(null)
-  const [restockQty, setRestockQty] = useState<number>(10)
+  // Data menu stok
+  const menuItems = MOCK_MENU
 
   // Item dengan stok menipis (stok <= stok_minimum)
   const lowStockItems = useMemo(() => {
@@ -155,34 +136,6 @@ export function DashboardPage() {
   const todayTransactions = 168
   const todayItemsSold = 214
   const avgPerTransaction = Math.round(todaySales / todayTransactions)
-
-  const handleOpenRestock = (item: MenuItemMock) => {
-    setSelectedItem(item)
-    setRestockQty(10)
-    setRestockModalOpen(true)
-  }
-
-  const handleSaveRestock = () => {
-    if (!selectedItem) return
-    const qty = Number(restockQty)
-    if (isNaN(qty) || qty <= 0) {
-      toast.error('Jumlah restock harus lebih dari 0')
-      return
-    }
-
-    setMenuItems((prev) =>
-      prev.map((item) =>
-        item.id === selectedItem.id
-          ? { ...item, stok: item.stok + qty }
-          : item
-      )
-    )
-
-    toast.success(`Berhasil menambah +${qty} ${selectedItem.satuan} untuk ${selectedItem.nama}`, {
-      description: `Stok saat ini: ${selectedItem.stok + qty} ${selectedItem.satuan}`,
-    })
-    setRestockModalOpen(false)
-  }
 
   return (
     <>
@@ -361,21 +314,16 @@ export function DashboardPage() {
             </CardContent>
           </Card>
 
-          {/* Kolom Kanan: Alert Kartu Stok Menipis */}
-          <Card className='col-span-1 lg:col-span-3 border-border/60 flex flex-col'>
-            <CardHeader className='flex flex-row items-center justify-between pb-3'>
-              <div>
-                <CardTitle className='text-base font-semibold flex items-center gap-2'>
-                  <AlertTriangle className='size-4 text-amber-500' />
-                  <span>Alert: Stok Menipis</span>
-                </CardTitle>
-                <CardDescription className='text-xs mt-0.5'>
-                  Item dengan stok &le; batas minimum sekolah
-                </CardDescription>
-              </div>
-              <Button asChild variant='ghost' size='sm' className='text-xs h-7 px-2'>
-                <Link to={'/stok/kartu' as string as never}>Lihat Semua</Link>
-              </Button>
+          {/* Kolom Kanan: Stok Menipis */}
+          <Card className='col-span-1 lg:col-span-3 border-0 bg-muted/70 dark:bg-muted/30 flex flex-col'>
+            <CardHeader className='pb-3'>
+              <CardTitle className='text-base font-semibold flex items-center gap-2'>
+                <AlertTriangle className='size-4 text-amber-500' />
+                <span>Stok Menipis</span>
+              </CardTitle>
+              <CardDescription className='text-xs mt-0.5'>
+                Item dengan stok kurang dari atau sama dengan batas minimum sekolah
+              </CardDescription>
             </CardHeader>
             <CardContent className='flex-1 p-0'>
               <div className='overflow-x-auto'>
@@ -385,13 +333,12 @@ export function DashboardPage() {
                       <TableHead>Menu</TableHead>
                       <TableHead className='text-center'>Sisa / Min</TableHead>
                       <TableHead className='text-center'>Status</TableHead>
-                      <TableHead className='text-right'>Aksi</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {lowStockItems.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={4} className='h-28 text-center text-xs text-muted-foreground'>
+                        <TableCell colSpan={3} className='h-28 text-center text-xs text-muted-foreground'>
                           <CheckCircle2 className='size-6 text-emerald-500 mx-auto mb-1 opacity-70' />
                           Semua stok menu dalam kondisi aman di atas batas minimum.
                         </TableCell>
@@ -415,25 +362,14 @@ export function DashboardPage() {
                             </TableCell>
                             <TableCell className='text-center'>
                               {isOut ? (
-                                <Badge variant='destructive' className='text-[10px] px-1.5 py-0 uppercase'>
+                                <Badge variant='destructive' className='text-[10px] px-1.5 py-0 uppercase border-0'>
                                   HABIS
                                 </Badge>
                               ) : (
-                                <Badge variant='outline' className='text-[10px] px-1.5 py-0 border-amber-400 bg-amber-500/10 text-amber-700 dark:text-amber-300 uppercase'>
+                                <Badge variant='outline' className='text-[10px] px-1.5 py-0 border-0 bg-amber-500/10 text-amber-700 dark:text-amber-300 uppercase'>
                                   MENIPIS
                                 </Badge>
                               )}
-                            </TableCell>
-                            <TableCell className='text-right'>
-                              <Button
-                                size='sm'
-                                variant={isOut ? 'default' : 'outline'}
-                                className='h-7 text-xs px-2 gap-1'
-                                onClick={() => handleOpenRestock(item)}
-                              >
-                                <Plus className='size-3' />
-                                Restock
-                              </Button>
                             </TableCell>
                           </TableRow>
                         )
@@ -441,17 +377,6 @@ export function DashboardPage() {
                     )}
                   </TableBody>
                 </Table>
-              </div>
-
-              {/* Quick Link ke Halaman Barang Masuk */}
-              <div className='p-3 border-t border-border/50 bg-muted/20 flex items-center justify-between text-xs text-muted-foreground'>
-                <span>Ingin mencatat faktur suplai baru?</span>
-                <Link
-                  to={'/stok/masuk' as string as never}
-                  className='font-semibold text-primary hover:underline inline-flex items-center gap-1'
-                >
-                  Input Barang Masuk <ArrowRight className='size-3' />
-                </Link>
               </div>
             </CardContent>
           </Card>
@@ -580,92 +505,6 @@ export function DashboardPage() {
           </Card>
         </div>
       </Main>
-
-      {/* ===== Dialog Restock Cepat ===== */}
-      <Dialog open={restockModalOpen} onOpenChange={setRestockModalOpen}>
-        <DialogContent className='sm:max-w-md'>
-          <DialogHeader>
-            <DialogTitle className='flex items-center gap-2'>
-              <Boxes className='size-5 text-primary' />
-              <span>Restock Cepat: {selectedItem?.nama}</span>
-            </DialogTitle>
-            <DialogDescription className='text-xs'>
-              Tambahkan stok instan untuk menu ini agar kasir dapat memproses pesanan kembali.
-            </DialogDescription>
-          </DialogHeader>
-
-          {selectedItem && (
-            <div className='space-y-4 py-2'>
-              <div className='rounded-lg bg-muted/50 p-3 text-xs space-y-1.5'>
-                <div className='flex justify-between'>
-                  <span className='text-muted-foreground'>Kategori:</span>
-                  <span className='font-medium text-foreground'>{selectedItem.kategori_nama}</span>
-                </div>
-                <div className='flex justify-between'>
-                  <span className='text-muted-foreground'>Stok Saat Ini:</span>
-                  <span className={`font-bold ${selectedItem.stok === 0 ? 'text-destructive' : 'text-amber-600'}`}>
-                    {selectedItem.stok} {selectedItem.satuan}
-                  </span>
-                </div>
-                <div className='flex justify-between'>
-                  <span className='text-muted-foreground'>Batas Minimum:</span>
-                  <span className='font-medium text-foreground'>{selectedItem.stok_minimum} {selectedItem.satuan}</span>
-                </div>
-                <div className='flex justify-between'>
-                  <span className='text-muted-foreground'>Harga Jual / HPP:</span>
-                  <span className='font-medium text-foreground'>
-                    {formatRupiah(selectedItem.harga_jual)} / {formatRupiah(selectedItem.hpp)}
-                  </span>
-                </div>
-              </div>
-
-              <div className='space-y-1.5'>
-                <Label htmlFor='restock-qty' className='text-xs font-semibold'>
-                  Jumlah Stok Masuk ({selectedItem.satuan}):
-                </Label>
-                <Input
-                  id='restock-qty'
-                  type='number'
-                  min={1}
-                  value={restockQty}
-                  onChange={(e) => setRestockQty(parseInt(e.target.value) || 0)}
-                  className='h-9 text-sm'
-                />
-                <div className='flex gap-1.5 pt-1'>
-                  {[5, 10, 20, 50].map((preset) => (
-                    <Button
-                      key={preset}
-                      type='button'
-                      variant='outline'
-                      size='sm'
-                      className='h-7 text-xs px-2 flex-1'
-                      onClick={() => setRestockQty(preset)}
-                    >
-                      +{preset}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              <div className='rounded-md bg-blue-500/10 p-2.5 text-xs text-blue-700 dark:text-blue-300 flex items-center gap-2'>
-                <Info className='size-4 shrink-0' />
-                <span>
-                  Estimasi stok baru: <strong>{selectedItem.stok + (Number(restockQty) || 0)} {selectedItem.satuan}</strong>
-                </span>
-              </div>
-            </div>
-          )}
-
-          <DialogFooter className='gap-2 sm:gap-0'>
-            <Button variant='outline' size='sm' onClick={() => setRestockModalOpen(false)}>
-              Batal
-            </Button>
-            <Button size='sm' onClick={handleSaveRestock}>
-              Simpan Tambah Stok
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </>
   )
 }

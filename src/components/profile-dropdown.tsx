@@ -45,7 +45,7 @@ export function ProfileDropdown() {
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className='w-64' align='end' forceMount>
+        <DropdownMenuContent className='w-64 border-0' align='end' forceMount>
           <DropdownMenuLabel className='font-normal'>
             <div className='flex flex-col gap-1.5'>
               <p className='text-sm leading-none font-semibold text-foreground truncate' title={userName}>

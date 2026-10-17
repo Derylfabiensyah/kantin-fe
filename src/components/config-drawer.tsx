@@ -20,7 +20,6 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -28,18 +27,6 @@ import {
 import { useSidebar } from './ui/sidebar'
 
 export function ConfigDrawer() {
-  const { setOpen } = useSidebar()
-  const { resetDir } = useDirection()
-  const { resetTheme } = useTheme()
-  const { resetLayout } = useLayout()
-
-  const handleReset = () => {
-    setOpen(true)
-    resetDir()
-    resetTheme()
-    resetLayout()
-  }
-
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -65,15 +52,6 @@ export function ConfigDrawer() {
           <LayoutConfig />
           <DirConfig />
         </div>
-        <SheetFooter className='gap-2'>
-          <Button
-            variant='destructive'
-            onClick={handleReset}
-            aria-label='Reset all settings to default values'
-          >
-            Reset
-          </Button>
-        </SheetFooter>
       </SheetContent>
     </Sheet>
   )
@@ -219,7 +197,7 @@ function ThemeConfig() {
 function SidebarConfig() {
   const { defaultVariant, variant, setVariant } = useLayout()
   return (
-    <div className='max-md:hidden'>
+    <div>
       <SectionTitle
         title='Sidebar'
         showReset={defaultVariant !== variant}
@@ -262,20 +240,15 @@ function SidebarConfig() {
 
 function LayoutConfig() {
   const { open, setOpen } = useSidebar()
-  const { defaultCollapsible, collapsible, setCollapsible } = useLayout()
+  const { collapsible, setCollapsible } = useLayout()
 
   const radioState = open ? 'default' : collapsible
 
   return (
-    <div className='max-md:hidden'>
+    <div>
       <SectionTitle
         title='Layout'
-        showReset={radioState !== 'default'}
-        onReset={() => {
-          setOpen(true)
-          setCollapsible(defaultCollapsible)
-        }}
-        resetAriaLabel='Reset layout options to default'
+        showReset={false}
       />
       <Radio
         value={radioState}
@@ -319,14 +292,12 @@ function LayoutConfig() {
 }
 
 function DirConfig() {
-  const { defaultDir, dir, setDir } = useDirection()
+  const { dir, setDir } = useDirection()
   return (
     <div>
       <SectionTitle
         title='Direction'
-        showReset={defaultDir !== dir}
-        onReset={() => setDir(defaultDir)}
-        resetAriaLabel='Reset text direction to default'
+        showReset={false}
       />
       <Radio
         value={dir}

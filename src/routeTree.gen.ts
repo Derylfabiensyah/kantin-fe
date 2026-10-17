@@ -19,19 +19,13 @@ import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
-import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
-import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedPengaturanIndexRouteImport } from './routes/_authenticated/pengaturan/index'
 import { Route as AuthenticatedMenuIndexRouteImport } from './routes/_authenticated/menu/index'
 import { Route as AuthenticatedKontrolSiswaIndexRouteImport } from './routes/_authenticated/kontrol-siswa/index'
 import { Route as AuthenticatedKategoriIndexRouteImport } from './routes/_authenticated/kategori/index'
 import { Route as AuthenticatedKartuTamuIndexRouteImport } from './routes/_authenticated/kartu-tamu/index'
 import { Route as AuthenticatedBackofficeIndexRouteImport } from './routes/_authenticated/backoffice/index'
-import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
-import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
-import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
-import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedTuTopupIndexRouteImport } from './routes/_authenticated/tu/topup/index'
 import { Route as AuthenticatedTuSetoranIndexRouteImport } from './routes/_authenticated/tu/setoran/index'
@@ -99,23 +93,11 @@ const authSignInRoute = authSignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedSettingsRouteRoute =
-  AuthenticatedSettingsRouteRouteImport.update({
-    id: '/settings',
-    path: '/settings',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedSettingsIndexRoute =
-  AuthenticatedSettingsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
 const AuthenticatedPengaturanIndexRoute =
   AuthenticatedPengaturanIndexRouteImport.update({
     id: '/pengaturan/',
@@ -150,30 +132,6 @@ const AuthenticatedBackofficeIndexRoute =
     id: '/backoffice/',
     path: '/backoffice/',
     getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedSettingsNotificationsRoute =
-  AuthenticatedSettingsNotificationsRouteImport.update({
-    id: '/notifications',
-    path: '/notifications',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
-const AuthenticatedSettingsDisplayRoute =
-  AuthenticatedSettingsDisplayRouteImport.update({
-    id: '/display',
-    path: '/display',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
-const AuthenticatedSettingsAppearanceRoute =
-  AuthenticatedSettingsAppearanceRouteImport.update({
-    id: '/appearance',
-    path: '/appearance',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
-const AuthenticatedSettingsAccountRoute =
-  AuthenticatedSettingsAccountRouteImport.update({
-    id: '/account',
-    path: '/account',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
 const AuthenticatedErrorsErrorRoute =
   AuthenticatedErrorsErrorRouteImport.update({
@@ -281,7 +239,6 @@ const AuthenticatedLaporanKerugianStokIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/kasir': typeof KasirRouteRouteWithChildren
-  '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/sign-in': typeof authSignInRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
@@ -290,17 +247,12 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/kasir/': typeof KasirIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
-  '/settings/account': typeof AuthenticatedSettingsAccountRoute
-  '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/settings/display': typeof AuthenticatedSettingsDisplayRoute
-  '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/backoffice/': typeof AuthenticatedBackofficeIndexRoute
   '/kartu-tamu/': typeof AuthenticatedKartuTamuIndexRoute
   '/kategori/': typeof AuthenticatedKategoriIndexRoute
   '/kontrol-siswa/': typeof AuthenticatedKontrolSiswaIndexRoute
   '/menu/': typeof AuthenticatedMenuIndexRoute
   '/pengaturan/': typeof AuthenticatedPengaturanIndexRoute
-  '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
   '/laporan/kerugian-stok/': typeof AuthenticatedLaporanKerugianStokIndexRoute
   '/laporan/laba-kotor/': typeof AuthenticatedLaporanLabaKotorIndexRoute
@@ -329,17 +281,12 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/kasir': typeof KasirIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
-  '/settings/account': typeof AuthenticatedSettingsAccountRoute
-  '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/settings/display': typeof AuthenticatedSettingsDisplayRoute
-  '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/backoffice': typeof AuthenticatedBackofficeIndexRoute
   '/kartu-tamu': typeof AuthenticatedKartuTamuIndexRoute
   '/kategori': typeof AuthenticatedKategoriIndexRoute
   '/kontrol-siswa': typeof AuthenticatedKontrolSiswaIndexRoute
   '/menu': typeof AuthenticatedMenuIndexRoute
   '/pengaturan': typeof AuthenticatedPengaturanIndexRoute
-  '/settings': typeof AuthenticatedSettingsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/laporan/kerugian-stok': typeof AuthenticatedLaporanKerugianStokIndexRoute
   '/laporan/laba-kotor': typeof AuthenticatedLaporanLabaKotorIndexRoute
@@ -362,7 +309,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/kasir': typeof KasirRouteRouteWithChildren
-  '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/(auth)/sign-in': typeof authSignInRoute
   '/(errors)/401': typeof errors401Route
   '/(errors)/403': typeof errors403Route
@@ -372,17 +318,12 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/kasir/': typeof KasirIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
-  '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
-  '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
-  '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/_authenticated/backoffice/': typeof AuthenticatedBackofficeIndexRoute
   '/_authenticated/kartu-tamu/': typeof AuthenticatedKartuTamuIndexRoute
   '/_authenticated/kategori/': typeof AuthenticatedKategoriIndexRoute
   '/_authenticated/kontrol-siswa/': typeof AuthenticatedKontrolSiswaIndexRoute
   '/_authenticated/menu/': typeof AuthenticatedMenuIndexRoute
   '/_authenticated/pengaturan/': typeof AuthenticatedPengaturanIndexRoute
-  '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/laporan/kerugian-stok/': typeof AuthenticatedLaporanKerugianStokIndexRoute
   '/_authenticated/laporan/laba-kotor/': typeof AuthenticatedLaporanLabaKotorIndexRoute
@@ -406,7 +347,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/kasir'
-    | '/settings'
     | '/sign-in'
     | '/401'
     | '/403'
@@ -415,17 +355,12 @@ export interface FileRouteTypes {
     | '/503'
     | '/kasir/'
     | '/errors/$error'
-    | '/settings/account'
-    | '/settings/appearance'
-    | '/settings/display'
-    | '/settings/notifications'
     | '/backoffice/'
     | '/kartu-tamu/'
     | '/kategori/'
     | '/kontrol-siswa/'
     | '/menu/'
     | '/pengaturan/'
-    | '/settings/'
     | '/users/'
     | '/laporan/kerugian-stok/'
     | '/laporan/laba-kotor/'
@@ -454,17 +389,12 @@ export interface FileRouteTypes {
     | '/'
     | '/kasir'
     | '/errors/$error'
-    | '/settings/account'
-    | '/settings/appearance'
-    | '/settings/display'
-    | '/settings/notifications'
     | '/backoffice'
     | '/kartu-tamu'
     | '/kategori'
     | '/kontrol-siswa'
     | '/menu'
     | '/pengaturan'
-    | '/settings'
     | '/users'
     | '/laporan/kerugian-stok'
     | '/laporan/laba-kotor'
@@ -486,7 +416,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated'
     | '/kasir'
-    | '/_authenticated/settings'
     | '/(auth)/sign-in'
     | '/(errors)/401'
     | '/(errors)/403'
@@ -496,17 +425,12 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/kasir/'
     | '/_authenticated/errors/$error'
-    | '/_authenticated/settings/account'
-    | '/_authenticated/settings/appearance'
-    | '/_authenticated/settings/display'
-    | '/_authenticated/settings/notifications'
     | '/_authenticated/backoffice/'
     | '/_authenticated/kartu-tamu/'
     | '/_authenticated/kategori/'
     | '/_authenticated/kontrol-siswa/'
     | '/_authenticated/menu/'
     | '/_authenticated/pengaturan/'
-    | '/_authenticated/settings/'
     | '/_authenticated/users/'
     | '/_authenticated/laporan/kerugian-stok/'
     | '/_authenticated/laporan/laba-kotor/'
@@ -609,26 +533,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignInRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/settings': {
-      id: '/_authenticated/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/users/': {
       id: '/_authenticated/users/'
       path: '/users'
       fullPath: '/users/'
       preLoaderRoute: typeof AuthenticatedUsersIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/settings/': {
-      id: '/_authenticated/settings/'
-      path: '/'
-      fullPath: '/settings/'
-      preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
     '/_authenticated/pengaturan/': {
       id: '/_authenticated/pengaturan/'
@@ -671,34 +581,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/backoffice/'
       preLoaderRoute: typeof AuthenticatedBackofficeIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/settings/notifications': {
-      id: '/_authenticated/settings/notifications'
-      path: '/notifications'
-      fullPath: '/settings/notifications'
-      preLoaderRoute: typeof AuthenticatedSettingsNotificationsRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
-    }
-    '/_authenticated/settings/display': {
-      id: '/_authenticated/settings/display'
-      path: '/display'
-      fullPath: '/settings/display'
-      preLoaderRoute: typeof AuthenticatedSettingsDisplayRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
-    }
-    '/_authenticated/settings/appearance': {
-      id: '/_authenticated/settings/appearance'
-      path: '/appearance'
-      fullPath: '/settings/appearance'
-      preLoaderRoute: typeof AuthenticatedSettingsAppearanceRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
-    }
-    '/_authenticated/settings/account': {
-      id: '/_authenticated/settings/account'
-      path: '/account'
-      fullPath: '/settings/account'
-      preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
     '/_authenticated/errors/$error': {
       id: '/_authenticated/errors/$error'
@@ -822,31 +704,7 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthenticatedSettingsRouteRouteChildren {
-  AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
-  AuthenticatedSettingsAppearanceRoute: typeof AuthenticatedSettingsAppearanceRoute
-  AuthenticatedSettingsDisplayRoute: typeof AuthenticatedSettingsDisplayRoute
-  AuthenticatedSettingsNotificationsRoute: typeof AuthenticatedSettingsNotificationsRoute
-  AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
-}
-
-const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteChildren =
-  {
-    AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
-    AuthenticatedSettingsAppearanceRoute: AuthenticatedSettingsAppearanceRoute,
-    AuthenticatedSettingsDisplayRoute: AuthenticatedSettingsDisplayRoute,
-    AuthenticatedSettingsNotificationsRoute:
-      AuthenticatedSettingsNotificationsRoute,
-    AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
-  }
-
-const AuthenticatedSettingsRouteRouteWithChildren =
-  AuthenticatedSettingsRouteRoute._addFileChildren(
-    AuthenticatedSettingsRouteRouteChildren,
-  )
-
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedBackofficeIndexRoute: typeof AuthenticatedBackofficeIndexRoute
@@ -875,7 +733,6 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedBackofficeIndexRoute: AuthenticatedBackofficeIndexRoute,

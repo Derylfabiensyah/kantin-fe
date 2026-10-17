@@ -1,16 +1,11 @@
 import { useMemo } from 'react'
-import { Link } from '@tanstack/react-router'
 import {
   TrendingUp,
   ShoppingCart,
   AlertTriangle,
   Scale,
   CheckCircle2,
-  Boxes,
-  FileSpreadsheet,
   Banknote,
-  Store,
-  Sparkles,
 } from 'lucide-react'
 import {
   ResponsiveContainer,
@@ -22,8 +17,6 @@ import {
   Legend,
   CartesianGrid,
 } from 'recharts'
-
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -382,122 +375,57 @@ export function DashboardPage() {
           </Card>
         </div>
 
-        {/* ===== Baris Bawah: Transaksi Terakhir & Pintasan Cepat ===== */}
-        <div className='grid grid-cols-1 gap-6 lg:grid-cols-7'>
-          {/* Transaksi Kasir Terkini */}
-          <Card className='col-span-1 lg:col-span-5 border-0 bg-muted/70 dark:bg-muted/30'>
-            <CardHeader className='pb-3'>
-              <CardTitle className='text-base font-semibold'>
-                Aktivitas Transaksi Kasir Terakhir
-              </CardTitle>
-              <CardDescription className='text-xs mt-0.5'>
-                Pencatatan real-time pembelian siswa & tamu via reader RFID USB
-              </CardDescription>
-            </CardHeader>
-            <CardContent className='p-0'>
-              <div className='overflow-x-auto'>
-                <Table>
-                  <TableHeader>
-                    <TableRow className='text-xs'>
-                      <TableHead>Waktu & ID</TableHead>
-                      <TableHead>Pelanggan</TableHead>
-                      <TableHead>Item Menu</TableHead>
-                      <TableHead className='text-right'>Total Belanja</TableHead>
-                      <TableHead className='text-center'>Status</TableHead>
+        {/* Transaksi Kasir Terkini */}
+        <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
+          <CardHeader className='pb-3'>
+            <CardTitle className='text-base font-semibold'>
+              Aktivitas Transaksi Kasir Terakhir
+            </CardTitle>
+            <CardDescription className='text-xs mt-0.5'>
+              Pencatatan real-time pembelian siswa & tamu via reader RFID USB
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='p-0'>
+            <div className='overflow-x-auto'>
+              <Table>
+                <TableHeader>
+                  <TableRow className='text-xs'>
+                    <TableHead>Waktu & ID</TableHead>
+                    <TableHead>Pelanggan</TableHead>
+                    <TableHead>Item Menu</TableHead>
+                    <TableHead className='text-right'>Total Belanja</TableHead>
+                    <TableHead className='text-center'>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {RECENT_TRANSACTIONS.map((trx) => (
+                    <TableRow key={trx.id} className='text-xs'>
+                      <TableCell>
+                        <div className='font-mono font-medium text-foreground'>{trx.waktu}</div>
+                        <div className='text-[10px] text-muted-foreground font-mono'>{trx.id}</div>
+                      </TableCell>
+                      <TableCell>
+                        <div className='font-semibold text-foreground'>{trx.nama}</div>
+                        <div className='text-[10px] text-muted-foreground'>{trx.identitas}</div>
+                      </TableCell>
+                      <TableCell className='text-muted-foreground max-w-[220px] truncate'>
+                        {trx.item}
+                      </TableCell>
+                      <TableCell className='text-right font-mono font-bold text-foreground'>
+                        {formatRupiah(trx.total)}
+                      </TableCell>
+                      <TableCell className='text-center'>
+                        <Badge variant='outline' className='text-[10px] bg-emerald-500/10 text-emerald-600 border-0 px-1.5 py-0'>
+                          {trx.status}
+                        </Badge>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {RECENT_TRANSACTIONS.map((trx) => (
-                      <TableRow key={trx.id} className='text-xs'>
-                        <TableCell>
-                          <div className='font-mono font-medium text-foreground'>{trx.waktu}</div>
-                          <div className='text-[10px] text-muted-foreground font-mono'>{trx.id}</div>
-                        </TableCell>
-                        <TableCell>
-                          <div className='font-semibold text-foreground'>{trx.nama}</div>
-                          <div className='text-[10px] text-muted-foreground'>{trx.identitas}</div>
-                        </TableCell>
-                        <TableCell className='text-muted-foreground max-w-[220px] truncate'>
-                          {trx.item}
-                        </TableCell>
-                        <TableCell className='text-right font-mono font-bold text-foreground'>
-                          {formatRupiah(trx.total)}
-                        </TableCell>
-                        <TableCell className='text-center'>
-                          <Badge variant='outline' className='text-[10px] bg-emerald-500/10 text-emerald-600 border-0 px-1.5 py-0'>
-                            {trx.status}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Pintasan Aksi Cepat (Quick Shortcuts) */}
-          <Card className='col-span-1 lg:col-span-2 border-border/60 flex flex-col justify-between'>
-            <CardHeader className='pb-3'>
-              <CardTitle className='text-base font-semibold flex items-center gap-1.5'>
-                <Sparkles className='size-4 text-primary' />
-                <span>Pintasan Operasional</span>
-              </CardTitle>
-              <CardDescription className='text-xs mt-0.5'>
-                Akses instan modul kunci SKOOLIA
-              </CardDescription>
-            </CardHeader>
-            <CardContent className='space-y-2.5 flex-1'>
-              <Button asChild variant='outline' className='w-full justify-start text-xs h-10 border-border/70 hover:bg-primary/5 hover:border-primary/40'>
-                <Link to='/kasir' className='flex items-center gap-2.5'>
-                  <div className='size-6 rounded bg-primary/10 text-primary flex items-center justify-center shrink-0'>
-                    <Store className='size-3.5' />
-                  </div>
-                  <div className='text-left'>
-                    <div className='font-semibold leading-tight'>Kasir POS Fullscreen</div>
-                    <div className='text-[10px] text-muted-foreground'>Layar transaksi tap RFID</div>
-                  </div>
-                </Link>
-              </Button>
-
-              <Button asChild variant='outline' className='w-full justify-start text-xs h-10 border-border/70 hover:bg-primary/5 hover:border-primary/40'>
-                <Link to={'/stok/masuk' as string as never} className='flex items-center gap-2.5'>
-                  <div className='size-6 rounded bg-blue-500/10 text-blue-600 flex items-center justify-center shrink-0'>
-                    <Boxes className='size-3.5' />
-                  </div>
-                  <div className='text-left'>
-                    <div className='font-semibold leading-tight'>Barang Masuk</div>
-                    <div className='text-[10px] text-muted-foreground'>Input nota & rata-rata HPP</div>
-                  </div>
-                </Link>
-              </Button>
-
-              <Button asChild variant='outline' className='w-full justify-start text-xs h-10 border-border/70 hover:bg-primary/5 hover:border-primary/40'>
-                <Link to={'/tu/topup' as string as never} className='flex items-center gap-2.5'>
-                  <div className='size-6 rounded bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0'>
-                    <Banknote className='size-3.5' />
-                  </div>
-                  <div className='text-left'>
-                    <div className='font-semibold leading-tight'>Top-up Tunai Siswa</div>
-                    <div className='text-[10px] text-muted-foreground'>Loket TU & cetak slip nota</div>
-                  </div>
-                </Link>
-              </Button>
-
-              <Button asChild variant='outline' className='w-full justify-start text-xs h-10 border-border/70 hover:bg-primary/5 hover:border-primary/40'>
-                <Link to={'/laporan/rekonsiliasi' as string as never} className='flex items-center gap-2.5'>
-                  <div className='size-6 rounded bg-purple-500/10 text-purple-600 flex items-center justify-center shrink-0'>
-                    <FileSpreadsheet className='size-3.5' />
-                  </div>
-                  <div className='text-left'>
-                    <div className='font-semibold leading-tight'>Rekonsiliasi Saldo Harian</div>
-                    <div className='text-[10px] text-muted-foreground'>Audit invariant & ekspor Excel</div>
-                  </div>
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
       </Main>
     </>
   )

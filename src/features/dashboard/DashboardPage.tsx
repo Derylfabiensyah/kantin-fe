@@ -267,22 +267,22 @@ export function DashboardPage() {
                         if (active && payload && payload.length) {
                           const total = payload.reduce((sum, entry) => sum + (Number(entry.value) || 0), 0)
                           return (
-                            <div className='rounded-lg border-0 bg-popover p-2.5 text-xs shadow-md'>
-                              <p className='font-semibold text-foreground mb-1.5'>{label}</p>
+                            <div className='rounded-xl border-0 bg-popover p-3 text-xs shadow-lg min-w-[200px]'>
+                              <p className='font-semibold text-foreground mb-2'>{label}</p>
                               {payload.map((entry) => (
-                                <div key={entry.name} className='flex items-center justify-between gap-4 py-0.5'>
-                                  <span className='capitalize text-muted-foreground flex items-center gap-1.5'>
-                                    <span className='size-2 rounded-full' style={{ backgroundColor: entry.color }} />
-                                    {entry.name}:
+                                <div key={entry.name} className='flex items-center justify-between gap-6 py-1'>
+                                  <span className='capitalize text-muted-foreground flex items-center gap-2'>
+                                    <span className='size-2 rounded-full shrink-0' style={{ backgroundColor: entry.color }} />
+                                    {entry.name}
                                   </span>
-                                  <span className='font-mono font-medium text-foreground'>
+                                  <span className='font-semibold text-foreground tabular-nums'>
                                     {formatRupiah(Number(entry.value))}
                                   </span>
                                 </div>
                               ))}
-                              <div className='mt-1.5 pt-1.5 border-t border-border flex items-center justify-between gap-4 font-bold text-foreground'>
-                                <span>Total Omset:</span>
-                                <span className='font-mono text-primary'>{formatRupiah(total)}</span>
+                              <div className='mt-2 pt-2 border-t border-border/50 flex items-center justify-between gap-6 font-semibold text-foreground'>
+                                <span>Total Omset</span>
+                                <span className='font-bold tabular-nums text-foreground'>{formatRupiah(total)}</span>
                               </div>
                             </div>
                           )

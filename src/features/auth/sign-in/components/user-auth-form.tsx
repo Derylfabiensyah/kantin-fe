@@ -24,7 +24,7 @@ import type { UserRole } from '@/stores/useRoleStore'
 const formSchema = z.object({
   email: z
     .string()
-    .min(1, 'Masukkan username atau email staf.'),
+    .min(1, 'Masukkan username staf.'),
   password: z
     .string()
     .min(1, 'Masukkan kata sandi staf.')
@@ -147,10 +147,10 @@ export function UserAuthForm({
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='text-xs'>Username / Email</FormLabel>
+                <FormLabel className='text-xs'>Username</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder='Masukkan username atau email'
+                    placeholder='Masukkan username'
                     autoComplete='username'
                     disabled={isLoading}
                     className='border-0 bg-card dark:bg-input/30'

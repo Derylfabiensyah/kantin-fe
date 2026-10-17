@@ -23,6 +23,7 @@ type ConfirmDialogProps = {
   isLoading?: boolean
   className?: string
   children?: React.ReactNode
+  onOpenAutoFocus?: (e: Event) => void
 } & (
   | { form: string; handleConfirm?: undefined }
   | { form?: undefined; handleConfirm: () => void }
@@ -42,11 +43,15 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
     disabled = false,
     form,
     handleConfirm,
+    onOpenAutoFocus,
     ...actions
   } = props
   return (
     <AlertDialog {...actions}>
-      <AlertDialogContent className={cn(className && className)}>
+      <AlertDialogContent
+        className={cn(className && className)}
+        onOpenAutoFocus={onOpenAutoFocus ?? ((e) => e.preventDefault())}
+      >
         <AlertDialogHeader className='text-start'>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription asChild>

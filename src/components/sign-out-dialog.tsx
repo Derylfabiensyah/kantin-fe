@@ -34,7 +34,7 @@ export function SignOutDialog({ open, onOpenChange }: SignOutDialogProps) {
       destructive
       handleConfirm={handleSignOut}
       className='sm:max-w-sm border-0'
-      cancelBtnClassName='border-0'
+      cancelBtnClassName='border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus-visible:border-transparent outline-none focus:outline-none focus-visible:outline-none'
     />
   )
 }

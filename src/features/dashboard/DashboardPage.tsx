@@ -194,7 +194,7 @@ export function DashboardPage() {
         {/* ===== 4 Kartu Metrik Utama ===== */}
         <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
           {/* Card 1: Penjualan Hari Ini */}
-          <Card className='border-border/60'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium text-muted-foreground'>
                 Total Penjualan Hari Ini
@@ -217,7 +217,7 @@ export function DashboardPage() {
           </Card>
 
           {/* Card 2: Total Transaksi Hari Ini */}
-          <Card className='border-border/60'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium text-muted-foreground'>
                 Total Transaksi Hari Ini
@@ -238,7 +238,7 @@ export function DashboardPage() {
           </Card>
 
           {/* Card 3: Status Rekonsiliasi Kas */}
-          <Card className='border-border/60'>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium text-muted-foreground'>
                 Status Rekonsiliasi Kas
@@ -260,7 +260,7 @@ export function DashboardPage() {
           </Card>
 
           {/* Card 4: Alert Status Stok Menipis */}
-          <Card className={`border-border/60 ${lowStockItems.length > 0 ? 'border-amber-500/40 bg-amber-500/5' : ''}`}>
+          <Card className='border-0 bg-muted/70 dark:bg-muted/30'>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium text-muted-foreground'>
                 Peringatan Stok Barang

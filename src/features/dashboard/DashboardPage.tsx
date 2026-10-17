@@ -287,7 +287,7 @@ export function DashboardPage() {
         {/* ===== Grid Konten Tengah: Grafik Penjualan 7 Hari & Alert Stok Menipis ===== */}
         <div className='grid grid-cols-1 gap-6 lg:grid-cols-7'>
           {/* Kolom Kiri: Tren Penjualan 7 Hari Terakhir (Recharts) */}
-          <Card className='col-span-1 lg:col-span-4 border-border/60'>
+          <Card className='col-span-1 lg:col-span-4 border-0 bg-muted/70 dark:bg-muted/30'>
             <CardHeader>
               <div>
                 <CardTitle className='text-base font-semibold'>
@@ -302,7 +302,7 @@ export function DashboardPage() {
               <div className='h-[320px] w-full'>
                 <ResponsiveContainer width='100%' height='100%'>
                   <BarChart data={SALES_TREND_DATA} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray='3 3' className='stroke-muted/40' vertical={false} />
+                    <CartesianGrid strokeDasharray='3 3' className='stroke-border/50' vertical={false} />
                     <XAxis
                       dataKey='hari'
                       stroke='#888888'

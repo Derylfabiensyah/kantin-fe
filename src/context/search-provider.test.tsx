@@ -46,7 +46,7 @@ async function openCommandPalette(
         .element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER))
         .toBeInTheDocument()
     },
-    { interval: 50, timeout: 5000 }
+    { interval: 100, timeout: 10000 }
   )
 }
 

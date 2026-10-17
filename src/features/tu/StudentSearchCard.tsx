@@ -50,8 +50,8 @@ export function StudentSearchCard({
   const [rfidInput, setRfidInput] = useState('')
   const [rfidFeedback, setRfidFeedback] = useState<string | null>(null)
 
-  const handleSimulateRfid = (uidToSimulate?: string) => {
-    const targetUid = uidToSimulate || rfidInput.trim()
+  const handleFindRfid = (uidToFind?: string) => {
+    const targetUid = uidToFind || rfidInput.trim()
     if (!targetUid) return
 
     const found = students.find(
@@ -174,42 +174,21 @@ export function StudentSearchCard({
           </Popover>
         </div>
 
-        {/* RFID Tap Simulation Box */}
+        {/* Input Scan RFID Reader TU */}
         <div className='space-y-2 rounded-xl border border-border bg-muted/40 p-3.5 dark:bg-muted/20'>
-          <div className='flex items-center justify-between'>
-            <label className='text-xs font-medium text-foreground'>
-              Simulasi Tap Kartu RFID (Reader TU)
-            </label>
-            <span className='text-[10px] text-muted-foreground'>
-              Pilih kartu sampel:
-            </span>
-          </div>
-
-          <div className='flex flex-wrap gap-1.5'>
-            {students.map((student) => (
-              <Button
-                key={student.uid}
-                type='button'
-                variant='ghost'
-                size='sm'
-                className='h-7 border border-border bg-background text-xs text-foreground hover:bg-muted'
-                onClick={() => handleSimulateRfid(student.uid)}
-              >
-                Tap RFID {student.nama.split(' ')[0]} ({student.uid})
-              </Button>
-            ))}
-          </div>
-
+          <label className='text-xs font-medium text-foreground'>
+            Scan atau Input UID Kartu RFID (Reader TU)
+          </label>
           <div className='flex gap-2 pt-1'>
             <Input
-              placeholder='Atau ketik UID Kartu (contoh: 04A1B2C3D4)...'
+              placeholder='Tempelkan kartu ke reader atau ketik UID...'
               value={rfidInput}
               onChange={(e) => setRfidInput(e.target.value)}
               className='h-9 bg-background font-mono text-xs'
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault()
-                  handleSimulateRfid()
+                  handleFindRfid()
                 }
               }}
             />
@@ -218,9 +197,9 @@ export function StudentSearchCard({
               size='sm'
               variant='secondary'
               className='h-9 px-3 text-xs'
-              onClick={() => handleSimulateRfid()}
+              onClick={() => handleFindRfid()}
             >
-              Simulasi Tap
+              Cari Kartu
             </Button>
           </div>
 
@@ -310,8 +289,7 @@ export function StudentSearchCard({
               Belum ada siswa terpilih
             </p>
             <p className='mt-1 text-xs text-muted-foreground/70'>
-              Gunakan autokomplit NIS/Nama di atas atau simulasikan Tap Kartu
-              RFID
+              Gunakan autokomplit NIS/Nama atau masukkan UID Kartu RFID di atas
             </p>
           </div>
         )}

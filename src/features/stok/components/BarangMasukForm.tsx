@@ -399,7 +399,7 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
                     Subtotal
                   </TableHead>
                   <TableHead className='min-w-[240px] text-xs'>
-                    Simulasi HPP Baru
+                    Estimasi HPP Baru
                   </TableHead>
                   <TableHead className='w-12 text-center text-xs'>
                     Aksi
@@ -509,13 +509,13 @@ export function BarangMasukForm({ menus, onSuccess }: BarangMasukFormProps) {
                         {formatRupiah(subtotal)}
                       </TableCell>
 
-                      {/* Simulasi HPP Preview */}
+                      {/* Estimasi HPP Preview */}
                       <TableCell>
                         {simulasi ? (
                           <HppSimulationBadge simulasi={simulasi} compact />
                         ) : (
                           <span className='text-[11px] text-muted-foreground italic'>
-                            Pilih menu untuk melihat simulasi
+                            Pilih menu untuk melihat estimasi
                           </span>
                         )}
                       </TableCell>

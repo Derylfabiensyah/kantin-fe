@@ -464,7 +464,7 @@ function KoreksiMutasiFormContent({
         </div>
       </div>
 
-      {/* Visualisasi Simulasi Dampak Saldo */}
+      {/* Visualisasi Proyeksi Dampak Saldo */}
       <div className='space-y-2 rounded-lg border bg-muted/30 p-3'>
         <span className='block text-xs font-semibold text-muted-foreground'>
           Proyeksi Dampak Saldo Ledger:

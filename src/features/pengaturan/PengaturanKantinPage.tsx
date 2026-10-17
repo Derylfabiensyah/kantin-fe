@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -12,7 +12,6 @@ import {
   Calendar,
   UserCheck,
   Loader2,
-  Eye,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatRupiah } from '@/lib/formatters'
@@ -59,7 +58,6 @@ export const PengaturanKantinPage: React.FC = () => {
   } = usePengaturanStore()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [previewCountdown, setPreviewCountdown] = useState<number | null>(null)
 
   const {
     register,
@@ -74,7 +72,6 @@ export const PengaturanKantinPage: React.FC = () => {
   })
 
   // Watch field values for dynamic previews
-  const watchedDurasi = watch('durasiFotoDetik', 3)
   const watchedKonfirmasi = watch('konfirmasiManual', false)
   const watchedMinTopup = watch('minTopup', 5000)
   const watchedMaxTopup = watch('maksTopup', 500000)
@@ -109,20 +106,6 @@ export const PengaturanKantinPage: React.FC = () => {
       isMounted = false
     }
   }, [fetchPengaturan, reset])
-
-  // Simulasi preview countdown foto
-  const handleTestPreviewCountdown = useCallback(() => {
-    setPreviewCountdown(watchedDurasi)
-    const interval = setInterval(() => {
-      setPreviewCountdown((prev) => {
-        if (prev === null || prev <= 1) {
-          clearInterval(interval)
-          return null
-        }
-        return prev - 1
-      })
-    }, 1000)
-  }, [watchedDurasi])
 
   // Submit Handler
   const onSubmit = async (values: PengaturanKantinFormValues) => {
@@ -366,24 +349,12 @@ export const PengaturanKantinPage: React.FC = () => {
 
                   {/* Durasi Tampil Foto Siswa */}
                   <div className='space-y-2 py-1'>
-                    <div className='flex items-center justify-between'>
-                      <Label
-                        htmlFor='durasiFotoDetik'
-                        className='text-xs font-semibold'
-                      >
-                        Durasi Tampil Foto Siswa
-                      </Label>
-                      <Button
-                        type='button'
-                        variant='ghost'
-                        size='sm'
-                        onClick={handleTestPreviewCountdown}
-                        className='h-6 px-1.5 text-[10px]'
-                        title='Uji coba hitung mundur foto'
-                      >
-                        <Eye className='h-3 w-3 mr-1' /> Tes Hitung Mundur
-                      </Button>
-                    </div>
+                    <Label
+                      htmlFor='durasiFotoDetik'
+                      className='text-xs font-semibold'
+                    >
+                      Durasi Tampil Foto Siswa
+                    </Label>
 
                     <div className='flex items-center gap-3'>
                       <Input
@@ -407,19 +378,6 @@ export const PengaturanKantinPage: React.FC = () => {
                       <p className='text-xs text-destructive'>
                         {errors.durasiFotoDetik.message}
                       </p>
-                    )}
-
-                    {/* Preview Simulasi Countdown jika diuji */}
-                    {previewCountdown !== null && (
-                      <div className='mt-2 flex items-center justify-center gap-2 rounded-md bg-emerald-500/10 p-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400'>
-                        <Clock className='h-4 w-4 animate-pulse' />
-                        <span>
-                          Simulasi modal foto kasir menutup otomatis dalam:{' '}
-                          <strong className='font-mono text-sm'>
-                            {previewCountdown}s
-                          </strong>
-                        </span>
-                      </div>
                     )}
                   </div>
                 </CardContent>

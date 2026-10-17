@@ -14,7 +14,6 @@ import {
   Store,
   Clock,
   ArrowRight,
-  AlertOctagon,
   Sparkles,
   Info,
 } from 'lucide-react'
@@ -57,7 +56,6 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { BackofficeHeader } from '@/components/layout/backoffice-header'
 import { Main } from '@/components/layout/main'
 import { useRoleStore } from '@/stores/useRoleStore'
@@ -144,11 +142,8 @@ const formatRupiah = (val: number) => {
 export function DashboardPage() {
   const { schoolName, canteenName } = useRoleStore()
 
-  // State menu untuk simulasi stok
+  // State menu stok
   const [menuItems, setMenuItems] = useState<MenuItemMock[]>(MOCK_MENU)
-
-  // State simulasi selisih rekonsiliasi kas (untuk audit testing)
-  const [simulateDiscrepancy, setSimulateDiscrepancy] = useState<boolean>(false)
 
   // State dialog restock cepat
   const [restockModalOpen, setRestockModalOpen] = useState(false)
@@ -172,7 +167,6 @@ export function DashboardPage() {
   const totalSaldoSiswa = 48200000
   const totalSaldoTamu = 1650000
   const totalPenjualanBersih = todaySales
-  const discrepancyAmount = simulateDiscrepancy ? 125000 : 0
 
   const handleOpenRestock = (item: MenuItemMock) => {
     setSelectedItem(item)
@@ -226,29 +220,6 @@ export function DashboardPage() {
           </div>
 
           <div className='flex flex-wrap items-center gap-2'>
-            {/* Tombol Simulasi Selisih Rekonsiliasi (Fitur Khusus Penguji & Auditor) */}
-            <Button
-              variant={simulateDiscrepancy ? 'destructive' : 'outline'}
-              size='sm'
-              onClick={() => {
-                const nextState = !simulateDiscrepancy
-                setSimulateDiscrepancy(nextState)
-                if (nextState) {
-                  toast.error('Simulasi Selisih Kas Aktif', {
-                    description: 'Banner peringatan selisih merah sekarang ditampilkan untuk verifikasi audit.',
-                  })
-                } else {
-                  toast.success('Simulasi Dinonaktifkan', {
-                    description: 'Status rekonsiliasi kembali SEIMBANG (Rp 0 selisih).',
-                  })
-                }
-              }}
-              className='gap-1.5 text-xs'
-            >
-              <Scale className='size-3.5' />
-              <span>{simulateDiscrepancy ? 'Reset Status Kas' : 'Simulasi Selisih Kas'}</span>
-            </Button>
-
             {/* Pintasan ke Kasir POS */}
             <Button asChild size='sm' className='gap-1.5'>
               <Link to='/kasir'>
@@ -260,54 +231,27 @@ export function DashboardPage() {
           </div>
         </div>
 
-        {/* ===== Alert Banner Rekonsiliasi Saldo (Kondisi Merah vs Seimbang) ===== */}
-        {simulateDiscrepancy ? (
-          <Alert variant='destructive' className='border-red-600/50 bg-red-500/10 text-red-950 dark:text-red-200 animate-in fade-in'>
-            <AlertOctagon className='size-5 text-red-600 dark:text-red-400 mt-0.5' />
-            <div className='space-y-1'>
-              <AlertTitle className='text-base font-bold text-red-700 dark:text-red-300 flex items-center gap-2'>
-                <span>PERINGATAN REKONSILIASI KAS: DITEMUKAN SELISIH SALDO SEBESAR {formatRupiah(discrepancyAmount)}!</span>
-                <Badge variant='destructive' className='text-[10px] uppercase tracking-wider'>Selisih Kas</Badge>
-              </AlertTitle>
-              <AlertDescription className='text-sm text-red-800/90 dark:text-red-300/90 leading-relaxed'>
-                Total penerimaan top-up fisik kasir TU tidak cocok dengan pertambahan saldo berjalan sistem hari ini. 
-                Penyimpangan invariant terdeteksi pada sesi kasir aktif. Silakan lakukan audit transaksi atau buat mutasi pembalik di menu rekonsiliasi.
-              </AlertDescription>
-              <div className='pt-2 flex items-center gap-3'>
-                <Button asChild size='sm' variant='destructive' className='h-8 text-xs font-semibold'>
-                  <Link to={'/laporan/rekonsiliasi' as string as never}>
-                    Periksa Laporan Rekonsiliasi
-                    <ArrowRight className='size-3.5 ml-1' />
-                  </Link>
-                </Button>
-                <span className='text-xs text-muted-foreground'>
-                  Waktu audit: {new Date().toLocaleTimeString('id-ID')} WIB
-                </span>
-              </div>
+        {/* ===== Status Rekonsiliasi Saldo Harian ===== */}
+        <div className='flex items-center justify-between rounded-lg border border-emerald-500/30 bg-emerald-500/5 px-4 py-3 text-sm'>
+          <div className='flex items-center gap-3'>
+            <div className='flex size-8 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0'>
+              <CheckCircle2 className='size-5' />
             </div>
-          </Alert>
-        ) : (
-          <div className='flex items-center justify-between rounded-lg border border-emerald-500/30 bg-emerald-500/5 px-4 py-3 text-sm'>
-            <div className='flex items-center gap-3'>
-              <div className='flex size-8 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0'>
-                <CheckCircle2 className='size-5' />
-              </div>
-              <div>
-                <p className='font-semibold text-emerald-900 dark:text-emerald-300'>
-                  Status Rekonsiliasi Harian: SEIMBANG (Selisih Rp 0)
-                </p>
-                <p className='text-xs text-muted-foreground'>
-                  Invariant Akuntansi terpenuhi: Topup ({formatRupiah(totalTopup)}) - Refund ({formatRupiah(totalRefund)}) = Saldo Siswa ({formatRupiah(totalSaldoSiswa)}) + Tamu ({formatRupiah(totalSaldoTamu)}) + Penjualan ({formatRupiah(totalPenjualanBersih)}).
-                </p>
-              </div>
+            <div>
+              <p className='font-semibold text-emerald-900 dark:text-emerald-300'>
+                Status Rekonsiliasi Harian: SEIMBANG (Selisih Rp 0)
+              </p>
+              <p className='text-xs text-muted-foreground'>
+                Invariant Akuntansi terpenuhi: Topup ({formatRupiah(totalTopup)}) - Refund ({formatRupiah(totalRefund)}) = Saldo Siswa ({formatRupiah(totalSaldoSiswa)}) + Tamu ({formatRupiah(totalSaldoTamu)}) + Penjualan ({formatRupiah(totalPenjualanBersih)}).
+              </p>
             </div>
-            <Button asChild variant='ghost' size='sm' className='text-xs text-emerald-700 dark:text-emerald-300 hover:text-emerald-800'>
-              <Link to={'/laporan/rekonsiliasi' as string as never}>
-                Lihat Rincian <ArrowRight className='size-3 ml-1' />
-              </Link>
-            </Button>
           </div>
-        )}
+          <Button asChild variant='ghost' size='sm' className='text-xs text-emerald-700 dark:text-emerald-300 hover:text-emerald-800'>
+            <Link to={'/laporan/rekonsiliasi' as string as never}>
+              Lihat Rincian <ArrowRight className='size-3 ml-1' />
+            </Link>
+          </Button>
+        </div>
 
         {/* ===== 4 Kartu Metrik Utama ===== */}
         <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
@@ -355,28 +299,24 @@ export function DashboardPage() {
             </CardContent>
           </Card>
 
-          {/* Card 3: Alert Status Rekonsiliasi Kas */}
-          <Card className={`border-border/60 ${simulateDiscrepancy ? 'border-red-500/50 bg-red-500/5' : ''}`}>
+          {/* Card 3: Status Rekonsiliasi Kas */}
+          <Card className='border-border/60'>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium text-muted-foreground'>
                 Status Rekonsiliasi Kas
               </CardTitle>
-              <div className={`flex size-9 items-center justify-center rounded-lg ${
-                simulateDiscrepancy ? 'bg-red-500/10 text-red-600' : 'bg-emerald-500/10 text-emerald-600'
-              }`}>
+              <div className='flex size-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600'>
                 <Scale className='size-5' />
               </div>
             </CardHeader>
             <CardContent>
               <div className='flex items-center gap-2'>
-                <span className={`text-xl font-bold tracking-tight ${
-                  simulateDiscrepancy ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'
-                }`}>
-                  {simulateDiscrepancy ? `SELISIH ${formatRupiah(discrepancyAmount)}` : 'SEIMBANG (Rp 0)'}
+                <span className='text-xl font-bold tracking-tight text-emerald-600 dark:text-emerald-400'>
+                  SEIMBANG (Rp 0)
                 </span>
               </div>
               <p className='text-xs text-muted-foreground mt-1'>
-                {simulateDiscrepancy ? 'Uang fisik TU kurang dari sistem' : 'Kas fisik TU cocok dengan sistem'}
+                Kas fisik TU cocok dengan sistem
               </p>
             </CardContent>
           </Card>

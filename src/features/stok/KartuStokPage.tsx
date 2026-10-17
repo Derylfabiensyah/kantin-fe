@@ -30,7 +30,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { formatRupiah, formatNumber, formatDateTime } from '@/lib/formatters'
 import { katalogApi } from '@/features/katalog/api/katalog-api'
 import type { MenuItem } from '@/features/katalog/types'
@@ -337,7 +336,6 @@ export function KartuStokPage() {
             <span className='text-xs font-medium'>Kartu Stok Mutasi</span>
           </div>
           <div className='flex items-center gap-2'>
-            <ThemeSwitch />
             <ProfileDropdown />
           </div>
         </div>

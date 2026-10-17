@@ -1,8 +1,6 @@
 import { cn } from '@/lib/utils'
 import { Header } from '@/components/layout/header'
 import { BreadcrumbNav } from '@/components/breadcrumb-nav'
-import { ThemeSwitch } from '@/components/theme-switch'
-import { ConfigDrawer } from '@/components/config-drawer'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Badge } from '@/components/ui/badge'
 import { useRoleStore } from '@/stores/useRoleStore'
@@ -55,12 +53,6 @@ export function BackofficeHeader({ className, fixed = true }: BackofficeHeaderPr
           </Badge>
         )}
 
-
-        {/* Theme Settings Drawer (sesuai preferensi tampilan) */}
-        <ConfigDrawer />
-
-        {/* Theme Switcher (Dark/Light mode) */}
-        <ThemeSwitch />
 
         {/* User Profile Dropdown */}
         <ProfileDropdown />

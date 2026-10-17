@@ -12,7 +12,6 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { useAuthStore } from '@/stores/auth-store'
 import { SignOutDialog } from '@/components/sign-out-dialog'
 import useDialogState from '@/hooks/use-dialog-state'
@@ -124,9 +123,6 @@ export function KasirLayout() {
           >
             {isFullscreen ? <Minimize2 className='h-4 w-4' /> : <Maximize2 className='h-4 w-4' />}
           </Button>
-
-          {/* Theme switcher */}
-          <ThemeSwitch />
 
           {/* Kembali ke Backoffice */}
           <Button asChild variant='outline' size='sm' className='h-8 gap-1.5 text-xs font-medium ml-1'>

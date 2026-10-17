@@ -32,7 +32,6 @@ import {
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { formatRupiah, formatNumber } from '@/lib/formatters'
 import { exportTableToExcel } from '@/lib/excelExport'
 import { laporanApi } from './api/laporan-api'
@@ -186,7 +185,6 @@ export function LaporanLabaKotorPage() {
             <span className="text-xs font-medium">Laba Kotor</span>
           </div>
           <div className="flex items-center gap-2">
-            <ThemeSwitch />
             <ProfileDropdown />
           </div>
         </div>

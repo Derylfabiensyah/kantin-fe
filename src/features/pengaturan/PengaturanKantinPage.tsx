@@ -19,8 +19,6 @@ import { formatRupiah } from '@/lib/formatters'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { ThemeSwitch } from '@/components/theme-switch'
-import { ConfigDrawer } from '@/components/config-drawer'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -174,8 +172,6 @@ export const PengaturanKantinPage: React.FC = () => {
             <span className='text-xs font-medium'>Operasional Kantin</span>
           </div>
           <div className='flex items-center gap-2'>
-            <ThemeSwitch />
-            <ConfigDrawer />
             <ProfileDropdown />
           </div>
         </div>

@@ -48,7 +48,6 @@ import {
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { formatRupiah } from '@/lib/formatters'
 import { KonfirmasiSetoranModal } from './KonfirmasiSetoranModal'
 import type { SetoranKasItem, TransaksiTopupDetail } from './types'
@@ -247,7 +246,6 @@ export function SetoranKasPage() {
     <>
       <Header fixed>
         <div className='ms-auto flex items-center space-x-4'>
-          <ThemeSwitch />
           <ProfileDropdown />
         </div>
       </Header>

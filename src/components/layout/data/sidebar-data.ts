@@ -67,7 +67,7 @@ export const sidebarData: SidebarData = {
           icon: Boxes,
           items: [
             {
-              title: 'Barang Masuk (Restock)',
+              title: 'Barang Masuk',
               url: '/stok/masuk',
             },
             {

@@ -115,7 +115,7 @@ describe('SearchProvider and CommandMenu', () => {
     await openCommandPalette(screen)
 
     await userEvent.click(
-      getByRole('option', { name: 'Manajemen Stok Barang Masuk (Restock)' })
+      getByRole('option', { name: 'Manajemen Stok Barang Masuk' })
     )
 
     expect(mocks.navigate).toHaveBeenCalledWith({ to: '/stok/masuk' })

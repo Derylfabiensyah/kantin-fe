@@ -613,7 +613,7 @@ export function DashboardPage() {
                     <Boxes className='size-3.5' />
                   </div>
                   <div className='text-left'>
-                    <div className='font-semibold leading-tight'>Barang Masuk (Restock)</div>
+                    <div className='font-semibold leading-tight'>Barang Masuk</div>
                     <div className='text-[10px] text-muted-foreground'>Input nota & rata-rata HPP</div>
                   </div>
                 </Link>

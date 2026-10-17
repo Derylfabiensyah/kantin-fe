@@ -133,7 +133,7 @@ export function BarangMasukPage() {
               Manajemen Stok
             </span>
             <span className='text-muted-foreground text-xs'>/</span>
-            <span className='text-xs font-medium'>Barang Masuk (Restock)</span>
+            <span className='text-xs font-medium'>Barang Masuk</span>
           </div>
           <div className='flex items-center gap-2'>
             <ProfileDropdown />
@@ -145,7 +145,7 @@ export function BarangMasukPage() {
         {/* Page Title */}
         <div>
           <h1 className='text-2xl font-bold tracking-tight text-foreground'>
-            Pencatatan Barang Masuk (Restock)
+            Pencatatan Barang Masuk
           </h1>
         </div>
 

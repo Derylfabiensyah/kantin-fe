@@ -389,31 +389,31 @@ export function DashboardPage() {
               <Table>
                 <TableHeader>
                   <TableRow className='text-xs'>
-                    <TableHead className='ps-6'>Waktu & ID</TableHead>
-                    <TableHead>Pelanggan</TableHead>
+                    <TableHead className='w-[140px] ps-6'>Waktu & ID</TableHead>
+                    <TableHead className='w-[200px]'>Pelanggan</TableHead>
                     <TableHead>Item Menu</TableHead>
-                    <TableHead className='text-right'>Total Belanja</TableHead>
-                    <TableHead className='text-center pe-6'>Status</TableHead>
+                    <TableHead className='text-right w-[140px]'>Total Belanja</TableHead>
+                    <TableHead className='text-center w-[120px] pe-6'>Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {RECENT_TRANSACTIONS.map((trx) => (
                     <TableRow key={trx.id} className='text-xs'>
-                      <TableCell className='ps-6'>
-                        <div className='font-mono font-medium text-foreground'>{trx.waktu}</div>
-                        <div className='text-[10px] text-muted-foreground font-mono'>{trx.id}</div>
+                      <TableCell className='ps-6 py-3'>
+                        <div className='font-medium text-foreground tabular-nums'>{trx.waktu}</div>
+                        <div className='text-[10px] text-muted-foreground tabular-nums'>{trx.id}</div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className='py-3'>
                         <div className='font-semibold text-foreground'>{trx.nama}</div>
                         <div className='text-[10px] text-muted-foreground'>{trx.identitas}</div>
                       </TableCell>
-                      <TableCell className='text-muted-foreground max-w-[220px] truncate'>
+                      <TableCell className='text-muted-foreground py-3'>
                         {trx.item}
                       </TableCell>
-                      <TableCell className='text-right font-mono font-bold text-foreground'>
+                      <TableCell className='text-right font-semibold text-foreground tabular-nums py-3'>
                         {formatRupiah(trx.total)}
                       </TableCell>
-                      <TableCell className='text-center pe-6'>
+                      <TableCell className='text-center pe-6 py-3'>
                         <Badge variant='outline' className='rounded-full text-[10px] font-semibold px-2.5 py-0.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-0 uppercase tracking-wide'>
                           {trx.status}
                         </Badge>

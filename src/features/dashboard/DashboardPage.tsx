@@ -340,19 +340,19 @@ export function DashboardPage() {
                         const isOut = item.stok === 0
                         return (
                           <TableRow key={item.id} className='text-xs'>
-                            <TableCell className='ps-6 font-medium'>
+                            <TableCell className='ps-6 py-3 font-medium'>
                               <div className='flex flex-col'>
                                 <span className='text-foreground font-semibold'>{item.nama}</span>
                                 <span className='text-[10px] text-muted-foreground'>{item.kategori_nama}</span>
                               </div>
                             </TableCell>
-                            <TableCell className='text-center font-mono'>
-                              <span className={isOut ? 'text-destructive font-bold' : 'text-amber-600 font-bold'}>
+                            <TableCell className='text-center py-3'>
+                              <span className={isOut ? 'text-destructive font-bold text-sm tabular-nums' : 'text-amber-600 dark:text-amber-400 font-bold text-sm tabular-nums'}>
                                 {item.stok}
                               </span>
-                              <span className='text-muted-foreground'> / {item.stok_minimum} {item.satuan}</span>
+                              <span className='text-muted-foreground text-xs font-normal'> / {item.stok_minimum} {item.satuan}</span>
                             </TableCell>
-                            <TableCell className='text-center pe-6'>
+                            <TableCell className='text-center pe-6 py-3'>
                               {isOut ? (
                                 <Badge variant='destructive' className='rounded-full text-[10px] font-semibold px-2.5 py-0.5 uppercase tracking-wide border-0'>
                                   HABIS

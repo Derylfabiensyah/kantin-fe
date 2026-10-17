@@ -72,18 +72,7 @@ export function BreadcrumbNav() {
   const segments = pathname.split('/').filter(Boolean)
 
   if (segments.length === 0) {
-    return (
-      <Breadcrumb className='hidden md:flex'>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbPage className='flex items-center gap-1 font-medium'>
-              <Home className='size-3.5 text-muted-foreground' />
-              <span>Dashboard Ringkasan</span>
-            </BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-    )
+    return null
   }
 
   return (

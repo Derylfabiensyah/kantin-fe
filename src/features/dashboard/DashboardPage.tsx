@@ -7,7 +7,6 @@ import {
   Scale,
   CheckCircle2,
   Plus,
-  ArrowUpRight,
   Boxes,
   FileSpreadsheet,
   Banknote,
@@ -58,7 +57,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { BackofficeHeader } from '@/components/layout/backoffice-header'
 import { Main } from '@/components/layout/main'
-import { useRoleStore } from '@/stores/useRoleStore'
 import { MOCK_MENU, type MenuItemMock } from '@/mocks/mock-data'
 
 // Data tren penjualan 7 hari terakhir
@@ -140,8 +138,6 @@ const formatRupiah = (val: number) => {
 }
 
 export function DashboardPage() {
-  const { schoolName } = useRoleStore()
-
   // State menu stok
   const [menuItems, setMenuItems] = useState<MenuItemMock[]>(MOCK_MENU)
 
@@ -160,13 +156,6 @@ export function DashboardPage() {
   const todayTransactions = 168
   const todayItemsSold = 214
   const avgPerTransaction = Math.round(todaySales / todayTransactions)
-
-  // Data invariant akuntansi rekonsiliasi
-  const totalTopup = 3500000
-  const totalRefund = 150000
-  const totalSaldoSiswa = 48200000
-  const totalSaldoTamu = 1650000
-  const totalPenjualanBersih = todaySales
 
   const handleOpenRestock = (item: MenuItemMock) => {
     setSelectedItem(item)
@@ -202,49 +191,6 @@ export function DashboardPage() {
       <BackofficeHeader />
 
       <Main className='space-y-6 pb-12'>
-        {/* ===== Welcome Banner & Quick Summary ===== */}
-        <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-          <div>
-            <p className='text-sm text-muted-foreground'>
-              Pusat kendali transaksi harian, monitoring saldo rekonsiliasi, dan peringatan stok kantin{' '}
-              <span className='font-medium text-foreground'>{schoolName}</span>.
-            </p>
-          </div>
-
-          <div className='flex flex-wrap items-center gap-2'>
-            {/* Pintasan ke Kasir POS */}
-            <Button asChild size='sm' className='gap-1.5'>
-              <Link to='/kasir'>
-                <Store className='size-3.5' />
-                <span>Buka Kasir POS</span>
-                <ArrowUpRight className='size-3' />
-              </Link>
-            </Button>
-          </div>
-        </div>
-
-        {/* ===== Status Rekonsiliasi Saldo Harian ===== */}
-        <div className='flex items-center justify-between rounded-lg border border-emerald-500/30 bg-emerald-500/5 px-4 py-3 text-sm'>
-          <div className='flex items-center gap-3'>
-            <div className='flex size-8 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0'>
-              <CheckCircle2 className='size-5' />
-            </div>
-            <div>
-              <p className='font-semibold text-emerald-900 dark:text-emerald-300'>
-                Status Rekonsiliasi Harian: SEIMBANG (Selisih Rp 0)
-              </p>
-              <p className='text-xs text-muted-foreground'>
-                Invariant Akuntansi terpenuhi: Topup ({formatRupiah(totalTopup)}) - Refund ({formatRupiah(totalRefund)}) = Saldo Siswa ({formatRupiah(totalSaldoSiswa)}) + Tamu ({formatRupiah(totalSaldoTamu)}) + Penjualan ({formatRupiah(totalPenjualanBersih)}).
-              </p>
-            </div>
-          </div>
-          <Button asChild variant='ghost' size='sm' className='text-xs text-emerald-700 dark:text-emerald-300 hover:text-emerald-800'>
-            <Link to={'/laporan/rekonsiliasi' as string as never}>
-              Lihat Rincian <ArrowRight className='size-3 ml-1' />
-            </Link>
-          </Button>
-        </div>
-
         {/* ===== 4 Kartu Metrik Utama ===== */}
         <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
           {/* Card 1: Penjualan Hari Ini */}

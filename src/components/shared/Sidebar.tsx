@@ -43,7 +43,7 @@ export function Sidebar({ className }: SidebarProps) {
   ]
 
   return (
-    <ShadcnSidebar collapsible='none' variant='sidebar' className={className}>
+    <ShadcnSidebar variant='sidebar' className={className}>
       <SidebarHeader className='border-b border-sidebar-border/50'>
         <TeamSwitcher teams={teams} />
       </SidebarHeader>

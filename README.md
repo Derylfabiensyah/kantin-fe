@@ -49,7 +49,7 @@ kantin-fe/
 │   ├── context/           # Penyedia konteks React (tema, layout)
 │   ├── features/          # Modul fungsional (dashboard, kasir, tu, auth, users)
 │   ├── hooks/             # Custom hooks
-│   ├── layouts/           # Shell tata letak (BackofficeLayout, KasirLayout)
+│   ├── layouts/           # Shell tata letak aplikasi (KasirLayout)
 │   ├── lib/               # Klien API terpusat, fungsi format, dan utilitas umum
 │   ├── mocks/             # Mock data dan adapter API untuk pengujian lokal
 │   ├── routes/            # Definisi rute berbasis struktur berkas TanStack Router

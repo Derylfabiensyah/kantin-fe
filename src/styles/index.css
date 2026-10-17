@@ -37,10 +37,16 @@
     }
   }
 
-  /* Sembunyikan ikon reveal bawaan peramban Edge/IE pada input kata sandi */
+  /* Sembunyikan ikon reveal dan autofill bawaan peramban (Edge/Chrome/Safari) */
   input[type='password']::-ms-reveal,
-  input[type='password']::-ms-clear {
-    display: none;
+  input[type='password']::-ms-clear,
+  input::-webkit-credentials-auto-fill-button,
+  input::-webkit-contacts-auto-fill-button {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    right: 0 !important;
   }
 }
 

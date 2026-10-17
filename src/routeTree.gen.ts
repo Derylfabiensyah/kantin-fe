@@ -19,7 +19,6 @@ import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
-import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
@@ -98,11 +97,6 @@ const errors401Route = errors401RouteImport.update({
 const authSignInRoute = authSignInRouteImport.update({
   id: '/(auth)/sign-in',
   path: '/sign-in',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
-  id: '/(auth)/forgot-password',
-  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedSettingsRouteRoute =
@@ -288,7 +282,6 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/kasir': typeof KasirRouteRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
-  '/forgot-password': typeof authForgotPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
@@ -327,7 +320,6 @@ export interface FileRoutesByFullPath {
   '/tu/topup/': typeof AuthenticatedTuTopupIndexRoute
 }
 export interface FileRoutesByTo {
-  '/forgot-password': typeof authForgotPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
@@ -371,7 +363,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/kasir': typeof KasirRouteRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
-  '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/sign-in': typeof authSignInRoute
   '/(errors)/401': typeof errors401Route
   '/(errors)/403': typeof errors403Route
@@ -416,7 +407,6 @@ export interface FileRouteTypes {
     | '/'
     | '/kasir'
     | '/settings'
-    | '/forgot-password'
     | '/sign-in'
     | '/401'
     | '/403'
@@ -455,7 +445,6 @@ export interface FileRouteTypes {
     | '/tu/topup/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/forgot-password'
     | '/sign-in'
     | '/401'
     | '/403'
@@ -498,7 +487,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/kasir'
     | '/_authenticated/settings'
-    | '/(auth)/forgot-password'
     | '/(auth)/sign-in'
     | '/(errors)/401'
     | '/(errors)/403'
@@ -541,7 +529,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   KasirRouteRoute: typeof KasirRouteRouteWithChildren
-  authForgotPasswordRoute: typeof authForgotPasswordRoute
   authSignInRoute: typeof authSignInRoute
   errors401Route: typeof errors401Route
   errors403Route: typeof errors403Route
@@ -620,13 +607,6 @@ declare module '@tanstack/react-router' {
       path: '/sign-in'
       fullPath: '/sign-in'
       preLoaderRoute: typeof authSignInRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/forgot-password': {
-      id: '/(auth)/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof authForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/settings': {
@@ -948,7 +928,6 @@ const KasirRouteRouteWithChildren = KasirRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   KasirRouteRoute: KasirRouteRouteWithChildren,
-  authForgotPasswordRoute: authForgotPasswordRoute,
   authSignInRoute: authSignInRoute,
   errors401Route: errors401Route,
   errors403Route: errors403Route,

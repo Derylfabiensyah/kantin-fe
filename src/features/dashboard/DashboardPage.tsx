@@ -322,15 +322,15 @@ export function DashboardPage() {
                 <Table>
                   <TableHeader>
                     <TableRow className='text-xs'>
-                      <TableHead>Menu</TableHead>
+                      <TableHead className='ps-6'>Menu</TableHead>
                       <TableHead className='text-center'>Sisa / Min</TableHead>
-                      <TableHead className='text-center'>Status</TableHead>
+                      <TableHead className='text-center pe-6'>Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {lowStockItems.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={3} className='h-28 text-center text-xs text-muted-foreground'>
+                        <TableCell colSpan={3} className='h-28 text-center text-xs text-muted-foreground px-6'>
                           <CheckCircle2 className='size-6 text-emerald-500 mx-auto mb-1 opacity-70' />
                           Semua stok menu dalam kondisi aman di atas batas minimum.
                         </TableCell>
@@ -340,7 +340,7 @@ export function DashboardPage() {
                         const isOut = item.stok === 0
                         return (
                           <TableRow key={item.id} className='text-xs'>
-                            <TableCell className='font-medium'>
+                            <TableCell className='ps-6 font-medium'>
                               <div className='flex flex-col'>
                                 <span className='text-foreground font-semibold'>{item.nama}</span>
                                 <span className='text-[10px] text-muted-foreground'>{item.kategori_nama}</span>
@@ -352,13 +352,13 @@ export function DashboardPage() {
                               </span>
                               <span className='text-muted-foreground'> / {item.stok_minimum} {item.satuan}</span>
                             </TableCell>
-                            <TableCell className='text-center'>
+                            <TableCell className='text-center pe-6'>
                               {isOut ? (
-                                <Badge variant='destructive' className='text-[10px] px-1.5 py-0 uppercase border-0'>
+                                <Badge variant='destructive' className='rounded-full text-[10px] font-semibold px-2.5 py-0.5 uppercase tracking-wide border-0'>
                                   HABIS
                                 </Badge>
                               ) : (
-                                <Badge variant='outline' className='text-[10px] px-1.5 py-0 border-0 bg-amber-500/10 text-amber-700 dark:text-amber-300 uppercase'>
+                                <Badge variant='outline' className='rounded-full text-[10px] font-semibold px-2.5 py-0.5 border-0 bg-amber-500/15 text-amber-700 dark:text-amber-300 uppercase tracking-wide'>
                                   MENIPIS
                                 </Badge>
                               )}
@@ -389,17 +389,17 @@ export function DashboardPage() {
               <Table>
                 <TableHeader>
                   <TableRow className='text-xs'>
-                    <TableHead>Waktu & ID</TableHead>
+                    <TableHead className='ps-6'>Waktu & ID</TableHead>
                     <TableHead>Pelanggan</TableHead>
                     <TableHead>Item Menu</TableHead>
                     <TableHead className='text-right'>Total Belanja</TableHead>
-                    <TableHead className='text-center'>Status</TableHead>
+                    <TableHead className='text-center pe-6'>Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {RECENT_TRANSACTIONS.map((trx) => (
                     <TableRow key={trx.id} className='text-xs'>
-                      <TableCell>
+                      <TableCell className='ps-6'>
                         <div className='font-mono font-medium text-foreground'>{trx.waktu}</div>
                         <div className='text-[10px] text-muted-foreground font-mono'>{trx.id}</div>
                       </TableCell>
@@ -413,8 +413,8 @@ export function DashboardPage() {
                       <TableCell className='text-right font-mono font-bold text-foreground'>
                         {formatRupiah(trx.total)}
                       </TableCell>
-                      <TableCell className='text-center'>
-                        <Badge variant='outline' className='text-[10px] bg-emerald-500/10 text-emerald-600 border-0 px-1.5 py-0'>
+                      <TableCell className='text-center pe-6'>
+                        <Badge variant='outline' className='rounded-full text-[10px] font-semibold px-2.5 py-0.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-0 uppercase tracking-wide'>
                           {trx.status}
                         </Badge>
                       </TableCell>

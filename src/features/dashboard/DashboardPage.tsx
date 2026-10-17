@@ -144,7 +144,7 @@ export function DashboardPage() {
               <CardTitle className='text-sm font-medium text-muted-foreground'>
                 Total Penjualan Hari Ini
               </CardTitle>
-              <div className='flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary'>
+              <div className='flex size-9 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400'>
                 <Banknote className='size-5' />
               </div>
             </CardHeader>
@@ -153,7 +153,7 @@ export function DashboardPage() {
                 {formatRupiah(todaySales)}
               </div>
               <div className='flex items-center gap-1.5 text-xs text-muted-foreground mt-1'>
-                <span className='inline-flex items-center text-emerald-600 font-semibold'>
+                <span className='inline-flex items-center text-emerald-600 dark:text-emerald-400 font-semibold'>
                   <TrendingUp className='size-3.5 mr-0.5' /> +18.4%
                 </span>
                 <span>vs kemarin ({todayItemsSold} item)</span>
@@ -176,7 +176,7 @@ export function DashboardPage() {
                 {todayTransactions} <span className='text-base font-normal text-muted-foreground'>Trx</span>
               </div>
               <div className='flex items-center gap-1.5 text-xs text-muted-foreground mt-1'>
-                <span className='font-medium text-foreground'>Rata-rata: {formatRupiah(avgPerTransaction)}</span>
+                <span className='font-semibold text-foreground'>Rata-rata: {formatRupiah(avgPerTransaction)}</span>
                 <span>/ siswa</span>
               </div>
             </CardContent>
@@ -188,19 +188,20 @@ export function DashboardPage() {
               <CardTitle className='text-sm font-medium text-muted-foreground'>
                 Status Rekonsiliasi Kas
               </CardTitle>
-              <div className='flex size-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600'>
+              <div className='flex size-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'>
                 <Scale className='size-5' />
               </div>
             </CardHeader>
             <CardContent>
-              <div className='flex items-center gap-2'>
-                <span className='text-xl font-bold tracking-tight text-emerald-600 dark:text-emerald-400'>
-                  SEIMBANG (Rp 0)
-                </span>
+              <div className='text-2xl font-bold tracking-tight text-foreground'>
+                Rp 0 <span className='text-base font-normal text-muted-foreground'>Selisih</span>
               </div>
-              <p className='text-xs text-muted-foreground mt-1'>
-                Kas fisik TU cocok dengan sistem
-              </p>
+              <div className='flex items-center gap-1.5 text-xs text-muted-foreground mt-1'>
+                <span className='inline-flex items-center text-emerald-600 dark:text-emerald-400 font-semibold'>
+                  Seimbang
+                </span>
+                <span>• Kas fisik TU cocok sistem</span>
+              </div>
             </CardContent>
           </Card>
 
@@ -215,17 +216,15 @@ export function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className='flex items-center gap-2'>
-                <span className='text-2xl font-bold tracking-tight text-foreground'>
-                  {lowStockItems.length}
-                </span>
-                <span className='text-xs text-muted-foreground'>
-                  item perlu restock
-                </span>
+              <div className='text-2xl font-bold tracking-tight text-foreground'>
+                {lowStockItems.length} <span className='text-base font-normal text-muted-foreground'>Item</span>
               </div>
-              <p className='text-xs text-amber-600 dark:text-amber-400 font-medium mt-1'>
-                {menuItems.filter(i => i.stok === 0).length} Habis &bull; {menuItems.filter(i => i.stok > 0 && i.stok <= i.stok_minimum).length} Menipis
-              </p>
+              <div className='flex items-center gap-1.5 text-xs text-muted-foreground mt-1'>
+                <span className='inline-flex items-center text-amber-600 dark:text-amber-400 font-semibold'>
+                  Perlu Restock
+                </span>
+                <span>• {menuItems.filter(i => i.stok === 0).length} Habis, {menuItems.filter(i => i.stok > 0 && i.stok <= i.stok_minimum).length} Menipis</span>
+              </div>
             </CardContent>
           </Card>
         </div>

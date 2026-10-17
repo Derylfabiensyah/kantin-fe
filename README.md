@@ -43,8 +43,8 @@ Aplikasi dibangun menggunakan model antarmuka ganda berbasis TanStack Router:
 
 ```text
 kantin-fe/
+├── public/                # Aset statis publik (logo, favicon)
 ├── src/
-│   ├── assets/            # Aset statis gambar dan ikon
 │   ├── components/        # Komponen UI bersama (shadcn/ui, layout shell, navigasi)
 │   ├── context/           # Penyedia konteks React (tema, layout)
 │   ├── features/          # Modul fungsional (dashboard, kasir, tu, auth, users)

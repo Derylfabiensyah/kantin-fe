@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
-import type { UserRole } from '@/stores/useRoleStore'
+import { ROLE_CONFIGS, type UserRole } from '@/stores/useRoleStore'
 
 const formSchema = z.object({
   email: z
@@ -105,8 +105,11 @@ export function UserAuthForm({
       auth.setAccessToken(resData.token)
       auth.setUser(authenticatedUser)
 
-      toast.success(`Selamat datang, ${authenticatedUser.nama}!`, {
-        description: `Peran aktif: ${rawRole.toUpperCase()} di ${authenticatedUser.sekolahNama}`,
+      const cleanNama = authenticatedUser.nama.replace(/\s*\([^)]*\)$/, '')
+      const roleLabel = ROLE_CONFIGS[rawRole]?.label || rawRole
+
+      toast.success(`Selamat datang, ${cleanNama}!`, {
+        description: `Peran aktif: ${roleLabel} di ${authenticatedUser.sekolahNama}`,
       })
 
       // Tentukan rute navigasi tujuan berdasarkan role staf

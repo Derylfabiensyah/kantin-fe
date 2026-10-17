@@ -44,7 +44,7 @@ export function Sidebar({ className }: SidebarProps) {
 
   return (
     <ShadcnSidebar variant='sidebar' className={className}>
-      <SidebarHeader className='border-b border-sidebar-border/50'>
+      <SidebarHeader className='h-[65px] justify-center border-b border-sidebar-border/50'>
         <TeamSwitcher teams={teams} />
       </SidebarHeader>
 

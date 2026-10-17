@@ -16,7 +16,7 @@ export function BackofficeHeader({ className, fixed = true }: BackofficeHeaderPr
   const isMock = import.meta.env.VITE_USE_MOCK !== 'false'
 
   return (
-    <Header fixed={fixed} className={cn('bg-background/95 backdrop-blur border-b border-border/40', className)}>
+    <Header fixed={fixed} className={cn('bg-background/95 backdrop-blur border-b border-sidebar-border/50', className)}>
       {/* Breadcrumb navigasi otomatis sinkron rute */}
       <div className='flex items-center gap-2 overflow-hidden me-auto'>
         <BreadcrumbNav />

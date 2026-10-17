@@ -17,20 +17,51 @@ const ROUTE_LABELS: Record<string, string> = {
   'masuk': 'Barang Masuk',
   'opname': 'Stok Opname',
   'kartu': 'Kartu Stok',
+  'inventaris': 'Laporan Inventaris',
   'tu': 'Layanan TU',
   'topup': 'Top-up Tunai Siswa',
   'setoran': 'Setoran Kas TU',
   'kartu-tamu': 'Kartu Tamu',
   'saldo': 'Saldo Siswa',
+  'koreksi': 'Koreksi Mutasi',
   'refund': 'Refund Siswa Keluar',
   'kontrol-siswa': 'Kontrol Siswa (Ortu)',
   'laporan': 'Pusat Laporan',
   'rekonsiliasi': 'Rekonsiliasi Harian',
   'penjualan': 'Penjualan & Laba',
+  'laba-kotor': 'Analisis Laba Kotor',
+  'saldo-mengendap': 'Saldo Mengendap',
+  'riwayat-siswa': 'Riwayat Belanja Siswa',
+  'kerugian-stok': 'Laporan Kerugian Stok',
   'pengaturan': 'Pengaturan Kantin',
+  'titik-kasir': 'Manajemen Titik Kasir',
   'kasir': 'Kasir POS',
-  'settings': 'Pengaturan Akun',
 }
+
+const VALID_NAV_PATHS = new Set([
+  '/',
+  '/kasir',
+  '/menu',
+  '/kategori',
+  '/stok/masuk',
+  '/stok/opname',
+  '/stok/kartu',
+  '/stok/inventaris',
+  '/tu/topup',
+  '/tu/setoran',
+  '/kartu-tamu',
+  '/saldo/koreksi',
+  '/saldo/refund',
+  '/kontrol-siswa',
+  '/laporan/rekonsiliasi',
+  '/laporan/penjualan',
+  '/laporan/laba-kotor',
+  '/laporan/saldo-mengendap',
+  '/laporan/riwayat-siswa',
+  '/laporan/kerugian-stok',
+  '/pengaturan',
+  '/pengaturan/titik-kasir',
+])
 
 export function BreadcrumbNav() {
   const pathname = useRouterState({
@@ -72,6 +103,7 @@ export function BreadcrumbNav() {
           const currentPath = `/${segments.slice(0, index + 1).join('/')}`
           const isLast = index === segments.length - 1
           const label = ROUTE_LABELS[segment] || decodeURIComponent(segment)
+          const isValidLink = !isLast && VALID_NAV_PATHS.has(currentPath)
 
           return (
             <span key={currentPath} className='inline-flex items-center gap-1.5'>
@@ -80,7 +112,7 @@ export function BreadcrumbNav() {
                   <BreadcrumbPage className='font-semibold text-foreground capitalize'>
                     {label}
                   </BreadcrumbPage>
-                ) : (
+                ) : isValidLink ? (
                   <BreadcrumbLink asChild>
                     <Link
                       to={currentPath as string as never}
@@ -89,6 +121,10 @@ export function BreadcrumbNav() {
                       {label}
                     </Link>
                   </BreadcrumbLink>
+                ) : (
+                  <span className='text-muted-foreground capitalize select-none cursor-default'>
+                    {label}
+                  </span>
                 )}
               </BreadcrumbItem>
               {!isLast && <BreadcrumbSeparator />}

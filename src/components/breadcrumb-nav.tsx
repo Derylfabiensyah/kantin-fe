@@ -25,7 +25,7 @@ const ROUTE_LABELS: Record<string, string> = {
   'saldo': 'Saldo Siswa',
   'koreksi': 'Koreksi Mutasi',
   'refund': 'Refund Siswa Keluar',
-  'kontrol-siswa': 'Kontrol Siswa (Ortu)',
+  'kontrol-siswa': 'Kontrol Siswa',
   'laporan': 'Pusat Laporan',
   'rekonsiliasi': 'Rekonsiliasi Harian',
   'penjualan': 'Penjualan & Laba',

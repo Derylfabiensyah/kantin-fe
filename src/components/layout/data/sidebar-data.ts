@@ -123,7 +123,7 @@ export const sidebarData: SidebarData = {
           icon: ArrowLeftRight,
         },
         {
-          title: 'Kontrol Siswa (Ortu)',
+          title: 'Kontrol Siswa',
           url: '/kontrol-siswa',
           icon: ShieldCheck,
         },

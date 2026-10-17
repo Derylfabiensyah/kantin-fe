@@ -40,7 +40,7 @@ export function ProfileDropdown() {
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant='ghost' className='relative h-8 w-8 rounded-full ring-2 ring-primary/20 hover:ring-primary/40'>
+          <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
             <Avatar className='h-8 w-8'>
               <AvatarImage src='/avatars/shadcn.jpg' alt={userName} />
               <AvatarFallback className='bg-primary/10 text-primary font-semibold text-xs'>

@@ -140,7 +140,7 @@ const formatRupiah = (val: number) => {
 }
 
 export function DashboardPage() {
-  const { schoolName, canteenName } = useRoleStore()
+  const { schoolName } = useRoleStore()
 
   // State menu stok
   const [menuItems, setMenuItems] = useState<MenuItemMock[]>(MOCK_MENU)
@@ -205,15 +205,7 @@ export function DashboardPage() {
         {/* ===== Welcome Banner & Quick Summary ===== */}
         <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
           <div>
-            <div className='flex items-center gap-2'>
-              <h1 className='text-2xl font-bold tracking-tight text-foreground sm:text-3xl'>
-                Dashboard Ringkasan
-              </h1>
-              <Badge variant='secondary' className='font-normal text-xs'>
-                {canteenName}
-              </Badge>
-            </div>
-            <p className='text-sm text-muted-foreground mt-1'>
+            <p className='text-sm text-muted-foreground'>
               Pusat kendali transaksi harian, monitoring saldo rekonsiliasi, dan peringatan stok kantin{' '}
               <span className='font-medium text-foreground'>{schoolName}</span>.
             </p>

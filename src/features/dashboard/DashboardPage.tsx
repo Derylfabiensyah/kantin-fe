@@ -346,11 +346,11 @@ export function DashboardPage() {
                                 <span className='text-[10px] text-muted-foreground'>{item.kategori_nama}</span>
                               </div>
                             </TableCell>
-                            <TableCell className='text-center py-3'>
-                              <span className={isOut ? 'text-destructive font-bold text-sm tabular-nums' : 'text-amber-600 dark:text-amber-400 font-bold text-sm tabular-nums'}>
+                            <TableCell className='text-center py-3 text-xs tabular-nums'>
+                              <span className={isOut ? 'text-destructive font-semibold' : 'text-amber-600 dark:text-amber-400 font-semibold'}>
                                 {item.stok}
                               </span>
-                              <span className='text-muted-foreground text-xs font-normal'> / {item.stok_minimum} {item.satuan}</span>
+                              <span className='text-muted-foreground'> / {item.stok_minimum} {item.satuan}</span>
                             </TableCell>
                             <TableCell className='text-center pe-6 py-3'>
                               {isOut ? (

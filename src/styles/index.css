@@ -36,6 +36,12 @@
       font-size: 16px !important;
     }
   }
+
+  /* Sembunyikan ikon reveal bawaan peramban Edge/IE pada input kata sandi */
+  input[type='password']::-ms-reveal,
+  input[type='password']::-ms-clear {
+    display: none;
+  }
 }
 
 @utility container {

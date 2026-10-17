@@ -268,7 +268,7 @@ export function DashboardPage() {
                         if (active && payload && payload.length) {
                           const total = payload.reduce((sum, entry) => sum + (Number(entry.value) || 0), 0)
                           return (
-                            <div className='rounded-lg border bg-popover p-2.5 text-xs'>
+                            <div className='rounded-lg border-0 bg-popover p-2.5 text-xs shadow-md'>
                               <p className='font-semibold text-foreground mb-1.5'>{label}</p>
                               {payload.map((entry) => (
                                 <div key={entry.name} className='flex items-center justify-between gap-4 py-0.5'>

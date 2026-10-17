@@ -14,7 +14,6 @@ import {
   XAxis,
   YAxis,
   Tooltip as RechartsTooltip,
-  Legend,
   CartesianGrid,
 } from 'recharts'
 import {
@@ -233,20 +232,41 @@ export function DashboardPage() {
         <div className='grid grid-cols-1 gap-6 lg:grid-cols-7'>
           {/* Kolom Kiri: Tren Penjualan 7 Hari Terakhir (Recharts) */}
           <Card className='col-span-1 lg:col-span-4 border-0 bg-muted/70 dark:bg-muted/30'>
-            <CardHeader>
-              <div>
-                <CardTitle className='text-base font-semibold'>
-                  Tren Penjualan 7 Hari Terakhir
-                </CardTitle>
-                <CardDescription className='text-xs mt-0.5'>
-                  Grafik omset harian kasir kantin dalam Rupiah (Rp) per kategori
-                </CardDescription>
+            <CardHeader className='pb-2'>
+              <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3'>
+                <div>
+                  <CardTitle className='text-base font-semibold'>
+                    Tren Penjualan 7 Hari Terakhir
+                  </CardTitle>
+                  <CardDescription className='text-xs mt-0.5'>
+                    Grafik omset harian kasir kantin dalam Rupiah (Rp) per kategori
+                  </CardDescription>
+                </div>
+                {/* Legend Kategori */}
+                <div className='flex items-center gap-3.5 text-xs shrink-0'>
+                  <div className='flex items-center gap-1.5'>
+                    <span className='size-2.5 rounded-full bg-[#3b82f6] shrink-0' />
+                    <span className='font-medium text-muted-foreground'>Makanan</span>
+                  </div>
+                  <div className='flex items-center gap-1.5'>
+                    <span className='size-2.5 rounded-full bg-[#06b6d4] shrink-0' />
+                    <span className='font-medium text-muted-foreground'>Minuman</span>
+                  </div>
+                  <div className='flex items-center gap-1.5'>
+                    <span className='size-2.5 rounded-full bg-[#f59e0b] shrink-0' />
+                    <span className='font-medium text-muted-foreground'>Snack</span>
+                  </div>
+                </div>
               </div>
             </CardHeader>
-            <CardContent className='ps-2 pe-4 pt-2'>
-              <div className='h-[320px] w-full'>
+            <CardContent className='ps-2 pe-6 pb-4 pt-3'>
+              <div className='h-[310px] w-full'>
                 <ResponsiveContainer width='100%' height='100%'>
-                  <BarChart data={SALES_TREND_DATA} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                  <BarChart
+                    data={SALES_TREND_DATA}
+                    maxBarSize={36}
+                    margin={{ top: 10, right: 10, left: 10, bottom: 4 }}
+                  >
                     <CartesianGrid strokeDasharray='3 3' className='stroke-border/50' vertical={false} />
                     <XAxis
                       dataKey='hari'
@@ -254,15 +274,23 @@ export function DashboardPage() {
                       fontSize={11}
                       tickLine={false}
                       axisLine={false}
+                      dy={6}
                     />
                     <YAxis
                       stroke='#888888'
                       fontSize={11}
                       tickLine={false}
                       axisLine={false}
-                      tickFormatter={(value) => `Rp ${(value / 1000).toLocaleString('id-ID')}k`}
+                      tickFormatter={(value) => {
+                        if (value === 0) return 'Rp 0'
+                        if (value >= 1_000_000) {
+                          return `Rp ${(value / 1_000_000).toLocaleString('id-ID', { maximumFractionDigits: 1 })} jt`
+                        }
+                        return `Rp ${(value / 1_000).toLocaleString('id-ID')} rb`
+                      }}
                     />
                     <RechartsTooltip
+                      cursor={{ fill: 'currentColor', opacity: 0.04 }}
                       content={({ active, payload, label }) => {
                         if (active && payload && payload.length) {
                           const total = payload.reduce((sum, entry) => sum + (Number(entry.value) || 0), 0)
@@ -290,16 +318,9 @@ export function DashboardPage() {
                         return null
                       }}
                     />
-                    <Legend
-                      verticalAlign='top'
-                      align='right'
-                      iconType='circle'
-                      iconSize={8}
-                      wrapperStyle={{ fontSize: '11px', paddingBottom: '10px' }}
-                    />
                     <Bar dataKey='makanan' name='Makanan' stackId='a' fill='#3b82f6' radius={[0, 0, 0, 0]} />
                     <Bar dataKey='minuman' name='Minuman' stackId='a' fill='#06b6d4' radius={[0, 0, 0, 0]} />
-                    <Bar dataKey='snack' name='Snack' stackId='a' fill='#f59e0b' radius={[4, 4, 0, 0]} />
+                    <Bar dataKey='snack' name='Snack' stackId='a' fill='#f59e0b' radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

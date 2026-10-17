@@ -91,9 +91,10 @@ export function UserAuthForm({
       }
 
       const rawRole = (resData.user.currentRole || 'admin') as UserRole
+      const cleanNama = (resData.user.nama || 'Staf Kantin').replace(/\s*\([^)]*\)$/, '')
       const authenticatedUser: AuthUser = {
         userId: resData.user.id,
-        nama: resData.user.nama,
+        nama: cleanNama,
         email: resData.user.email,
         sekolahId: resData.user.sekolah?.id || 10,
         sekolahNama: resData.user.sekolah?.nama || 'PAUD SKOOLIA',
@@ -105,7 +106,6 @@ export function UserAuthForm({
       auth.setAccessToken(resData.token)
       auth.setUser(authenticatedUser)
 
-      const cleanNama = authenticatedUser.nama.replace(/\s*\([^)]*\)$/, '')
       const roleLabel = ROLE_CONFIGS[rawRole]?.label || rawRole
 
       toast.success(`Selamat datang, ${cleanNama}!`, {

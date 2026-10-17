@@ -18,7 +18,8 @@ export function ProfileDropdown() {
   const { user } = useAuthStore().auth
   const { userName: fallbackName, userEmail: fallbackEmail } = useRoleStore()
 
-  const userName = user?.nama || fallbackName || 'Staf Kantin'
+  const rawUserName = user?.nama || fallbackName || 'Staf Kantin'
+  const userName = rawUserName.replace(/\s*\([^)]*\)$/, '')
   const userEmail = user?.email || fallbackEmail || ''
 
   const initials = userName

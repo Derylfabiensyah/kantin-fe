@@ -385,20 +385,14 @@ export function DashboardPage() {
         {/* ===== Baris Bawah: Transaksi Terakhir & Pintasan Cepat ===== */}
         <div className='grid grid-cols-1 gap-6 lg:grid-cols-7'>
           {/* Transaksi Kasir Terkini */}
-          <Card className='col-span-1 lg:col-span-5 border-border/60'>
-            <CardHeader className='flex flex-row items-center justify-between pb-3'>
-              <div>
-                <CardTitle className='text-base font-semibold'>
-                  Aktivitas Transaksi Kasir Terakhir
-                </CardTitle>
-                <CardDescription className='text-xs mt-0.5'>
-                  Pencatatan real-time pembelian siswa & tamu via reader RFID USB
-                </CardDescription>
-              </div>
-              <Badge variant='outline' className='text-xs font-mono bg-emerald-500/5 text-emerald-600 border-emerald-500/30'>
-                <span className='size-1.5 rounded-full bg-emerald-500 animate-pulse mr-1.5' />
-                Sesi Kasir Aktif
-              </Badge>
+          <Card className='col-span-1 lg:col-span-5 border-0 bg-muted/70 dark:bg-muted/30'>
+            <CardHeader className='pb-3'>
+              <CardTitle className='text-base font-semibold'>
+                Aktivitas Transaksi Kasir Terakhir
+              </CardTitle>
+              <CardDescription className='text-xs mt-0.5'>
+                Pencatatan real-time pembelian siswa & tamu via reader RFID USB
+              </CardDescription>
             </CardHeader>
             <CardContent className='p-0'>
               <div className='overflow-x-auto'>
@@ -430,7 +424,7 @@ export function DashboardPage() {
                           {formatRupiah(trx.total)}
                         </TableCell>
                         <TableCell className='text-center'>
-                          <Badge variant='outline' className='text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/30 px-1.5 py-0'>
+                          <Badge variant='outline' className='text-[10px] bg-emerald-500/10 text-emerald-600 border-0 px-1.5 py-0'>
                             {trx.status}
                           </Badge>
                         </TableCell>

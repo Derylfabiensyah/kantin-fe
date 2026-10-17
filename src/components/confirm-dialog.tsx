@@ -17,6 +17,7 @@ type ConfirmDialogProps = {
   disabled?: boolean
   desc: React.JSX.Element | string
   cancelBtnText?: string
+  cancelBtnClassName?: string
   confirmText?: React.ReactNode
   destructive?: boolean
   isLoading?: boolean
@@ -35,6 +36,7 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
     className,
     confirmText,
     cancelBtnText,
+    cancelBtnClassName,
     destructive,
     isLoading,
     disabled = false,
@@ -53,7 +55,7 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
         </AlertDialogHeader>
         {children}
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>
+          <AlertDialogCancel className={cancelBtnClassName} disabled={isLoading}>
             {cancelBtnText ?? 'Cancel'}
           </AlertDialogCancel>
           <Button

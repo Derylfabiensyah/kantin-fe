@@ -11,7 +11,6 @@ import {
   FileSpreadsheet,
   Banknote,
   Store,
-  Clock,
   ArrowRight,
   Sparkles,
   Info,
@@ -289,7 +288,7 @@ export function DashboardPage() {
         <div className='grid grid-cols-1 gap-6 lg:grid-cols-7'>
           {/* Kolom Kiri: Tren Penjualan 7 Hari Terakhir (Recharts) */}
           <Card className='col-span-1 lg:col-span-4 border-border/60'>
-            <CardHeader className='flex flex-row items-center justify-between'>
+            <CardHeader>
               <div>
                 <CardTitle className='text-base font-semibold'>
                   Tren Penjualan 7 Hari Terakhir
@@ -298,9 +297,6 @@ export function DashboardPage() {
                   Grafik omset harian kasir kantin dalam Rupiah (Rp) per kategori
                 </CardDescription>
               </div>
-              <Badge variant='outline' className='text-xs gap-1 font-mono'>
-                <Clock className='size-3 text-primary' /> 7 Hari
-              </Badge>
             </CardHeader>
             <CardContent className='ps-2 pe-4 pt-2'>
               <div className='h-[320px] w-full'>
